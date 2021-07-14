@@ -1,0 +1,12 @@
+.toolbar {
+  flex-wrap: 'wrap';
+}
+.toolbar-title {
+  flex-grow: 1;
+}
+.toolbar-icon {
+  margin-right: 0.8em;
+}
+.toolbar .MuiTypography-root.toolbar-link {
+  margin-left: 1em;
+}
