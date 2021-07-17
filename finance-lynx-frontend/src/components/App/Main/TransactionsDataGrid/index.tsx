@@ -11,7 +11,8 @@ export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
     {
       field: 'date',
       headerName: 'Date',
-      width: 150,
+      width: 200,
+      type: 'date',
       editable: true,
     },
     {
@@ -23,14 +24,15 @@ export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
     {
       field: 'description',
       headerName: 'Description',
-      width: 400,
+      width: 350,
+      type: 'string',
       editable: true,
     },
     {
       field: 'amount',
       headerName: 'Amount',
-      type: 'amount',
       width: 200,
+      type: 'number',
       editable: true,
     },
   ];
@@ -42,7 +44,7 @@ export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
         date: transaction.date,
         account: `${transaction.account.number} - ${transaction.account.name}`,
         description: transaction.description,
-        amount: transaction.amount.toFixed(2) + " SEK"
+        amount: transaction.amount.toFixed(2)
       }
     }
   )
