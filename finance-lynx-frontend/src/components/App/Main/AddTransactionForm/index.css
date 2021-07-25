@@ -1,0 +1,16 @@
+div.addTransactionForm {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: row;
+  }
+  
+div.inputField {
+  width: 200px;
+  margin: 0 12px 12px 0;
+}
+
+button.submitButton {
+  align-self: center;
+  margin-bottom: 12px;
+}
