@@ -7,10 +7,9 @@ div.addTransactionForm {
   
 div.inputField {
   width: 200px;
-  margin: 0 12px 12px 0;
+  margin-right: 12px;
 }
 
 button.submitButton {
   align-self: center;
-  margin-bottom: 12px;
 }

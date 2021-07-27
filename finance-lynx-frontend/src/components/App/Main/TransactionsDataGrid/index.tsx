@@ -1,3 +1,4 @@
+import { Card, CardContent } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Transaction } from "../types";
 import './index.css'
@@ -24,7 +25,7 @@ export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
     {
       field: 'description',
       headerName: 'Description',
-      width: 350,
+      width: 300,
       type: 'string',
       editable: true,
     },
@@ -50,13 +51,18 @@ export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
   )
 
   return (
-    <div className="TransactionsDataGridContainer">
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={10}
-        disableSelectionOnClick
-      />
-    </div>
+    <Card>
+      <CardContent>
+        <h3>Transactions</h3>
+        <div className="TransactionsDataGridContainer">
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            disableSelectionOnClick
+          />
+        </div>
+      </CardContent>
+    </Card>
   )
 }
