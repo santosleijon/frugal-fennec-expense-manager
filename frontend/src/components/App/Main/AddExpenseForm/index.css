@@ -1,0 +1,15 @@
+div.addExpenseForm {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: row;
+  }
+  
+div.inputField {
+  width: 200px;
+  margin-right: 12px;
+}
+
+button.submitButton {
+  align-self: center;
+}
