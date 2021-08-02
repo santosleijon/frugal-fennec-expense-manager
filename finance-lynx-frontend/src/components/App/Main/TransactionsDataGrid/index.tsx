@@ -1,10 +1,12 @@
-import { Card, CardContent } from "@material-ui/core";
-import { DataGrid, GridColDef } from "@material-ui/data-grid";
+import * as React from 'react';
+import { Button, Card, CardContent } from "@material-ui/core";
+import { DataGrid, GridRowId, GridColDef } from "@material-ui/data-grid";
 import { Transaction } from "../types";
 import './index.css'
 
 interface TransactionsDataGridProps {
     transactions: Transaction[]
+    onDeleteTransactions: (transactionIds: number[]) => void
 }
 
 export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
@@ -25,7 +27,7 @@ export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
     {
       field: 'description',
       headerName: 'Description',
-      width: 300,
+      width: 250,
       type: 'string',
       editable: true,
     },
@@ -50,16 +52,33 @@ export default function TransactionsDataGrid(props: TransactionsDataGridProps) {
     }
   )
 
+  const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([])
+
+  const onDeleteTransactions = () => {
+    props.onDeleteTransactions(selectionModel.map(rowId => +rowId))
+  }
+
   return (
     <Card>
       <CardContent>
         <h3>Transactions</h3>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={onDeleteTransactions}
+        >
+          Delete transactions
+        </Button>
         <div className="TransactionsDataGridContainer">
           <DataGrid
             rows={rows}
             columns={columns}
             pageSize={10}
             disableSelectionOnClick
+            checkboxSelection
+            onSelectionModelChange={(newSelectionModel) => {
+              setSelectionModel(newSelectionModel);
+            }}
           />
         </div>
       </CardContent>

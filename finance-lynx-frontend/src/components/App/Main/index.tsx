@@ -26,13 +26,20 @@ export default function Main() {
     setTransactions(transactions.concat({ ...newTransaction, id: transactions.length+1 }))
   }
 
+  const onDeleteTransactions = (transactionIds: number[]) => {
+    setTransactions(transactions.filter(t => !transactionIds.includes(t.id)))
+  }
+
   return (
     <div className="MainContainer">
       <h1>Transactions</h1>
 
       <AddTransactionForm accounts={accountsList} onTransactionAdded={onTransactionAdded}/>
 
-      <TransactionsDataGrid transactions={transactions} />
+      <TransactionsDataGrid
+        transactions={transactions}
+        onDeleteTransactions={onDeleteTransactions}
+      />
     </div>
   )
 }
