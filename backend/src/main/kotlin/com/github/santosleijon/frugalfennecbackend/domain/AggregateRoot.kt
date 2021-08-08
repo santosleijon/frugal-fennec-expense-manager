@@ -1,7 +1,10 @@
 package com.github.santosleijon.frugalfennecbackend.domain
 
+import java.util.*
+
 abstract class AggregateRoot(
-    val version: Int
+    val id: UUID,
+    val version: Int,
 ) {
     val pendingEvents = mutableListOf<DomainEvent>()
 

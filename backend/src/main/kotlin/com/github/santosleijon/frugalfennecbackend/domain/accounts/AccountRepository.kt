@@ -25,7 +25,7 @@ class AccountRepository {
             return null
         }
 
-        return Account.loadFrom(eventStream.version, eventStream.events)
+        return Account.loadFrom(eventStream.events, id, eventStream.version)
     }
 
     fun findAll(): Set<Account> {

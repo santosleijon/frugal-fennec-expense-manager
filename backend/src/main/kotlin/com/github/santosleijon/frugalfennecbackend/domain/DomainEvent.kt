@@ -11,6 +11,7 @@ interface DomainEvent {
     val type: EventType
 
     enum class EventType {
-        AccountCreated
+        AccountCreated,
+        AccountNameUpdated
     }
 }
