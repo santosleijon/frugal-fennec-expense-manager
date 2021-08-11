@@ -18,21 +18,23 @@ class AccountRepository {
         return account
     }
 
-    fun findById(id: UUID): Account? {
+    fun findByIdOrNull(id: UUID): Account? {
         val eventStream = eventStore.loadStream(id)
 
         if (eventStream.events.isEmpty()) {
             return null
         }
 
-        return Account.loadFrom(eventStream.events, id, eventStream.version)
+        val account = Account.loadFrom(eventStream.events, id, eventStream.version)
+
+        if (account.deleted) {
+            return null
+        }
+
+        return account
     }
 
     fun findAll(): Set<Account> {
-        TODO()
-    }
-
-    fun delete(account: Account) {
         TODO()
     }
 }

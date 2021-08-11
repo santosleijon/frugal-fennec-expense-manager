@@ -1,5 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.domain.accounts
 
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.errors.AccountNotFoundError
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,8 +23,8 @@ internal class AccountResourceTest {
         val foundAccount = accountResource.get(newAccount.id)
 
         Assertions.assertThat(foundAccount).isNotNull
-        Assertions.assertThat(foundAccount?.id).isNotNull
-        Assertions.assertThat(foundAccount?.name).isEqualTo(accountName)
+        Assertions.assertThat(foundAccount.id).isNotNull
+        Assertions.assertThat(foundAccount.name).isEqualTo(accountName)
     }
 
     @Test
@@ -35,5 +36,15 @@ internal class AccountResourceTest {
 
         Assertions.assertThat(account.id).isEqualTo(updatedAccount?.id)
         Assertions.assertThat(updatedAccount?.name).isEqualTo(updatedName)
+    }
+
+    @Test
+    fun `An account can be deleted`() {
+        val createdAccount = accountResource.create("Account")
+        accountResource.delete(createdAccount.id)
+
+        Assertions.assertThatThrownBy {
+            accountResource.get(createdAccount.id)
+        }.isInstanceOf(AccountNotFoundError::class.java)
     }
 }

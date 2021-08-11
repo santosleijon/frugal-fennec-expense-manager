@@ -1,7 +1,8 @@
 package com.github.santosleijon.frugalfennecbackend.domain.accounts
 
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.CreateAccountCommand
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.UpdateAccountName
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.DeleteAccountCommand
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.UpdateAccountNameCommand
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.queries.GetAccountQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -19,7 +20,10 @@ class AccountResource {
     lateinit var getAccountQuery: GetAccountQuery
 
     @Autowired
-    lateinit var updateAccountName: UpdateAccountName
+    lateinit var updateAccountNameCommand: UpdateAccountNameCommand
+
+    @Autowired
+    lateinit var deleteAccountCommand: DeleteAccountCommand
 
     @PostMapping
     fun create(@RequestParam("name") name: String): Account {
@@ -30,12 +34,17 @@ class AccountResource {
     }
 
     @RequestMapping("/{id}")
-    fun get(@PathVariable(value="id") id: UUID): Account? {
+    fun get(@PathVariable(value="id") id: UUID): Account {
         return getAccountQuery.handle(id)
     }
 
     @RequestMapping("/{id}", method=[RequestMethod.PATCH])
     fun updateName(@PathVariable(value="id") id: UUID, @RequestParam("newName") newName: String): Account? {
-        return updateAccountName.handle(id, newName)
+        return updateAccountNameCommand.handle(id, newName)
+    }
+
+    @RequestMapping("/{id}", method=[RequestMethod.DELETE])
+    fun delete(@PathVariable(value="id") id: UUID) {
+        return deleteAccountCommand.handle(id)
     }
 }

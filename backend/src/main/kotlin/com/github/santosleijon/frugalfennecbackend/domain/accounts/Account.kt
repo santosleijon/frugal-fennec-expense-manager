@@ -3,6 +3,7 @@ package com.github.santosleijon.frugalfennecbackend.domain.accounts
 import com.github.santosleijon.frugalfennecbackend.domain.AggregateRoot
 import com.github.santosleijon.frugalfennecbackend.domain.DomainEvent
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountCreatedEvent
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountDeletedEvent
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountNameUpdatedEvent
 import java.util.*
 
@@ -11,6 +12,9 @@ class Account(
     version: Int,
 ) : AggregateRoot(id, version) {
     var name: String? = null
+        private set
+
+    var deleted: Boolean = false
         private set
 
     companion object {
@@ -50,6 +54,17 @@ class Account(
         return this
     }
 
+    fun delete(): Account {
+        this.apply(
+            AccountDeletedEvent(
+                id = this.id,
+                version = version+1
+            )
+        )
+
+        return this
+    }
+
     override fun mutate(event: DomainEvent) {
         when (event) {
             is AccountCreatedEvent -> {
@@ -57,6 +72,9 @@ class Account(
             }
             is AccountNameUpdatedEvent -> {
                 name = event.newName
+            }
+            is AccountDeletedEvent -> {
+                deleted = true
             }
         }
     }
