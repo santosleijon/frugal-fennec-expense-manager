@@ -12,6 +12,7 @@ interface DomainEvent {
 
     enum class EventType {
         AccountCreated,
-        AccountNameUpdated
+        AccountNameUpdated,
+        AccountDeleted,
     }
 }

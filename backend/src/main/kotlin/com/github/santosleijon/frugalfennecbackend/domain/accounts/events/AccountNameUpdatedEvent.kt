@@ -9,7 +9,7 @@ class AccountNameUpdatedEvent(
     override val version: Int,
     val newName: String,
 ) : DomainEvent {
-    override val type: DomainEvent.EventType = DomainEvent.EventType.AccountCreated
+    override val type: DomainEvent.EventType = DomainEvent.EventType.AccountNameUpdated
     override val eventId: UUID = UUID.randomUUID()
     override val aggregateId = id
     override val date: Instant = Instant.now()

@@ -8,7 +8,7 @@ class AccountDeletedEvent(
     id: UUID,
     override val version: Int,
 ) : DomainEvent {
-    override val type: DomainEvent.EventType = DomainEvent.EventType.AccountCreated
+    override val type: DomainEvent.EventType = DomainEvent.EventType.AccountDeleted
     override val eventId: UUID = UUID.randomUUID()
     override val aggregateId = id
     override val date: Instant = Instant.now()
