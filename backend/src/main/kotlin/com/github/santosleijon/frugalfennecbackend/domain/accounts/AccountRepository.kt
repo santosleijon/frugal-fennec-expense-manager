@@ -34,7 +34,21 @@ class AccountRepository {
         return account
     }
 
-    fun findAll(): Set<Account> {
-        TODO()
+    fun findAll(): List<Account> {
+        val eventStreams = eventStore.loadStreamsByAggregate(Account.aggregateName)
+
+        if (eventStreams.isEmpty()) {
+            return emptyList()
+        }
+
+        return eventStreams.map {
+            Account.loadFrom(
+                events = it.events,
+                id = it.events.first().aggregateId,
+                version = it.version
+            )
+        }.filterNot {
+            it.deleted
+        }
     }
 }

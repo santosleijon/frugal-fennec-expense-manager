@@ -4,6 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.Crea
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.DeleteAccountCommand
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.UpdateAccountNameCommand
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.queries.GetAccountQuery
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.queries.GetAllAccountQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -15,6 +16,9 @@ import java.util.*
 class AccountResource {
     @Autowired
     lateinit var createAccountCommand: CreateAccountCommand
+
+    @Autowired
+    lateinit var getAllAccounts: GetAllAccountQuery
 
     @Autowired
     lateinit var getAccountQuery: GetAccountQuery
@@ -31,6 +35,11 @@ class AccountResource {
             id = UUID.randomUUID(),
             name = name,
         )
+    }
+
+    @RequestMapping("/")
+    fun getAll(): List<Account> {
+        return getAllAccounts.handle()
     }
 
     @RequestMapping("/{id}")

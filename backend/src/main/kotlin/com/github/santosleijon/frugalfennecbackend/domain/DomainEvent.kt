@@ -5,14 +5,8 @@ import java.util.*
 
 interface DomainEvent {
     val eventId: UUID
+    val aggregateName: String
     val aggregateId: UUID
     val date: Instant
     val version: Int
-    val type: EventType
-
-    enum class EventType {
-        AccountCreated,
-        AccountNameUpdated,
-        AccountDeleted,
-    }
 }

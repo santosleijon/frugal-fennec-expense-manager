@@ -18,7 +18,9 @@ class Account(
         private set
 
     companion object {
-        fun loadFrom(events: Set<DomainEvent>, id: UUID, version: Int): Account {
+        const val aggregateName: String = "Account"
+
+        fun loadFrom(events: List<DomainEvent>, id: UUID, version: Int): Account {
             val newAccount = Account(id, version)
 
             for (event in events) {

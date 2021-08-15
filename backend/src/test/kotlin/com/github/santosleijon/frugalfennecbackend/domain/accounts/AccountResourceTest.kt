@@ -47,4 +47,31 @@ internal class AccountResourceTest {
             accountResource.get(createdAccount.id)
         }.isInstanceOf(AccountNotFoundError::class.java)
     }
+
+    @Test
+    fun `All accounts can be retrieved`() {
+        val account1 = accountResource.create("Account 1")
+        val account2 = accountResource.create("Account 2")
+        val account3 = accountResource.create("Account 3")
+        val createdAccounts = listOf(account1, account2, account3)
+
+        val retrievedAccounts = accountResource.getAll()
+
+        Assertions.assertThat(retrievedAccounts.containsAll(createdAccounts))
+    }
+
+    @Test
+    fun `Deleted accounts are not included when retrieving all accounts`() {
+        val account1 = accountResource.create("Account 1")
+        val account2 = accountResource.create("Account 2")
+        val account3 = accountResource.create("Account 3")
+        accountResource.delete(account1.id)
+
+        val retrievedAccounts = accountResource.getAll()
+
+        Assertions.assertThat(retrievedAccounts.any { it.id == account1.id }).isEqualTo(false)
+        Assertions.assertThat(retrievedAccounts.any { it.id == account2.id }).isEqualTo(true)
+        Assertions.assertThat(retrievedAccounts.any { it.id == account3.id }).isEqualTo(true)
+
+    }
 }
