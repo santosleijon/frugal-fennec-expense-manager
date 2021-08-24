@@ -1,5 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.domain.accounts
 
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.AddExpenseCommand
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.CreateAccountCommand
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.DeleteAccountCommand
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.commands.UpdateAccountNameCommand
@@ -8,6 +9,8 @@ import com.github.santosleijon.frugalfennecbackend.domain.accounts.queries.GetAl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import java.math.BigDecimal
+import java.time.Instant
 import java.util.*
 
 @Controller
@@ -28,6 +31,9 @@ class AccountResource {
 
     @Autowired
     lateinit var deleteAccountCommand: DeleteAccountCommand
+
+    @Autowired
+    lateinit var addExpenseCommand: AddExpenseCommand
 
     @PostMapping
     fun create(@RequestParam("name") name: String): Account {
@@ -55,5 +61,15 @@ class AccountResource {
     @RequestMapping("/{id}", method=[RequestMethod.DELETE])
     fun delete(@PathVariable(value="id") id: UUID) {
         return deleteAccountCommand.handle(id)
+    }
+
+    @RequestMapping("/{id}/expense", method=[RequestMethod.POST])
+    fun addExpense(
+        @PathVariable("id") id: UUID,
+        @RequestParam("date") date: Instant,
+        @RequestParam("description") description: String,
+        @RequestParam("amount") amount: BigDecimal,
+    ): Account? {
+        return addExpenseCommand.handle(id, date, description, amount)
     }
 }

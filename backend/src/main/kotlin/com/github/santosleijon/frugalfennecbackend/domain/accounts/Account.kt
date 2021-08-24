@@ -5,6 +5,7 @@ import com.github.santosleijon.frugalfennecbackend.domain.DomainEvent
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountCreatedEvent
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountDeletedEvent
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountNameUpdatedEvent
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.ExpenseAddedEvent
 import java.util.*
 
 class Account(
@@ -15,6 +16,9 @@ class Account(
         private set
 
     var deleted: Boolean = false
+        private set
+
+    var expenses: MutableList<Expense> = emptyList<Expense>().toMutableList()
         private set
 
     companion object {
@@ -67,6 +71,18 @@ class Account(
         return this
     }
 
+    fun addExpense(expense: Expense): Account {
+        this.apply(
+            ExpenseAddedEvent(
+                id = this.id,
+                version = version+1,
+                expense = expense,
+            )
+        )
+
+        return this
+    }
+
     override fun mutate(event: DomainEvent) {
         when (event) {
             is AccountCreatedEvent -> {
@@ -77,6 +93,9 @@ class Account(
             }
             is AccountDeletedEvent -> {
                 deleted = true
+            }
+            is ExpenseAddedEvent -> {
+                expenses.add(event.expense)
             }
         }
     }

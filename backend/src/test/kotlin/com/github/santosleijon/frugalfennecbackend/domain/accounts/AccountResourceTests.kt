@@ -5,9 +5,11 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
+import java.time.Instant
 
 @SpringBootTest
-internal class AccountResourceTest {
+internal class AccountResourceTests {
     @Autowired
     lateinit var accountResource: AccountResource
 
@@ -72,6 +74,27 @@ internal class AccountResourceTest {
         Assertions.assertThat(retrievedAccounts.any { it.id == account1.id }).isEqualTo(false)
         Assertions.assertThat(retrievedAccounts.any { it.id == account2.id }).isEqualTo(true)
         Assertions.assertThat(retrievedAccounts.any { it.id == account3.id }).isEqualTo(true)
+    }
 
+    @Test
+    fun `Add an expense to an account`() {
+        val account = accountResource.create("Account")
+
+        val date = Instant.now()
+        val description = "Expense description"
+        val amount = BigDecimal.valueOf(99.99)
+
+        accountResource.addExpense(
+            id = account.id,
+            date = date,
+            description = description,
+            amount = amount,
+        )
+
+        val updatedAccount = accountResource.get(account.id)
+
+        Assertions.assertThat(updatedAccount.expenses).contains(
+            Expense(account.id, date, description, amount)
+        )
     }
 }
