@@ -2,10 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.domain.accounts
 
 import com.github.santosleijon.frugalfennecbackend.domain.AggregateRoot
 import com.github.santosleijon.frugalfennecbackend.domain.DomainEvent
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountCreatedEvent
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountDeletedEvent
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.AccountNameUpdatedEvent
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.ExpenseAddedEvent
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.*
 import java.util.*
 
 class Account(
@@ -74,7 +71,19 @@ class Account(
     fun addExpense(expense: Expense): Account {
         this.apply(
             ExpenseAddedEvent(
-                id = this.id,
+                accountId = this.id,
+                version = version+1,
+                expense = expense,
+            )
+        )
+
+        return this
+    }
+
+    fun deleteExpense(expense: Expense): Account {
+        this.apply(
+            ExpenseDeletedEvent(
+                accountId = this.id,
                 version = version+1,
                 expense = expense,
             )
@@ -96,6 +105,9 @@ class Account(
             }
             is ExpenseAddedEvent -> {
                 expenses.add(event.expense)
+            }
+            is ExpenseDeletedEvent -> {
+                expenses.remove(event.expense)
             }
         }
     }

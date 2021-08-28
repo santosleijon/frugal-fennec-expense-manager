@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
 import java.time.Instant
+import java.util.*
 
 @SpringBootTest
 internal class AccountResourceTests {
@@ -80,21 +82,54 @@ internal class AccountResourceTests {
     fun `Add an expense to an account`() {
         val account = accountResource.create("Account")
 
-        val date = Instant.now()
-        val description = "Expense description"
-        val amount = BigDecimal.valueOf(99.99)
+        val testExpense = testExpense(account.id)
 
         accountResource.addExpense(
             id = account.id,
-            date = date,
-            description = description,
-            amount = amount,
+            date = testExpense.date,
+            description = testExpense.description,
+            amount = testExpense.amount,
         )
 
         val updatedAccount = accountResource.get(account.id)
 
         Assertions.assertThat(updatedAccount.expenses).contains(
-            Expense(account.id, date, description, amount)
+            Expense(account.id, testExpense.date, testExpense.description, testExpense.amount)
         )
     }
+
+    @Test
+    fun `Delete an expense from an account`() {
+        val account = accountResource.create("Account")
+
+        val testExpense = testExpense(account.id)
+
+        accountResource.addExpense(
+            id = account.id,
+            date = testExpense.date,
+            description = testExpense.description,
+            amount = testExpense.amount,
+        )
+
+        val accountBeforeDeletion = accountResource.get(account.id)
+        Assertions.assertThat(accountBeforeDeletion.expenses).contains(testExpense)
+
+        accountResource.deleteExpense(
+            id = account.id,
+            date = testExpense.date,
+            description = testExpense.description,
+            amount = testExpense.amount,
+        )
+
+        val accountAfterDeletion = accountResource.get(account.id)
+
+        Assertions.assertThat(accountAfterDeletion.expenses).doesNotContain(testExpense)
+    }
+
+    private fun testExpense(accountId: UUID) = Expense(
+        accountId = accountId,
+        date = SimpleDateFormat("yyyy-MM-dd").parse("2001-01-01").toInstant(),
+        description = "Expense description",
+        amount = BigDecimal.valueOf(99.99)
+    )
 }

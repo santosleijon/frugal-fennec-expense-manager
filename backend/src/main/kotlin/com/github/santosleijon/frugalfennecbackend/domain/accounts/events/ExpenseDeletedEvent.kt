@@ -6,7 +6,7 @@ import com.github.santosleijon.frugalfennecbackend.domain.accounts.Expense
 import java.time.Instant
 import java.util.*
 
-class ExpenseAddedEvent(
+class ExpenseDeletedEvent(
     accountId: UUID,
     override val version: Int,
     val expense: Expense,
