@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.domain
+package com.github.santosleijon.frugalfennecbackend
 
 import java.util.*
 

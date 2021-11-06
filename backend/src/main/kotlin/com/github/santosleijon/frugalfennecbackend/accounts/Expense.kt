@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.domain.accounts
+package com.github.santosleijon.frugalfennecbackend.accounts
 
 import java.math.BigDecimal
 import java.time.Instant

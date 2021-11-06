@@ -1,12 +1,14 @@
-package com.github.santosleijon.frugalfennecbackend.domain.accounts.events
+package com.github.santosleijon.frugalfennecbackend.accounts.events
 
-import com.github.santosleijon.frugalfennecbackend.domain.DomainEvent
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.Account
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.github.santosleijon.frugalfennecbackend.DomainEvent
+import com.github.santosleijon.frugalfennecbackend.accounts.Account
 import java.time.Instant
 import java.util.*
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 class AccountNameUpdatedEvent(
-    id: UUID,
+    val id: UUID,
     override val version: Int,
     val newName: String,
 ) : DomainEvent {

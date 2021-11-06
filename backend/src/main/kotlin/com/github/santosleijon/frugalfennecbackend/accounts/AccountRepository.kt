@@ -1,6 +1,6 @@
-package com.github.santosleijon.frugalfennecbackend.domain.accounts
+package com.github.santosleijon.frugalfennecbackend.accounts
 
-import com.github.santosleijon.frugalfennecbackend.domain.EventStore
+import com.github.santosleijon.frugalfennecbackend.EventStore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -35,7 +35,7 @@ class AccountRepository {
     }
 
     fun findAll(): List<Account> {
-        val eventStreams = eventStore.loadStreamsByAggregate(Account.aggregateName)
+        val eventStreams = eventStore.loadStreamsByAggregateName(Account.aggregateName)
 
         if (eventStreams.isEmpty()) {
             return emptyList()

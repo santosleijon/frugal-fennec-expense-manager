@@ -1,8 +1,8 @@
-package com.github.santosleijon.frugalfennecbackend.domain.accounts.commands
+package com.github.santosleijon.frugalfennecbackend.accounts.commands
 
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.Account
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.AccountRepository
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.errors.AccountNotFoundError
+import com.github.santosleijon.frugalfennecbackend.accounts.Account
+import com.github.santosleijon.frugalfennecbackend.accounts.AccountRepository
+import com.github.santosleijon.frugalfennecbackend.accounts.errors.AccountNotFoundError
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*

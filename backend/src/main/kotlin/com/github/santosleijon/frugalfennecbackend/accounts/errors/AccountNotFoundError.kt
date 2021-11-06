@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.domain.accounts.errors
+package com.github.santosleijon.frugalfennecbackend.accounts.errors
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
