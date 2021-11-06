@@ -53,7 +53,7 @@ internal class AccountResourceTests {
     @Test
     fun `A new account can be created and retrieved`() {
         val accountName = "Test account"
-        val newAccount = accountResource.create(AccountResource.CreateAccountCommandInputsDTO(accountName))
+        val newAccount = accountResource.create(AccountResource.CreateAccountInputsDTO(accountName))
 
         Assertions.assertThat(newAccount).isNotNull
         Assertions.assertThat(newAccount.id).isNotNull
@@ -68,10 +68,16 @@ internal class AccountResourceTests {
 
     @Test
     fun `An account name can be updated`() {
-        val account = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Original account name"))
+        val account = accountResource.create(AccountResource.CreateAccountInputsDTO("Original account name"))
 
         val updatedName = "Updated account name"
-        val updatedAccount = accountResource.updateName(account.id, updatedName)
+
+        val updateAccountNameInputsDTO = AccountResource.UpdateAccountNameInputsDTO(updatedName)
+
+        val updatedAccount = accountResource.updateName(
+            account.id,
+            updateAccountNameInputsDTO,
+        )
 
         Assertions.assertThat(account.id).isEqualTo(updatedAccount?.id)
         Assertions.assertThat(updatedAccount?.name).isEqualTo(updatedName)
@@ -79,7 +85,7 @@ internal class AccountResourceTests {
 
     @Test
     fun `An account can be deleted`() {
-        val createdAccount = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account"))
+        val createdAccount = accountResource.create(AccountResource.CreateAccountInputsDTO("Account"))
         accountResource.delete(createdAccount.id)
 
         Assertions.assertThatThrownBy {
@@ -89,9 +95,9 @@ internal class AccountResourceTests {
 
     @Test
     fun `All accounts can be retrieved`() {
-        val account1 = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account 1"))
-        val account2 = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account 2"))
-        val account3 = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account 3"))
+        val account1 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 1"))
+        val account2 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 2"))
+        val account3 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 3"))
         val createdAccounts = listOf(account1, account2, account3)
 
         val retrievedAccounts = accountResource.getAll()
@@ -101,9 +107,9 @@ internal class AccountResourceTests {
 
     @Test
     fun `Deleted accounts are not included when retrieving all accounts`() {
-        val account1 = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account 1"))
-        val account2 = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account 2"))
-        val account3 = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account 3"))
+        val account1 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 1"))
+        val account2 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 2"))
+        val account3 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 3"))
         accountResource.delete(account1.id)
 
         val retrievedAccounts = accountResource.getAll()
@@ -115,15 +121,13 @@ internal class AccountResourceTests {
 
     @Test
     fun `Add an expense to an account`() {
-        val account = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account"))
+        val account = accountResource.create(AccountResource.CreateAccountInputsDTO("Account"))
 
         val testExpense = testExpense(account.id)
 
         accountResource.addExpense(
             id = account.id,
-            date = testExpense.date,
-            description = testExpense.description,
-            amount = testExpense.amount,
+            testExpense.toExpenseInputsDTO(),
         )
 
         val updatedAccount = accountResource.get(account.id)
@@ -135,15 +139,13 @@ internal class AccountResourceTests {
 
     @Test
     fun `Delete an expense from an account`() {
-        val account = accountResource.create(AccountResource.CreateAccountCommandInputsDTO("Account"))
+        val account = accountResource.create(AccountResource.CreateAccountInputsDTO("Account"))
 
         val testExpense = testExpense(account.id)
 
         accountResource.addExpense(
             id = account.id,
-            date = testExpense.date,
-            description = testExpense.description,
-            amount = testExpense.amount,
+            testExpense.toExpenseInputsDTO(),
         )
 
         val accountBeforeDeletion = accountResource.get(account.id)
@@ -151,9 +153,7 @@ internal class AccountResourceTests {
 
         accountResource.deleteExpense(
             id = account.id,
-            date = testExpense.date,
-            description = testExpense.description,
-            amount = testExpense.amount,
+            testExpense.toExpenseInputsDTO(),
         )
 
         val accountAfterDeletion = accountResource.get(account.id)
@@ -167,4 +167,12 @@ internal class AccountResourceTests {
         description = "Expense description",
         amount = BigDecimal.valueOf(99.99)
     )
+
+    private fun Expense.toExpenseInputsDTO(): AccountResource.ExpenseInputsDTO {
+        return AccountResource.ExpenseInputsDTO(
+            date,
+            description,
+            amount,
+        )
+    }
 }

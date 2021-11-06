@@ -22,17 +22,17 @@ class AccountResource @Autowired constructor(
     private val addExpenseCommand: AddExpenseCommand,
     private val deleteExpenseCommand: DeleteExpenseCommand,
 ) {
-    data class CreateAccountCommandInputsDTO (
-        val name: String,
-   )
-
     @PostMapping("/", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun create(@RequestBody(required = true) createAccountCommandInputsDTO: CreateAccountCommandInputsDTO): Account {
+    fun create(@RequestBody(required = true) createAccountInputsDTO: CreateAccountInputsDTO): Account {
         return createAccountCommand.handle(
             id = UUID.randomUUID(),
-            name = createAccountCommandInputsDTO.name,
+            name = createAccountInputsDTO.name,
         )
     }
+
+    data class CreateAccountInputsDTO(
+        val name: String,
+    )
 
     @GetMapping
     fun getAll(): List<Account> {
@@ -40,37 +40,56 @@ class AccountResource @Autowired constructor(
     }
 
     @RequestMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun get(@PathVariable(value="id") id: UUID): Account {
+    fun get(@PathVariable(value = "id") id: UUID): Account {
         return getAccountQuery.handle(id)
     }
 
     @PatchMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun updateName(@PathVariable(value="id") id: UUID, @RequestParam("newName") newName: String): Account? {
-        return updateAccountNameCommand.handle(id, newName)
+    fun updateName(
+        @PathVariable(value = "id") id: UUID,
+        @RequestBody(required = true) updateAccountNameInputsDTO: UpdateAccountNameInputsDTO,
+    ): Account? {
+        return updateAccountNameCommand.handle(id, updateAccountNameInputsDTO.newName)
     }
 
+    data class UpdateAccountNameInputsDTO(
+        val newName: String,
+    )
+
     @DeleteMapping("{id}")
-    fun delete(@PathVariable(value="id") id: UUID) {
+    fun delete(@PathVariable(value = "id") id: UUID) {
         return deleteAccountCommand.handle(id)
     }
 
     @PostMapping("{id}/expense", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun addExpense(
         @PathVariable("id") id: UUID,
-        @RequestParam("date") date: Instant,
-        @RequestParam("description") description: String,
-        @RequestParam("amount") amount: BigDecimal,
+        @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
     ): Account? {
-        return addExpenseCommand.handle(id, date, description, amount)
+        return addExpenseCommand.handle(
+            id,
+            expenseInputsDTO.date,
+            expenseInputsDTO.description,
+            expenseInputsDTO.amount
+        )
     }
+
+    data class ExpenseInputsDTO(
+        val date: Instant,
+        val description: String,
+        val amount: BigDecimal,
+    )
 
     @DeleteMapping("{id}/expense", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteExpense(
         @PathVariable("id") id: UUID,
-        @RequestParam("date") date: Instant,
-        @RequestParam("description") description: String,
-        @RequestParam("amount") amount: BigDecimal,
+        @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
     ): Account? {
-        return deleteExpenseCommand.handle(id, date, description, amount)
+        return deleteExpenseCommand.handle(
+            id,
+            expenseInputsDTO.date,
+            expenseInputsDTO.description,
+            expenseInputsDTO.amount,
+        )
     }
 }
