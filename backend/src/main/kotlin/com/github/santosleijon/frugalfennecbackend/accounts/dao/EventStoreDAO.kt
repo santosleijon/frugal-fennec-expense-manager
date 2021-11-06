@@ -54,7 +54,7 @@ class EventStoreDAO @Autowired constructor(
             "event_id" to event.eventId,
             "aggregate_name" to event.aggregateName,
             "aggregate_id" to event.aggregateId,
-            "event_date" to event.date.toZuluLocalDate(),
+            "event_date" to event.date.toZuluLocalDateTime(),
             "version" to event.version,
             "data" to objectMapper.writeValueAsString(event),
         )
