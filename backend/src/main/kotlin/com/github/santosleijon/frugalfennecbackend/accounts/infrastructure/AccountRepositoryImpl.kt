@@ -1,16 +1,18 @@
-package com.github.santosleijon.frugalfennecbackend.accounts
+package com.github.santosleijon.frugalfennecbackend.accounts.infrastructure
 
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.eventsourcing.EventStore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class AccountRepository {
-    @Autowired
-    lateinit var eventStore: EventStore
-
-    fun save(account: Account): Account {
+@Suppress("unused")
+class AccountRepositoryImpl @Autowired constructor(
+    private val eventStore: EventStore
+): AccountRepository {
+    override fun save(account: Account): Account {
         account.pendingEvents.forEach {
             eventStore.append(it)
         }
@@ -18,7 +20,7 @@ class AccountRepository {
         return account
     }
 
-    fun findByIdOrNull(id: UUID): Account? {
+    override fun findByIdOrNull(id: UUID): Account? {
         val eventStream = eventStore.loadStream(id)
 
         if (eventStream.events.isEmpty()) {
@@ -34,7 +36,7 @@ class AccountRepository {
         return account
     }
 
-    fun findAll(): List<Account> {
+    override fun findAll(): List<Account> {
         val eventStreams = eventStore.loadStreamsByAggregateName(Account.aggregateName)
 
         if (eventStreams.isEmpty()) {

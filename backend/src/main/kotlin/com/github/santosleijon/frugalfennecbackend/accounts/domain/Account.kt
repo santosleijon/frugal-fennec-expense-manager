@@ -1,7 +1,7 @@
-package com.github.santosleijon.frugalfennecbackend.accounts
+package com.github.santosleijon.frugalfennecbackend.accounts.domain
 
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.events.*
 import com.github.santosleijon.frugalfennecbackend.aggregates.AggregateRoot
-import com.github.santosleijon.frugalfennecbackend.accounts.events.*
 import com.github.santosleijon.frugalfennecbackend.eventsourcing.DomainEvent
 import java.util.*
 
