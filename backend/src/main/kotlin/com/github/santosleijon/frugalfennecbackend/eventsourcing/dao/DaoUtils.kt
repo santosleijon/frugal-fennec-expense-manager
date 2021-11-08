@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.accounts.dao
+package com.github.santosleijon.frugalfennecbackend.eventsourcing.dao
 
 import java.time.Instant
 import java.time.LocalDateTime

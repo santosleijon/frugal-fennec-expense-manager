@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.accounts.commands
+package com.github.santosleijon.frugalfennecbackend.accounts.application.commands
 
 import com.github.santosleijon.frugalfennecbackend.accounts.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.AccountRepository
@@ -11,22 +11,22 @@ import java.time.Instant
 import java.util.*
 
 @Component
-class AddExpenseCommand {
+class DeleteExpenseCommand {
     @Autowired
     lateinit var accountRepository: AccountRepository
 
     fun handle(
-        id: UUID,
+        accountId: UUID,
         date: Instant,
         description: String,
         amount: BigDecimal,
     ): Account {
-        val account = accountRepository.findByIdOrNull(id)
-            ?: throw AccountNotFoundError(id)
+        val account = accountRepository.findByIdOrNull(accountId)
+            ?: throw AccountNotFoundError(accountId)
 
-        val expense = Expense(id, date, description, amount)
+        val expense = Expense(accountId, date, description, amount)
 
-        account.addExpense(expense)
+        account.deleteExpense(expense)
 
         return accountRepository.save(account)
     }

@@ -1,5 +1,6 @@
-package com.github.santosleijon.frugalfennecbackend
+package com.github.santosleijon.frugalfennecbackend.aggregates
 
+import com.github.santosleijon.frugalfennecbackend.eventsourcing.DomainEvent
 import java.util.*
 
 abstract class AggregateRoot(

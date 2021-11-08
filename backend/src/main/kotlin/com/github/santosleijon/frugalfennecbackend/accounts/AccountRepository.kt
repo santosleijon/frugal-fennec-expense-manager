@@ -1,6 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.accounts
 
-import com.github.santosleijon.frugalfennecbackend.EventStore
+import com.github.santosleijon.frugalfennecbackend.eventsourcing.EventStore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.*

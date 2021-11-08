@@ -1,8 +1,9 @@
-package com.github.santosleijon.frugalfennecbackend.accounts
+package com.github.santosleijon.frugalfennecbackend.accounts.application.api
 
-import com.github.santosleijon.frugalfennecbackend.accounts.commands.*
-import com.github.santosleijon.frugalfennecbackend.accounts.queries.GetAccountQuery
-import com.github.santosleijon.frugalfennecbackend.accounts.queries.GetAllAccountQuery
+import com.github.santosleijon.frugalfennecbackend.accounts.Account
+import com.github.santosleijon.frugalfennecbackend.accounts.application.commands.*
+import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAccountQuery
+import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAllAccountQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*

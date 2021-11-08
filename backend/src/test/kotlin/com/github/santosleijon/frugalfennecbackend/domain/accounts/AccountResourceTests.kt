@@ -1,6 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.domain.accounts
 
-import com.github.santosleijon.frugalfennecbackend.accounts.AccountResource
+import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
 import com.github.santosleijon.frugalfennecbackend.accounts.Expense
 import com.github.santosleijon.frugalfennecbackend.accounts.errors.AccountNotFoundError
 import org.assertj.core.api.Assertions

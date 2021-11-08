@@ -1,5 +1,6 @@
-package com.github.santosleijon.frugalfennecbackend.accounts.commands
+package com.github.santosleijon.frugalfennecbackend.accounts.application.commands
 
+import com.github.santosleijon.frugalfennecbackend.accounts.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.errors.AccountNotFoundError
 import org.springframework.beans.factory.annotation.Autowired
@@ -7,16 +8,19 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class DeleteAccountCommand {
+class UpdateAccountNameCommand {
     @Autowired
     lateinit var accountRepository: AccountRepository
 
-    fun handle(id: UUID) {
+    fun handle(
+        id: UUID,
+        newName: String,
+    ): Account {
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 
-        account.delete()
+        account.setName(newName)
 
-        accountRepository.save(account)
+        return accountRepository.save(account)
     }
 }

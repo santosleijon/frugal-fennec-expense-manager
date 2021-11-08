@@ -1,7 +1,7 @@
 package com.github.santosleijon.frugalfennecbackend.accounts.events
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.github.santosleijon.frugalfennecbackend.DomainEvent
+import com.github.santosleijon.frugalfennecbackend.eventsourcing.DomainEvent
 import com.github.santosleijon.frugalfennecbackend.accounts.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.Expense
 import java.time.Instant

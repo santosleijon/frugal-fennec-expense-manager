@@ -1,6 +1,6 @@
-package com.github.santosleijon.frugalfennecbackend
+package com.github.santosleijon.frugalfennecbackend.eventsourcing
 
-import com.github.santosleijon.frugalfennecbackend.accounts.dao.EventStoreDAO
+import com.github.santosleijon.frugalfennecbackend.eventsourcing.dao.EventStoreDAO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*

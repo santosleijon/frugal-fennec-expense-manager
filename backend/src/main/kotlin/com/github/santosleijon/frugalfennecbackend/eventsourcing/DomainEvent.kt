@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend
+package com.github.santosleijon.frugalfennecbackend.eventsourcing
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import java.time.Instant

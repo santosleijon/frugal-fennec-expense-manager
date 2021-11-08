@@ -1,8 +1,8 @@
 package com.github.santosleijon.frugalfennecbackend.accounts
 
-import com.github.santosleijon.frugalfennecbackend.AggregateRoot
+import com.github.santosleijon.frugalfennecbackend.aggregates.AggregateRoot
 import com.github.santosleijon.frugalfennecbackend.accounts.events.*
-import com.github.santosleijon.frugalfennecbackend.DomainEvent
+import com.github.santosleijon.frugalfennecbackend.eventsourcing.DomainEvent
 import java.util.*
 
 class Account(

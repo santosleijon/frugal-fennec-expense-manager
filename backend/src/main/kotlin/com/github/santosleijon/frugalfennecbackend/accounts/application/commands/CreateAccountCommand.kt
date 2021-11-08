@@ -1,26 +1,21 @@
-package com.github.santosleijon.frugalfennecbackend.accounts.commands
+package com.github.santosleijon.frugalfennecbackend.accounts.application.commands
 
 import com.github.santosleijon.frugalfennecbackend.accounts.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.AccountRepository
-import com.github.santosleijon.frugalfennecbackend.accounts.errors.AccountNotFoundError
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class UpdateAccountNameCommand {
+class CreateAccountCommand {
     @Autowired
     lateinit var accountRepository: AccountRepository
 
     fun handle(
         id: UUID,
-        newName: String,
+        name: String,
     ): Account {
-        val account = accountRepository.findByIdOrNull(id)
-            ?: throw AccountNotFoundError(id)
-
-        account.setName(newName)
-
-        return accountRepository.save(account)
+        val newAccount = Account(id, name)
+        return accountRepository.save(newAccount)
     }
 }

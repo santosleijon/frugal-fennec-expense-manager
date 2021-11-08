@@ -1,7 +1,7 @@
-package com.github.santosleijon.frugalfennecbackend.accounts.dao
+package com.github.santosleijon.frugalfennecbackend.eventsourcing.dao
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.santosleijon.frugalfennecbackend.DomainEvent
+import com.github.santosleijon.frugalfennecbackend.eventsourcing.DomainEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
