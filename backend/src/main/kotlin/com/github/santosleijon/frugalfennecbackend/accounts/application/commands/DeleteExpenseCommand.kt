@@ -24,7 +24,7 @@ class DeleteExpenseCommand {
         val account = accountRepository.findByIdOrNull(accountId)
             ?: throw AccountNotFoundError(accountId)
 
-        val expense = Expense(accountId, date, description, amount)
+        val expense = Expense(date, description, amount)
 
         account.deleteExpense(expense)
 

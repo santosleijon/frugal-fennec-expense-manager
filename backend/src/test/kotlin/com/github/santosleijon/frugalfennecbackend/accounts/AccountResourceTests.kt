@@ -17,7 +17,6 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import java.math.BigDecimal
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
-import java.util.*
 
 @SpringBootTest
 @Testcontainers
@@ -123,7 +122,7 @@ internal class AccountResourceTests {
     fun `Add an expense to an account`() {
         val account = accountResource.create(AccountResource.CreateAccountInputsDTO("Account"))
 
-        val testExpense = testExpense(account.id)
+        val testExpense = testExpense()
 
         accountResource.addExpense(
             id = account.id,
@@ -133,7 +132,7 @@ internal class AccountResourceTests {
         val updatedAccount = accountResource.get(account.id)
 
         Assertions.assertThat(updatedAccount.expenses).contains(
-            Expense(account.id, testExpense.date, testExpense.description, testExpense.amount)
+            Expense(testExpense.date, testExpense.description, testExpense.amount)
         )
     }
 
@@ -141,7 +140,7 @@ internal class AccountResourceTests {
     fun `Delete an expense from an account`() {
         val account = accountResource.create(AccountResource.CreateAccountInputsDTO("Account"))
 
-        val testExpense = testExpense(account.id)
+        val testExpense = testExpense()
 
         accountResource.addExpense(
             id = account.id,
@@ -161,8 +160,7 @@ internal class AccountResourceTests {
         Assertions.assertThat(accountAfterDeletion.expenses).doesNotContain(testExpense)
     }
 
-    private fun testExpense(accountId: UUID) = Expense(
-        accountId = accountId,
+    private fun testExpense() = Expense(
         date = SimpleDateFormat("yyyy-MM-dd").parse("2001-01-01").toInstant(),
         description = "Expense description",
         amount = BigDecimal.valueOf(99.99)

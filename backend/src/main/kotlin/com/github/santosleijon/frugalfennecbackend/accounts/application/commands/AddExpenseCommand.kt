@@ -24,7 +24,7 @@ class AddExpenseCommand {
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 
-        val expense = Expense(id, date, description, amount)
+        val expense = Expense(date, description, amount)
 
         account.addExpense(expense)
 
