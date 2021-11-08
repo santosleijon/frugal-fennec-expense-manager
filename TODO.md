@@ -10,9 +10,9 @@
 
 #### Technical details
 
-* Use persistent PostgreSQL database.
 * Use projections for Account entity instead of always retrieving aggregate from replayed events.
 * Use end-to-end BDD testing (if possible).
+* ~~Use persistent PostgreSQL database.~~
 
 ### v1.1.0
 
@@ -21,5 +21,7 @@
 * Create and manage budgets.
 
 ### v1.2.0
+
+#### Features
 
 * Sign in using Google account.
