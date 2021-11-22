@@ -1,3 +1,4 @@
+
 # Frugal Fennec TODOs
 
 ### v1.0.0
@@ -10,7 +11,7 @@
 
 #### Technical details
 
-* Use projections for Account entity instead of always retrieving aggregate from replayed events.
+* ~~Use projections for Account entity instead of always retrieving aggregate from replayed events.~~
 * Use end-to-end BDD testing (if possible).
 * ~~Use persistent PostgreSQL database.~~
 
