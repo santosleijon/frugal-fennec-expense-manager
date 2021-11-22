@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class DeleteAccountCommand {
-    @Autowired
-    lateinit var accountRepository: AccountRepository
-
+class DeleteAccountCommand @Autowired constructor(
+    private val accountRepository: AccountRepository
+) {
     fun handle(id: UUID) {
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)

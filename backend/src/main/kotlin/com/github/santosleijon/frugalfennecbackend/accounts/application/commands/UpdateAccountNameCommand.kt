@@ -8,10 +8,9 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class UpdateAccountNameCommand {
-    @Autowired
-    lateinit var accountRepository: AccountRepository
-
+class UpdateAccountNameCommand @Autowired constructor(
+    private val accountRepository: AccountRepository,
+) {
     fun handle(
         id: UUID,
         newName: String,

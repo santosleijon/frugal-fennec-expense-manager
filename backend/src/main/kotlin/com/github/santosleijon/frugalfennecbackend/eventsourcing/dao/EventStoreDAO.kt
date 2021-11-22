@@ -7,49 +7,30 @@ import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
+import java.util.*
 
 @Component
 class EventStoreDAO @Autowired constructor(
     private val template: NamedParameterJdbcTemplate,
     private val objectMapper: ObjectMapper,
 ) {
-    fun findAll(): MutableList<DomainEvent> {
-        return template.query("""
-            SELECT
-                  event_id,
-                  aggregate_name,
-                  aggregate_id,
-                  event_date,
-                  version,
-                  data
-            FROM
-                event_store
-        """.trimIndent(), EventMapping(objectMapper)
-        )
-    }
-
-    fun findByAggregateName(aggregateName: String): MutableList<DomainEvent> {
+    fun findByAggregateId(aggregateId: UUID): MutableList<DomainEvent> {
         val paramMap: Map<String, Any> = mapOf(
-            "aggregate_name" to aggregateName,
+            "aggregate_id" to aggregateId,
         )
 
         return template.query("""
             SELECT
-                  event_id,
-                  aggregate_name,
-                  aggregate_id,
-                  event_date,
-                  version,
-                  data
+                data
             FROM
                 event_store
             WHERE
-                aggregate_name = :aggregate_name
+                aggregate_id = :aggregate_id
         """.trimIndent(), paramMap, EventMapping(objectMapper)
         )
     }
 
-    fun add(event: DomainEvent) {
+    fun insert(event: DomainEvent) {
         val paramMap: Map<String, Any> = mapOf(
             "event_id" to event.eventId,
             "aggregate_name" to event.aggregateName,

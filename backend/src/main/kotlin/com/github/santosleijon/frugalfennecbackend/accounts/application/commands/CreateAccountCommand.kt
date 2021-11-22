@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class CreateAccountCommand {
-    @Autowired
-    lateinit var accountRepository: AccountRepository
-
+class CreateAccountCommand @Autowired constructor(
+    private val accountRepository: AccountRepository
+) {
     fun handle(
         id: UUID,
         name: String,

@@ -11,10 +11,9 @@ import java.time.Instant
 import java.util.*
 
 @Component
-class AddExpenseCommand {
-    @Autowired
-    lateinit var accountRepository: AccountRepository
-
+class AddExpenseCommand @Autowired constructor(
+    private val accountRepository: AccountRepository,
+) {
     fun handle(
         id: UUID,
         date: Instant,

@@ -10,7 +10,7 @@ import java.util.*
 @Repository
 @Suppress("unused")
 class AccountRepositoryImpl @Autowired constructor(
-    private val eventStore: EventStore
+    private val eventStore: EventStore,
 ): AccountRepository {
     override fun save(account: Account): Account {
         account.pendingEvents.forEach {
@@ -34,23 +34,5 @@ class AccountRepositoryImpl @Autowired constructor(
         }
 
         return account
-    }
-
-    override fun findAll(): List<Account> {
-        val eventStreams = eventStore.loadStreamsByAggregateName(Account.aggregateName)
-
-        if (eventStreams.isEmpty()) {
-            return emptyList()
-        }
-
-        return eventStreams.map {
-            Account.loadFrom(
-                events = it.events,
-                id = it.events.first().aggregateId,
-                version = it.version
-            )
-        }.filterNot {
-            it.deleted
-        }
     }
 }

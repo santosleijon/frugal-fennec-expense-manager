@@ -3,6 +3,7 @@ package com.github.santosleijon.frugalfennecbackend.accounts
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.AccountNotFoundError
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.toAccountProjection
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,13 +29,14 @@ internal class AccountResourceTests {
     companion object {
         private val dbImage = ImageFromDockerfile().withFileFromPath(".", Paths.get("./db/."))
 
+        private const val TEST_DB_EXPOSED_PORT = 5432
         private const val TEST_DB_NAME = "frugal_fennec"
         private const val TEST_DB_USER = "frugal_fennec"
         private const val TEST_DB_PASSWORD = "frugal_fennec"
 
         @Container
         private val dbContainer = (GenericContainer<Nothing>(dbImage) as GenericContainer<*>)
-            .withExposedPorts(5432)
+            .withExposedPorts(TEST_DB_EXPOSED_PORT)
             .waitingFor(
                 Wait.forLogMessage(".*PostgreSQL init process complete; ready for start up.*\\n", 1)
             )
@@ -97,7 +99,7 @@ internal class AccountResourceTests {
         val account1 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 1"))
         val account2 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 2"))
         val account3 = accountResource.create(AccountResource.CreateAccountInputsDTO("Account 3"))
-        val createdAccounts = listOf(account1, account2, account3)
+        val createdAccounts = listOf(account1, account2, account3).map { it.toAccountProjection() }
 
         val retrievedAccounts = accountResource.getAll()
 

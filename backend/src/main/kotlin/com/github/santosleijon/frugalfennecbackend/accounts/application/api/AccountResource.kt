@@ -4,6 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.application.commands.*
 import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAccountQuery
 import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAllAccountsQuery
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
@@ -36,12 +37,12 @@ class AccountResource @Autowired constructor(
     )
 
     @GetMapping
-    fun getAll(): List<Account> {
+    fun getAll(): List<AccountProjection> {
         return getAllAccounts.handle()
     }
 
     @RequestMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun get(@PathVariable(value = "id") id: UUID): Account {
+    fun get(@PathVariable(value = "id") id: UUID): AccountProjection {
         return getAccountQuery.handle(id)
     }
 
