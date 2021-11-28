@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { Button, Card, CardContent } from "@material-ui/core";
-import { DataGrid, GridRowId, GridColDef } from "@material-ui/data-grid";
-import { Expense } from "../types";
-import './index.css'
+import { DataGrid, GridColDef, GridRowId } from "@material-ui/data-grid";
+import * as React from 'react';
+import { Expense } from "../../types/Expense";
+import './index.css';
 
 interface ExpensesDataGridProps {
     expenses: Expense[]

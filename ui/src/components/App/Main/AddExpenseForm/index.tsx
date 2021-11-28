@@ -1,6 +1,7 @@
 import { Button, Card, CardContent, FormControl, MenuItem, TextField } from "@material-ui/core"
 import { useState } from "react"
-import { Account, Expense } from "../types"
+import { Account } from "../../types/Account"
+import { Expense } from "../../types/Expense"
 import './index.css'
 
 interface AddExpenseFormProps {

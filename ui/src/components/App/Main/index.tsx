@@ -1,8 +1,9 @@
 import ExpensesDataGrid from "./ExpensesDataGrid"
-import { Account, Expense } from "./types"
 import './index.css'
 import { useState } from "react"
 import AddExpenseForm from "./AddExpenseForm"
+import { Account } from "../types/Account"
+import { Expense } from "../types/Expense"
   
 export default function Main() {
   const ACCOUNTS = new Map<number, Account>([

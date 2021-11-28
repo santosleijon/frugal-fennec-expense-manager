@@ -1,7 +1,4 @@
-export interface Account {
-  number: number
-  name?: string
-}
+import { Account } from "./Account";
 
 export interface Expense {
   id: number
