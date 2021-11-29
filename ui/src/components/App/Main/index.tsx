@@ -2,14 +2,14 @@ import ExpensesDataGrid from "./ExpensesDataGrid"
 import './index.css'
 import { useState } from "react"
 import AddExpenseForm from "./AddExpenseForm"
-import { Account } from "../types/Account"
-import { Expense } from "../types/Expense"
+import { Account } from "../../../types/Account"
+import { Expense } from "../../../types/Expense"
   
 export default function Main() {
   const ACCOUNTS = new Map<number, Account>([
-    [3400, { number: 3400, name: "Bread" }],
-    [3300, { number: 3300, name: "Dairy" }],
-    [3800, { number: 3800, name: "Root fruits" }],
+    [3400, { id: "3400", name: "Bread" }],
+    [3300, { id: "3300", name: "Dairy" }],
+    [3800, { id: "3800", name: "Root fruits" }],
   ])
 
   const accountsList: Account[] = []
@@ -39,6 +39,7 @@ export default function Main() {
 
       <ExpensesDataGrid
         expenses={expenses}
+        accounts={accountsList}
         onDeleteExpenses={onDeleteExpenses}
       />
     </div>

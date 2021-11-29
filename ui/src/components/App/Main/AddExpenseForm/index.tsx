@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, FormControl, MenuItem, TextField } from "@material-ui/core"
 import { useState } from "react"
-import { Account } from "../../types/Account"
-import { Expense } from "../../types/Expense"
+import { Account } from "../../../../types/Account"
+import { Expense } from "../../../../types/Expense"
 import './index.css'
 
 interface AddExpenseFormProps {
@@ -13,7 +13,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
 
   const initialFormValues = {
     date: new Date().toLocaleDateString(),
-    account: props.accounts.find(e => true)?.number,
+    account: props.accounts.find(e => true)?.id,
     description: "",
     amount: "0.00",
   }
@@ -27,7 +27,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
 
   const [errors, setErrors] = useState(initialErrors)
 
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const date = event.target.value
 
     if (date) {
@@ -35,15 +35,14 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
     }
   }
 
-  const handleAccountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, account: +event.target.value })
+  const onAccountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, account: event.target.value })
   }
-
-  const handleAmountChange = (event: any) => {
+  const onAmountChanged = (event: any) => {
     setValues({ ...values, amount: event.target.value})
   }
 
-  const handleAmountBlur = (event: any) => {
+  const onAmountBlur = (_: any) => {
     const integerRegex = /^-?\d{1,64}$/g
     const amountRegex = /^-?\d{1,64}.\d{2}$/g
     
@@ -59,7 +58,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
     }
   }
   
-  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const descriptionRegex = /^.{0,255}$/g
 
     if (!event.target.value.match(descriptionRegex)) {
@@ -70,7 +69,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
     }
   }
 
-  const handleSubmit = (event: any) => {
+  const onSubmit = (event: any) => {
     event.preventDefault()
 
     const noValidationErrors = Object.values(errors).every((error) => error === "")
@@ -80,7 +79,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
       const newExpense: Expense = {
         id: 0,
         date: values.date,
-        account: props.accounts.find(a => a.number === values.account)!,
+        account: props.accounts.find(a => a.id === values.account)!,
         description: values.description,
         amount: +values.amount,
       }
@@ -98,75 +97,75 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
   return (
     <Card>
       <CardContent>
-        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+        <form noValidate autoComplete="off" onSubmit={onSubmit}>
           <h3>Add expense</h3>
           
           <FormControl variant="outlined">
               <div className="addExpenseForm">
-              <TextField
-                  id="date-field"
-                  label="Date"
-                  type="date"
-                  value={values.date}
-                  InputLabelProps={{
-                  shrink: true,
-                  }}
-                  variant="outlined"
-                  onChange={handleDateChange}
-                  className="inputField"
-              />
+                <TextField
+                    id="date-field"
+                    label="Date"
+                    type="date"
+                    value={values.date}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
+                    variant="outlined"
+                    onChange={onDateChange}
+                    className="inputField"
+                />
 
-              <TextField
-                  id="account-field"
-                  select
-                  label="Account"
-                  value={values.account}
-                  variant="outlined"
-                  onChange={handleAccountChange}
-                  className="inputField"
-              >
+                <TextField
+                    id="account-field"
+                    select
+                    label="Account"
+                    value={values.account}
+                    variant="outlined"
+                    onChange={onAccountChange}
+                    className="inputField"
+                >
                   {props.accounts.map((account) => (
-                  <MenuItem key={account.number} value={account.number}>
-                      {account.number} - {account.name}
+                  <MenuItem key={account.id} value={account.id}>
+                      {account.name}
                   </MenuItem>
                   ))}
-              </TextField>
-              
-              <TextField
-                  id="description-field"
-                  label="Description"
-                  value={values.description}
-                  className="inputField"
-                  onChange={handleDescriptionChange}
-                  error={errors.description !== ""}
-                  variant="outlined"
-                  helperText={errors.description}
-                  InputLabelProps={{
-                  shrink: true,
-                  }}
-              />
-              
-              <TextField
-                  id="amount-field"
-                  label="Amount"
-                  value={values.amount}
-                  onBlur={handleAmountBlur}
-                  onChange={handleAmountChange}
-                  variant="outlined"
-                  className="inputField"
-                  error={errors.amount !== ""}
-                  helperText={errors.amount}
-              /> 
+                </TextField>
+                
+                <TextField
+                    id="description-field"
+                    label="Description"
+                    value={values.description}
+                    className="inputField"
+                    onChange={onDescriptionChange}
+                    error={errors.description !== ""}
+                    variant="outlined"
+                    helperText={errors.description}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
+                />
+                
+                <TextField
+                    id="amount-field"
+                    label="Amount"
+                    value={values.amount}
+                    onBlur={onAmountBlur}
+                    onChange={onAmountChanged}
+                    variant="outlined"
+                    className="inputField"
+                    error={errors.amount !== ""}
+                    helperText={errors.amount}
+                /> 
 
-              <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  className="submitButton"
-                  type="submit"
-              >
-                  Add
-              </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    className="submitButton"
+                    type="submit"
+                >
+                    Add
+                </Button>
               </div>
           </FormControl>
         </form>

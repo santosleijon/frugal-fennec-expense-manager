@@ -1,15 +1,52 @@
-import { Button, Card, CardContent } from "@material-ui/core";
-import { DataGrid, GridColDef, GridRowId } from "@material-ui/data-grid";
+import { Button, Card, CardContent, FormControl, FormHelperText, MenuItem } from "@material-ui/core";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
 import * as React from 'react';
-import { Expense } from "../../types/Expense";
+import { Account } from "../../../../types/Account";
+import { Expense } from "../../../../types/Expense";
 import './index.css';
 
 interface ExpensesDataGridProps {
     expenses: Expense[]
+    accounts: Account[]
     onDeleteExpenses: (expenseIds: number[]) => void
 }
 
 export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
+  function AccountEditCell(props: GridRenderCellParams<number> & { accounts: Account[] }): JSX.Element {
+    const onChange = (event: SelectChangeEvent) => {
+      const newSelectedAccountId = +event.target.value
+      console.log("newSelectedAccountId=", newSelectedAccountId)
+    }
+
+    const selectedAccountId = props.accounts.find((a: Account) => a.name === props.row.account)?.id
+  
+    return (
+      <FormControl variant="filled">
+        <Select
+          id="account-field-{selectedAccountId}"
+          displayEmpty
+          inputProps={{ 'aria-label': 'Account' }}
+          value={selectedAccountId}
+          variant="outlined"
+          onChange={onChange}
+          className="inputField"
+        >
+          {props.accounts.map((account) => (
+            <MenuItem key={account.id} value={account.id}>
+              {account.name}
+            </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText>Account</FormHelperText>
+      </FormControl>
+    );
+  }
+
+  function renderAccountEditCell(params: any) {
+    return <AccountEditCell {...params} accounts={props.accounts} />;
+  }
+
   const columns: GridColDef[] = [
     {
       field: 'date',
@@ -23,6 +60,7 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
       headerName: 'Account',
       width: 200,
       editable: true,
+      renderEditCell: renderAccountEditCell,
     },
     {
       field: 'description',
@@ -45,7 +83,7 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
       return {
         id: expense.id,
         date: expense.date,
-        account: `${expense.account.number} - ${expense.account.name}`,
+        account: expense.account.name,
         description: expense.description,
         amount: expense.amount.toFixed(2)
       }
@@ -62,6 +100,18 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
     <Card>
       <CardContent>
         <h3>Expenses</h3>
+        <div className="ExpensesDataGridContainer">
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            disableSelectionOnClick
+            disableColumnSelector
+            checkboxSelection
+            onSelectionModelChange={(newSelectionModel) => {
+              setSelectionModel(newSelectionModel);
+            }}
+          />
+        </div>
         <Button
           variant="contained"
           color="secondary"
@@ -69,18 +119,6 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
         >
           Delete expenses
         </Button>
-        <div className="ExpensesDataGridContainer">
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            checkboxSelection
-            onSelectionModelChange={(newSelectionModel) => {
-              setSelectionModel(newSelectionModel);
-            }}
-          />
-        </div>
       </CardContent>
     </Card>
   )
