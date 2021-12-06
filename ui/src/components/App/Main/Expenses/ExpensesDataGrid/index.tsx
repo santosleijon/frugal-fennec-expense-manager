@@ -1,10 +1,10 @@
 import { Button, Card, CardContent, FormControl, FormHelperText, MenuItem } from "@material-ui/core";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
+import DataGridContainer from "components/App/common/DataGridContainer";
 import * as React from 'react';
-import { Account } from "../../../../types/Account";
-import { Expense } from "../../../../types/Expense";
-import './index.css';
+import { Account } from "types/Account";
+import { Expense } from "types/Expense";
 
 interface ExpensesDataGridProps {
     expenses: Expense[]
@@ -100,7 +100,7 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
     <Card>
       <CardContent>
         <h3>Expenses</h3>
-        <div className="ExpensesDataGridContainer">
+        <DataGridContainer>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -111,7 +111,7 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
               setSelectionModel(newSelectionModel);
             }}
           />
-        </div>
+        </DataGridContainer>
         <Button
           variant="contained"
           color="secondary"

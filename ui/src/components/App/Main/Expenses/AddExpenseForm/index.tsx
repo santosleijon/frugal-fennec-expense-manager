@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, FormControl, MenuItem, TextField } from "@material-ui/core"
+import { Account } from "types/Account"
+import { Expense } from "types/Expense"
 import { useState } from "react"
-import { Account } from "../../../../types/Account"
-import { Expense } from "../../../../types/Expense"
 import './index.css'
 
 interface AddExpenseFormProps {
@@ -101,72 +101,69 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
           <h3>Add expense</h3>
           
           <FormControl variant="outlined">
-              <div className="addExpenseForm">
-                <TextField
-                    id="date-field"
-                    label="Date"
-                    type="date"
-                    value={values.date}
-                    InputLabelProps={{
-                    shrink: true,
-                    }}
-                    variant="outlined"
-                    onChange={onDateChange}
-                    className="inputField"
-                />
+            <div className="addExpenseForm">
+              <TextField
+                  id="date-field"
+                  label="Date"
+                  type="date"
+                  value={values.date}
+                  InputLabelProps={{
+                  shrink: true,
+                  }}
+                  variant="outlined"
+                  onChange={onDateChange}
+                  className="inputField"
+              />
 
-                <TextField
-                    id="account-field"
-                    select
-                    label="Account"
-                    value={values.account}
-                    variant="outlined"
-                    onChange={onAccountChange}
-                    className="inputField"
-                >
-                  {props.accounts.map((account) => (
-                  <MenuItem key={account.id} value={account.id}>
-                      {account.name}
-                  </MenuItem>
-                  ))}
-                </TextField>
-                
-                <TextField
-                    id="description-field"
-                    label="Description"
-                    value={values.description}
-                    className="inputField"
-                    onChange={onDescriptionChange}
-                    error={errors.description !== ""}
-                    variant="outlined"
-                    helperText={errors.description}
-                    InputLabelProps={{
-                    shrink: true,
-                    }}
-                />
-                
-                <TextField
-                    id="amount-field"
-                    label="Amount"
-                    value={values.amount}
-                    onBlur={onAmountBlur}
-                    onChange={onAmountChanged}
-                    variant="outlined"
-                    className="inputField"
-                    error={errors.amount !== ""}
-                    helperText={errors.amount}
-                /> 
+              <TextField
+                  id="account-field"
+                  select
+                  label="Account"
+                  value={values.account}
+                  variant="outlined"
+                  onChange={onAccountChange}
+                  className="inputField"
+              >
+                {props.accounts.map((account) => (
+                <MenuItem key={account.id} value={account.id}>
+                    {account.name}
+                </MenuItem>
+                ))}
+              </TextField>
+              
+              <TextField
+                  id="description-field"
+                  label="Description"
+                  value={values.description}
+                  className="inputField"
+                  onChange={onDescriptionChange}
+                  error={errors.description !== ""}
+                  variant="outlined"
+                  helperText={errors.description}
+              />
+              
+              <TextField
+                  id="amount-field"
+                  label="Amount"
+                  value={values.amount}
+                  onBlur={onAmountBlur}
+                  onChange={onAmountChanged}
+                  variant="outlined"
+                  className="inputField"
+                  error={errors.amount !== ""}
+                  helperText={errors.amount}
+              /> 
 
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    className="submitButton"
-                    type="submit"
-                >
-                    Add
-                </Button>
-              </div>
+              <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  className="submitButton"
+                  type="submit"
+              >
+                  Add
+              </Button>
+            </div>
           </FormControl>
         </form>
       </CardContent>
