@@ -1,13 +1,10 @@
 import { Button, Card, CardContent, FormControl, TextField } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import useAccounts from "hooks/useAccounts";
 import { Account } from "types/Account";
 
 export default function Accounts() {
-  const accounts: Account[] = [
-    { id: "3400", name: "Bread" },
-    { id: "3300", name: "Dairy" },
-    { id: "3800", name: "Root fruits" },
-  ]
+  const accounts = useAccounts()
 
   return (
     <>
