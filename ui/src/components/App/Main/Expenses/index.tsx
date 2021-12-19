@@ -6,6 +6,7 @@ import { Account } from "types/Account"
 import { Expense } from "types/Expense"
   
 export default function Expenses() {
+  // TODO: Read accounts from Redux state
   const ACCOUNTS = new Map<number, Account>([
     [3400, { id: "3400", name: "Bread" }],
     [3300, { id: "3300", name: "Dairy" }],

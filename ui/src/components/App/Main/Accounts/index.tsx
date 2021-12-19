@@ -1,10 +1,22 @@
 import { Button, Card, CardContent, FormControl, TextField } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import useAccounts from "hooks/useAccounts";
+import { getAccounts } from "actions/getAccounts";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "reducers/appReducer";
 import { Account } from "types/Account";
 
 export default function Accounts() {
-  const accounts = useAccounts()
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // TODO: Handle "isLoading" state
+    getAccounts().then(successAction => dispatch(successAction))
+  }, [dispatch]);
+
+  const accounts = useSelector<AppState, Account[]>(
+    (state) => state.accounts
+  );
 
   return (
     <>
