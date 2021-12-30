@@ -10,21 +10,19 @@ interface AddExpenseFormProps {
 }
 
 export default function AddExpenseForm(props: AddExpenseFormProps) {
-
   const initialFormValues = {
     date: new Date().toLocaleDateString(),
-    account: props.accounts.find(e => true)?.id,
+    account: props.accounts[0]?.id,
     description: "",
     amount: "0.00",
   }
-
-  const [values, setValues] = useState(initialFormValues)
 
   const initialErrors = {
     description: "",
     amount: "",
   }
 
+  const [values, setValues] = useState(initialFormValues)
   const [errors, setErrors] = useState(initialErrors)
 
   const onDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +77,6 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
       const newExpense: Expense = {
         id: 0,
         date: values.date,
-        account: props.accounts.find(a => a.id === values.account)!,
         description: values.description,
         amount: +values.amount,
       }
@@ -92,6 +89,10 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
 
       props.onExpenseAdded(newExpense)
     }
+  }
+
+  if (props.accounts.length < 1) {
+    return <></>
   }
 
   return (
@@ -119,7 +120,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
                   id="account-field"
                   select
                   label="Account"
-                  value={values.account}
+                  value={values.account ?? props.accounts[0]?.id}
                   variant="outlined"
                   onChange={onAccountChange}
                   className="inputField"

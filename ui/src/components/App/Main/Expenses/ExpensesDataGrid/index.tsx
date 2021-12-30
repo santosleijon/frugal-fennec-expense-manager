@@ -1,13 +1,11 @@
 import { Button, Card, CardContent, FormControl, FormHelperText, MenuItem } from "@material-ui/core";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { DataGrid, GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowId, GridRowsProp } from '@mui/x-data-grid';
 import DataGridContainer from "components/App/common/DataGridContainer";
 import * as React from 'react';
 import { Account } from "types/Account";
-import { Expense } from "types/Expense";
 
 interface ExpensesDataGridProps {
-    expenses: Expense[]
     accounts: Account[]
     onDeleteExpenses: (expenseIds: number[]) => void
 }
@@ -78,17 +76,17 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
     },
   ];
 
-  const rows = props.expenses.map(expense => 
-    {
-      return {
-        id: expense.id,
-        date: expense.date,
-        account: expense.account.name,
-        description: expense.description,
-        amount: expense.amount.toFixed(2)
-      }
-    }
-  )
+  const rows: GridRowsProp = props.accounts.filter((account) => { return account.expenses.length > 0 }).flatMap((account) => {
+      return account.expenses.map((expense, index) => {
+        return {
+          id: `${account.id}-${index}`,
+          date: formatDate(expense.date),
+          account: account.name,
+          description: expense.description,
+          amount: formatAmount(expense.amount),
+        }
+      })
+  })
 
   const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([])
 
@@ -122,4 +120,12 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
       </CardContent>
     </Card>
   )
+}
+
+function formatDate(date: string): string {
+  return date.slice(0, 10)
+}
+
+function formatAmount(amount: number): string {
+  return amount.toFixed(2)
 }
