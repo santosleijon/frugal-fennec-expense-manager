@@ -1,17 +1,20 @@
 import { Button, Card, CardContent, FormControl, TextField } from "@material-ui/core";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { getAccounts } from "actions/getAccounts";
-import { useEffect } from "react";
+import { addAccountAction } from "actions/addAccountAction";
+import { getAccountsAction } from "actions/getAccountsAction";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "reducers/appReducer";
 import { Account } from "types/Account";
+import { AccountsDataGrid } from "./AccountsDataGrid";
 
 export default function Accounts() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     // TODO: Handle "isLoading" state
-    getAccounts().then(successAction => dispatch(successAction))
+    getAccountsAction()
+    .then(successAction => dispatch(successAction))
+    // TODO: Display error message with notistack
   }, [dispatch]);
 
   const accounts = useSelector<AppState, Account[]>(
@@ -28,9 +31,19 @@ export default function Accounts() {
 }
 
 function AddAccountForm() {
-  const onNameChange = () => {}
+  const dispatch = useDispatch();
 
-  const onSubmit = () => {}
+  const [account, setAccount] = useState<Account>({ name: "", expenses: [] })
+
+  const onSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    addAccountAction(account).then((successAction) => dispatch(successAction))
+    // TODO: Display error message with notistack
+  }
+
+  const onChangeAccountName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAccount({ ...account, name: event.target.value })
+  }
 
   return (
     <>
@@ -42,8 +55,9 @@ function AddAccountForm() {
               <TextField
                 id="name-field"
                 label="Name"
+                value={account.name}
+                onChange={onChangeAccountName}
                 variant="outlined"
-                onChange={onNameChange}
                 style={{ flexGrow: 1, marginRight: "12px" }}
               />
               <Button
@@ -60,55 +74,5 @@ function AddAccountForm() {
         </CardContent>
       </Card>
     </>
-  )
-}
-
-interface AccountsDataGridProps {
-  accounts: Account[]
-}
-
-function AccountsDataGrid(props: AccountsDataGridProps) {
-  const columns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      type: 'string',
-      editable: true,
-    },
-  ]
-
-  const rows = props.accounts.map(account =>
-    {
-      return {
-        id: account.id,
-        name: account.name,
-      }
-    }
-  )
-
-  const onDeleteAccounts = () => {}
-  
-  return (
-    <Card>
-      <CardContent>
-        <h3>Accounts</h3>
-        <div style={{height: "400px", marginBottom: "12px" }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            disableSelectionOnClick
-            disableColumnSelector
-            checkboxSelection
-          />
-        </div>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={onDeleteAccounts}
-        >
-          Delete expenses
-        </Button>
-      </CardContent>
-    </Card>
   )
 }

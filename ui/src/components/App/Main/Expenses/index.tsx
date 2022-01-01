@@ -6,14 +6,14 @@ import { Account } from "types/Account"
 import { Expense } from "types/Expense"
 import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "reducers/appReducer"
-import { getAccounts } from "actions/getAccounts"
+import { getAccountsAction } from "actions/getAccountsAction"
   
 export default function Expenses() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     // TODO: Handle "isLoading" state
-    getAccounts().then(successAction => dispatch(successAction))
+    getAccountsAction().then(successAction => dispatch(successAction))
   }, [dispatch]);
 
   const accounts = useSelector<AppState, Account[]>(

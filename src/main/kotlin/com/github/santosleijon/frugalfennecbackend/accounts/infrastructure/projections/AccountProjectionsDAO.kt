@@ -20,6 +20,8 @@ class AccountProjectionsDAO @Autowired constructor(
                 data
             FROM
                 account_projections
+            ORDER BY
+                account_name
         """.trimIndent(), ProjectionMapping(objectMapper)
         )
     }

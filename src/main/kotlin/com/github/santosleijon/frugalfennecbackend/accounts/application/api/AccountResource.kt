@@ -24,7 +24,7 @@ class AccountResource @Autowired constructor(
     private val addExpenseCommand: AddExpenseCommand,
     private val deleteExpenseCommand: DeleteExpenseCommand,
 ) {
-    @PostMapping("/", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping("", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun create(@RequestBody(required = true) createAccountInputsDTO: CreateAccountInputsDTO): Account {
         return createAccountCommand.handle(
             id = UUID.randomUUID(),

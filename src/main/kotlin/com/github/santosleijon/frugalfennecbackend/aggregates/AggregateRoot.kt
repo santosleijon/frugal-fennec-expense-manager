@@ -1,8 +1,10 @@
 package com.github.santosleijon.frugalfennecbackend.aggregates
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.github.santosleijon.frugalfennecbackend.eventsourcing.DomainEvent
 import java.util.*
 
+@JsonIgnoreProperties("version", "pendingEvents")
 abstract class AggregateRoot(
     val id: UUID,
     val version: Int,

@@ -1,8 +1,6 @@
 import { Account } from "types/Account";
 
 export const fetchAccounts = async(): Promise<Account[]> => {
-  console.log(`${process.env.REACT_APP_API_URL}/account`)
-
   const response = await fetch(`${process.env.REACT_APP_API_URL}/account`, {
     method: 'GET',
     headers: {
@@ -11,7 +9,7 @@ export const fetchAccounts = async(): Promise<Account[]> => {
   })
 
   if (!response.ok) {
-    throw new Error(`Failed retrieve accounts (HTTP status = ${response.status})`);
+    throw new Error(`Failed to retrieve accounts (HTTP status = ${response.status})`);
   }
 
   return response.json()

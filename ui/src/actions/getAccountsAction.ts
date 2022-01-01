@@ -3,7 +3,7 @@ import { Action } from "reducers/Action";
 
 export const GET_ACCOUNTS_ACTION_TYPE = 'GET_ACCOUNTS';
 
-export async function getAccounts(): Promise<Action> {
+export async function getAccountsAction(): Promise<Action> {
   const accounts = await fetchAccounts()
   
   return {

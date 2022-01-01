@@ -3,6 +3,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowId, GridRowsProp } from '@mui/x-data-grid';
 import DataGridContainer from "components/App/common/DataGridContainer";
 import * as React from 'react';
+import { useState } from "react";
 import { Account } from "types/Account";
 
 interface ExpensesDataGridProps {
@@ -76,7 +77,7 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
     },
   ];
 
-  const rows: GridRowsProp = props.accounts.filter((account) => { return account.expenses.length > 0 }).flatMap((account) => {
+  const rows: GridRowsProp = props.accounts.filter((account) => { return (account.expenses.length > 0) }).flatMap((account) => {
       return account.expenses.map((expense, index) => {
         return {
           id: `${account.id}-${index}`,
@@ -88,7 +89,7 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
       })
   })
 
-  const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([])
+  const [selectionModel, setSelectionModel] = useState<GridRowId[]>([])
 
   const onDeleteExpenses = () => {
     props.onDeleteExpenses(selectionModel.map(rowId => +rowId))

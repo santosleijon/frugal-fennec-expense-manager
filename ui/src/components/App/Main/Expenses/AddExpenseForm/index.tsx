@@ -67,7 +67,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
     }
   }
 
-  const onSubmit = (event: any) => {
+  const onSubmit = (event: React.FormEvent) => {
     event.preventDefault()
 
     const noValidationErrors = Object.values(errors).every((error) => error === "")
