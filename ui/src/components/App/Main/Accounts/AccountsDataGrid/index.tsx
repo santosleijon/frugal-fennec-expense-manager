@@ -1,13 +1,20 @@
 
 import { Account } from "types/Account"
 import { Button, Card, CardContent } from "@material-ui/core";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowId } from "@mui/x-data-grid";
+import { useState } from "react";
+import { deleteAccount } from "commands/deleteAccount";
+import { useDispatch } from "react-redux";
 
 interface AccountsDataGridProps {
   accounts: Account[]
 }
 
 export function AccountsDataGrid(props: AccountsDataGridProps) {
+  const dispatch = useDispatch()
+
+  const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
+
   const columns: GridColDef[] = [
     {
       field: 'name',
@@ -26,7 +33,11 @@ export function AccountsDataGrid(props: AccountsDataGridProps) {
     }
   )
 
-  const onDeleteAccounts = () => {}
+  const onDeleteAccounts = () => {
+    selectedRows.forEach((accountId) => {
+      deleteAccount(accountId.toString()).then((successAction) => dispatch(successAction))
+    })
+  }
   
   return (
     <Card>
@@ -39,6 +50,9 @@ export function AccountsDataGrid(props: AccountsDataGridProps) {
             disableSelectionOnClick
             disableColumnSelector
             checkboxSelection
+            onSelectionModelChange={(newSelectionModel) => {
+              setSelectedRows(newSelectionModel);
+            }}
           />
         </div>
         <Button

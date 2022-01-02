@@ -57,7 +57,7 @@ class Account(
         return this
     }
 
-    fun delete(): Account {
+    fun delete() {
         this.apply(
             AccountDeletedEvent(
                 id = this.id,
@@ -65,7 +65,7 @@ class Account(
             )
         )
 
-        return this
+        return
     }
 
     fun addExpense(expense: Expense): Account {

@@ -6,6 +6,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.
 import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAllAccountsQuery
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjection
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
@@ -59,6 +60,7 @@ class AccountResource @Autowired constructor(
     )
 
     @DeleteMapping("{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun delete(@PathVariable(value = "id") id: UUID) {
         return deleteAccountCommand.handle(id)
     }

@@ -35,7 +35,7 @@ internal class AccountResourceTests {
         private const val TEST_DB_PASSWORD = "frugal_fennec"
 
         @Container
-        private val dbContainer = (GenericContainer<Nothing>(dbImage) as GenericContainer<*>)
+        private val dbContainer = (GenericContainer<Nothing>(dbImage) as GenericContainer<*>) // TODO: Create container from docker-compose file (https://www.testcontainers.org/modules/docker_compose/)
             .withExposedPorts(TEST_DB_EXPOSED_PORT)
             .waitingFor(
                 Wait.forLogMessage(".*PostgreSQL init process complete; ready for start up.*\\n", 1)

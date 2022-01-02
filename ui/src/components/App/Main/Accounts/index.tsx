@@ -37,7 +37,10 @@ function AddAccountForm() {
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    addAccount(account).then((successAction) => dispatch(successAction))
+    addAccount(account).then((successAction) => {
+      dispatch(successAction)
+      setAccount({ ...account, name: "" })
+    })
     // TODO: Display error message with notistack
   }
 
