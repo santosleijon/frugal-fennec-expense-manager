@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, FormControl, TextField } from "@material-ui/core";
-import { addAccountAction } from "actions/addAccountAction";
-import { getAccountsAction } from "actions/getAccountsAction";
+import { addAccount } from "commands/addAccount";
+import { getAccounts } from "commands/getAccounts";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "reducers/appReducer";
@@ -12,7 +12,7 @@ export default function Accounts() {
 
   useEffect(() => {
     // TODO: Handle "isLoading" state
-    getAccountsAction()
+    getAccounts()
     .then(successAction => dispatch(successAction))
     // TODO: Display error message with notistack
   }, [dispatch]);
@@ -37,7 +37,7 @@ function AddAccountForm() {
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    addAccountAction(account).then((successAction) => dispatch(successAction))
+    addAccount(account).then((successAction) => dispatch(successAction))
     // TODO: Display error message with notistack
   }
 

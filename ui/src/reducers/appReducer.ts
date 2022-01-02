@@ -1,5 +1,5 @@
-import { ADD_ACCOUNT_ACTION_TYPE } from 'actions/addAccountAction';
-import { GET_ACCOUNTS_ACTION_TYPE } from 'actions/getAccountsAction';
+import { ADD_ACCOUNT_ACTION_TYPE } from 'commands/addAccount';
+import { GET_ACCOUNTS_ACTION_TYPE } from 'commands/getAccounts';
 import { Account } from 'types/Account.js';
 import { Action } from './Action';
 import _ from 'lodash'
