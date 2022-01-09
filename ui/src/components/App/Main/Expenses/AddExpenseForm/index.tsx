@@ -1,18 +1,18 @@
 import { Button, Card, CardContent, FormControl, MenuItem, TextField } from "@material-ui/core"
 import { Account } from "types/Account"
 import { Expense } from "types/Expense"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import './index.css'
 
 interface AddExpenseFormProps {
   accounts: Account[],
-  onExpenseAdded: (newExpense: Expense) => void
+  onExpenseAdded: (accountId: string, newExpense: Expense) => void
 }
 
 export default function AddExpenseForm(props: AddExpenseFormProps) {
   const initialFormValues = {
     date: new Date().toLocaleDateString(),
-    account: props.accounts[0]?.id,
+    accountId: "",
     description: "",
     amount: "0.00",
   }
@@ -25,6 +25,12 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
   const [values, setValues] = useState(initialFormValues)
   const [errors, setErrors] = useState(initialErrors)
 
+  useEffect(() => {
+    if (values.accountId === "" && props.accounts.length > 0) {
+      setValues({ ...values, accountId: props.accounts[0]?.id ?? ""})
+    }
+  }, [values, props.accounts, setValues])
+
   const onDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const date = event.target.value
 
@@ -34,7 +40,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
   }
 
   const onAccountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, account: event.target.value })
+    setValues({ ...values, accountId: event.target.value })
   }
   const onAmountChanged = (event: any) => {
     setValues({ ...values, amount: event.target.value})
@@ -73,21 +79,21 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
     const noValidationErrors = Object.values(errors).every((error) => error === "")
 
     if (noValidationErrors) {
-      // TODO: Make backend call
       const newExpense: Expense = {
-        id: 0,
         date: values.date,
         description: values.description,
         amount: +values.amount,
       }
 
-      setValues({
-        ...values,
-        description: "",
-        amount: "0.00"
-      })
+      if (values.accountId) {
+        props.onExpenseAdded(values.accountId, newExpense)
 
-      props.onExpenseAdded(newExpense)
+        setValues({
+          ...values,
+          description: "",
+          amount: "0.00"
+        })
+      }
     }
   }
 
@@ -120,7 +126,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
                   id="account-field"
                   select
                   label="Account"
-                  value={values.account ?? props.accounts[0]?.id}
+                  value={values.accountId ?? props.accounts[0]?.id}
                   variant="outlined"
                   onChange={onAccountChange}
                   className="inputField"

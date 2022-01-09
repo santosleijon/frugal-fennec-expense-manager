@@ -170,7 +170,7 @@ internal class AccountResourceTests {
 
     private fun Expense.toExpenseInputsDTO(): AccountResource.ExpenseInputsDTO {
         return AccountResource.ExpenseInputsDTO(
-            date,
+            date.toString(),
             description,
             amount,
         )

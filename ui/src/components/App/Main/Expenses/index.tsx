@@ -7,6 +7,7 @@ import { Expense } from "types/Expense"
 import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "reducers/appReducer"
 import { getAccounts } from "commands/getAccounts"
+import { addExpense } from "commands/addExpense"
   
 export default function Expenses() {
   const dispatch = useDispatch();
@@ -20,8 +21,8 @@ export default function Expenses() {
     (state) => state.accounts
   );
 
-  const onExpenseAdded = (newExpense: Expense) => {
-    //setExpenses(expenses.concat({ ...newExpense, id: expenses.length+1 }))
+  const onExpenseAdded = (accountId: string, newExpense: Expense) => {
+    addExpense(accountId.toString(), newExpense).then((successAction) => dispatch(successAction))
   }
 
   const onDeleteExpenses = (expenseIds: number[]) => {
