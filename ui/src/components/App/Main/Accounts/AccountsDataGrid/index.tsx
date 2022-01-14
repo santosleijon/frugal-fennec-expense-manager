@@ -60,7 +60,7 @@ export function AccountsDataGrid(props: AccountsDataGridProps) {
           color="secondary"
           onClick={onDeleteAccounts}
         >
-          Delete expenses
+          Delete accounts
         </Button>
       </CardContent>
     </Card>
