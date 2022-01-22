@@ -1,7 +1,7 @@
 import { Account } from "types/Account";
 import { Expense } from "types/Expense";
 
-const baseUrl = `${process.env.REACT_APP_API_URL}/account`
+const baseUrl = `${process.env.REACT_APP_API_URL}/account/`
 
 export const accountsApi = {
   
