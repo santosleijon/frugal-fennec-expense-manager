@@ -3,6 +3,7 @@ import { Account } from "types/Account"
 import { Expense } from "types/Expense"
 import { useEffect, useState } from "react"
 import './index.css'
+import { getCurrentDate } from "utils/getCurrentDate"
 
 interface AddExpenseFormProps {
   accounts: Account[],
@@ -11,7 +12,7 @@ interface AddExpenseFormProps {
 
 export default function AddExpenseForm(props: AddExpenseFormProps) {
   const initialFormValues = {
-    date: new Date().toLocaleDateString(),
+    date: getCurrentDate(),
     accountId: "",
     description: "",
     amount: "0.00",
@@ -115,7 +116,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
                   type="date"
                   value={values.date}
                   InputLabelProps={{
-                  shrink: true,
+                    shrink: true,
                   }}
                   variant="outlined"
                   onChange={onDateChange}
