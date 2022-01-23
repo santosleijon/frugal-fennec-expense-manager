@@ -17,7 +17,8 @@ class AccountRepositoryImpl @Autowired constructor(
             eventStore.append(it)
         }
 
-        return account
+        return findByIdOrNull(account.id)
+            ?: error("Failed to find saved account")
     }
 
     override fun findByIdOrNull(id: UUID): Account? {

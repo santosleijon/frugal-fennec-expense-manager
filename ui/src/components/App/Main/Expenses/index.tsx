@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "reducers/appReducer"
 import { getAccounts } from "commands/getAccounts"
 import { addExpense } from "commands/addExpense"
+import { deleteExpense } from "commands/deleteExpense"
   
 export default function Expenses() {
   const dispatch = useDispatch();
@@ -22,22 +23,22 @@ export default function Expenses() {
   );
 
   const onExpenseAdded = (accountId: string, newExpense: Expense) => {
-    addExpense(accountId.toString(), newExpense).then((successAction) => dispatch(successAction))
+    addExpense(accountId, newExpense).then((successAction) => dispatch(successAction))
   }
 
-  const onDeleteExpenses = (expenseIds: number[]) => {
-    //setExpenses(expenses.filter(t => !expenseIds.includes(t.id)))
+  const onDeleteExpense = (accountId: string, expense: Expense) => {
+    deleteExpense(accountId, expense).then((successAction) => dispatch(successAction))
   }
 
   return (
     <>
       <h1>Expenses</h1>
 
-      <AddExpenseForm accounts={accounts} onExpenseAdded={onExpenseAdded}/>
+      <AddExpenseForm accounts={accounts} onExpenseAdded={onExpenseAdded} />
 
       <ExpensesDataGrid
         accounts={accounts}
-        onDeleteExpenses={onDeleteExpenses}
+        onDeleteExpenses={onDeleteExpense}
       />
     </>
   )

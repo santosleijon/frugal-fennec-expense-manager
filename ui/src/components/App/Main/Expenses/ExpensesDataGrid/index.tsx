@@ -5,10 +5,13 @@ import DataGridContainer from "components/App/common/DataGridContainer";
 import * as React from 'react';
 import { useState } from "react";
 import { Account } from "types/Account";
+import { Expense } from "types/Expense";
+import { formatAmount } from "utils/formatAmount";
+import { formatDate } from "utils/formatDate";
 
 interface ExpensesDataGridProps {
     accounts: Account[]
-    onDeleteExpenses: (expenseIds: number[]) => void
+    onDeleteExpenses: (accountId: string, expense: Expense) => void
 }
 
 export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
@@ -77,10 +80,14 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
     },
   ];
 
-  const rows: GridRowsProp = props.accounts.filter((account) => { return (account.expenses.length > 0) }).flatMap((account) => {
-      return account.expenses.map((expense, index) => {
+  const accountsWithExpenses = props.accounts.filter((account) => { return (account.expenses.length > 0) })
+
+  const rows: GridRowsProp = accountsWithExpenses.flatMap((account) => {
+    return account.expenses.map((expense, index) => {
         return {
           id: `${account.id}-${index}`,
+          accountId: account.id,
+          expense: expense,
           date: formatDate(expense.date),
           account: account.name,
           description: expense.description,
@@ -92,7 +99,15 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
   const [selectionModel, setSelectionModel] = useState<GridRowId[]>([])
 
   const onDeleteExpenses = () => {
-    props.onDeleteExpenses(selectionModel.map(rowId => +rowId))
+    selectionModel.forEach((value, index, array) => {
+      const row = rows.find((row) => row.id === value)
+      const accountId = row?.accountId
+      const expense = row?.expense
+
+      if (accountId && expense) {
+        props.onDeleteExpenses(accountId, expense)
+      }
+    })
   }
 
   return (
@@ -121,12 +136,4 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
       </CardContent>
     </Card>
   )
-}
-
-function formatDate(date: string): string {
-  return date.slice(0, 10)
-}
-
-function formatAmount(amount: number): string {
-  return amount.toFixed(2)
 }

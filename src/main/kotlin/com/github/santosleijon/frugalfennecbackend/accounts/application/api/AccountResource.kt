@@ -103,12 +103,13 @@ class AccountResource @Autowired constructor(
 
     private fun String.toUTCInstant(): Instant {
         val datePattern = Regex("^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\$")
+        val tenDigitValue = this.substring(0, 10)
 
-        if (!(this matches datePattern)) {
+        if (!(tenDigitValue matches datePattern)) {
             throw IllegalArgumentException("String must be valid date formatted as yyyy-MM-dd")
         }
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        return LocalDateTime.parse("$this 00:00:00", formatter).toInstant(ZoneOffset.UTC)
+        return LocalDateTime.parse("$tenDigitValue 00:00:00", formatter).toInstant(ZoneOffset.UTC)
     }
 }

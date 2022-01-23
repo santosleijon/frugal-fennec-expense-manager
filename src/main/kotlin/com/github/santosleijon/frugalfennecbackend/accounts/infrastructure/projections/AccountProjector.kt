@@ -5,7 +5,6 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjec
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.events.*
 import com.github.santosleijon.frugalfennecbackend.eventsourcing.DomainEvent
 import com.github.santosleijon.frugalfennecbackend.eventsourcing.EventSubscriber
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
@@ -31,15 +30,17 @@ class AccountProjector @Autowired constructor(
                 accountProjectionRepository.delete(event.aggregateId)
             }
             is AccountNameUpdatedEvent -> {
-                val updatedProjection = getAccountProjection(event.aggregateId).copy(
+                val updatedProjection = getAccountProjection(event.aggregateId)?.copy(
                     name = event.newName,
                     version = event.version,
                 )
+                    ?: return
 
                 accountProjectionRepository.save(updatedProjection)
             }
             is ExpenseAddedEvent -> {
                 val previousProjection = getAccountProjection(event.aggregateId)
+                    ?: return
 
                 val updatedProjection = previousProjection.copy(
                     expenses = previousProjection.expenses + listOf(event.expense),
@@ -50,6 +51,7 @@ class AccountProjector @Autowired constructor(
             }
             is ExpenseDeletedEvent -> {
                 val previousProjection = getAccountProjection(event.aggregateId)
+                    ?: return
 
                 val updatedProjection = previousProjection.copy(
                     expenses = previousProjection.expenses - listOf(event.expense),
@@ -61,8 +63,7 @@ class AccountProjector @Autowired constructor(
         }
     }
 
-    private fun getAccountProjection(id: UUID): AccountProjection {
+    private fun getAccountProjection(id: UUID): AccountProjection? {
         return accountProjectionRepository.findByIdOrNull(id)
-            ?: error("Failed to find account projection for account $id")
     }
 }
