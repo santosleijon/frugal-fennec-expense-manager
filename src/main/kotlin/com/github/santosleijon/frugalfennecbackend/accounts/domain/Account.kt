@@ -69,6 +69,10 @@ class Account(
     }
 
     fun addExpense(expense: Expense): Account {
+        if (expenses.contains(expense)) {
+            return this
+        }
+
         this.apply(
             ExpenseAddedEvent(
                 accountId = this.id,
