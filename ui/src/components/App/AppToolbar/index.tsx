@@ -1,17 +1,27 @@
-import { AppBar, Typography, Toolbar, Link, Box, Button } from "@material-ui/core";
+import { AppBar, Typography, Toolbar, Link, Box, Button, CircularProgress } from "@material-ui/core";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import React from "react";
 import './index.css'
+import { useSelector } from "react-redux";
+import { AppState } from "reducers/appReducer";
 
 export default function AppToolbar() {
   const navigate = useNavigate();
+
+  const isLoadingCommand = useSelector<AppState, boolean>(
+    (state) => state.isLoadingCommand
+  );
+
+  const toolbarIcon = isLoadingCommand ? <CircularProgress color="inherit" size="24px" /> : <AccountBalanceIcon />
 
   return (
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="static">
       <Toolbar className="toolbar">
-        <AccountBalanceIcon className="toolbar-icon" />
+        <Box className="toolbar-icon">
+          {toolbarIcon}
+        </Box>
         <Typography variant="h6" className="toolbar-title" color="inherit">
           <Link href="./" title="Frugal Fennec Expense Manager" color="inherit">
             Frugal Fennec

@@ -9,13 +9,13 @@ import { AppState } from "reducers/appReducer"
 import { getAccounts } from "commands/getAccounts"
 import { addExpense } from "commands/addExpense"
 import { deleteExpense } from "commands/deleteExpense"
+import { dispatchCommand } from "commands/dispatchCommand"
   
 export default function Expenses() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // TODO: Handle "isLoading" state
-    getAccounts().then(successAction => dispatch(successAction))
+    dispatchCommand(getAccounts, dispatch)
   }, [dispatch]);
 
   const accounts = useSelector<AppState, Account[]>(
@@ -23,11 +23,11 @@ export default function Expenses() {
   );
 
   const onExpenseAdded = (accountId: string, newExpense: Expense) => {
-    addExpense(accountId, newExpense).then((successAction) => dispatch(successAction))
+    dispatchCommand(() => addExpense(accountId, newExpense), dispatch)
   }
 
   const onDeleteExpense = (accountId: string, expense: Expense) => {
-    deleteExpense(accountId, expense).then((successAction) => dispatch(successAction))
+    dispatchCommand(() => deleteExpense(accountId, expense), dispatch)
   }
 
   return (

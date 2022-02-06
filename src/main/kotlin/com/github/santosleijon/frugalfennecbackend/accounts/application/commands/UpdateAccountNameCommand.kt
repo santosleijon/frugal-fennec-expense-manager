@@ -21,5 +21,6 @@ class UpdateAccountNameCommand @Autowired constructor(
         account.setName(newName)
 
         return accountRepository.save(account)
+            ?: throw AccountNotFoundError(id)
     }
 }

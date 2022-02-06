@@ -1,5 +1,6 @@
 import { Button, Card, CardContent, FormControl, TextField } from "@material-ui/core";
 import { addAccount } from "commands/addAccount";
+import { dispatchCommand } from "commands/dispatchCommand";
 import { getAccounts } from "commands/getAccounts";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,9 +12,7 @@ export default function Accounts() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // TODO: Handle "isLoading" state
-    getAccounts()
-    .then(successAction => dispatch(successAction))
+    dispatchCommand(getAccounts, dispatch)
     // TODO: Display error message with notistack
   }, [dispatch]);
 
@@ -37,10 +36,11 @@ function AddAccountForm() {
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    addAccount(account).then((successAction) => {
-      dispatch(successAction)
-      setAccount({ ...account, name: "" })
-    })
+
+    dispatchCommand(() => addAccount(account), dispatch)
+
+    setAccount({ ...account, name: "" })
+
     // TODO: Display error message with notistack
   }
 

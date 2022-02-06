@@ -5,6 +5,7 @@ import { DataGrid, GridColDef, GridRowId } from "@mui/x-data-grid";
 import { useState } from "react";
 import { deleteAccount } from "commands/deleteAccount";
 import { useDispatch } from "react-redux";
+import { dispatchCommand } from "commands/dispatchCommand";
 
 interface AccountsDataGridProps {
   accounts: Account[]
@@ -35,10 +36,10 @@ export function AccountsDataGrid(props: AccountsDataGridProps) {
 
   const onDeleteAccounts = () => {
     selectedRows.forEach((accountId) => {
-      deleteAccount(accountId.toString()).then((successAction) => dispatch(successAction))
+      dispatchCommand(() => deleteAccount(accountId.toString()), dispatch)
     })
   }
-  
+
   return (
     <Card>
       <CardContent>

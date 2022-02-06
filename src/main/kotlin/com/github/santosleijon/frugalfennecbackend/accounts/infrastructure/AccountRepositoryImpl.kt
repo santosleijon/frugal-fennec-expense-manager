@@ -12,13 +12,12 @@ import java.util.*
 class AccountRepositoryImpl @Autowired constructor(
     private val eventStore: EventStore,
 ): AccountRepository {
-    override fun save(account: Account): Account {
+    override fun save(account: Account): Account? {
         account.pendingEvents.forEach {
             eventStore.append(it)
         }
 
         return findByIdOrNull(account.id)
-            ?: error("Failed to find saved account")
     }
 
     override fun findByIdOrNull(id: UUID): Account? {

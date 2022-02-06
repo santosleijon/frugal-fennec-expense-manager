@@ -28,5 +28,6 @@ class AddExpenseCommand @Autowired constructor(
         account.addExpense(expense)
 
         return accountRepository.save(account)
+            ?: throw AccountNotFoundError(id)
     }
 }

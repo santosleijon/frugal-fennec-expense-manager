@@ -28,5 +28,6 @@ class DeleteExpenseCommand @Autowired constructor(
         account.deleteExpense(expense)
 
         return accountRepository.save(account)
+            ?: throw AccountNotFoundError(accountId)
     }
 }
