@@ -1,8 +1,8 @@
 package com.github.santosleijon.frugalfennecbackend.accounts
 
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.AccountNotFoundError
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.toAccountProjection
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -10,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.testcontainers.containers.GenericContainer
+import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait
-import org.testcontainers.images.builder.ImageFromDockerfile
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.io.File
 import java.math.BigDecimal
-import java.nio.file.Paths
-import java.text.SimpleDateFormat
+import java.time.Instant
 
 @SpringBootTest
 @Testcontainers
@@ -27,24 +26,33 @@ internal class AccountResourceTests {
     lateinit var accountResource: AccountResource
 
     companion object {
-        private val dbImage = ImageFromDockerfile().withFileFromPath(".", Paths.get("./db/."))
-
+        private val DOCKER_COMPOSE_FILE = File("./docker-compose.yml")
+        private const val POSTGRES_DOCKER_SERVICE_NAME = "db"
         private const val TEST_DB_EXPOSED_PORT = 5432
         private const val TEST_DB_NAME = "frugal_fennec"
         private const val TEST_DB_USER = "frugal_fennec"
         private const val TEST_DB_PASSWORD = "frugal_fennec"
 
         @Container
-        private val dbContainer = (GenericContainer<Nothing>(dbImage) as GenericContainer<*>) // TODO: Create container from docker-compose file (https://www.testcontainers.org/modules/docker_compose/)
-            .withExposedPorts(TEST_DB_EXPOSED_PORT)
-            .waitingFor(
+        private val DB_CONTAINER: DockerComposeContainer<*> = DockerComposeContainer<Nothing>(DOCKER_COMPOSE_FILE)
+            .withExposedService(
+                POSTGRES_DOCKER_SERVICE_NAME,
+                TEST_DB_EXPOSED_PORT,
                 Wait.forLogMessage(".*PostgreSQL init process complete; ready for start up.*\\n", 1)
             )
 
+        @Suppress("unused")
         @JvmStatic
         @DynamicPropertySource
         fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url") { "jdbc:postgresql://" + dbContainer.host + ":" + dbContainer.firstMappedPort + "/" + TEST_DB_NAME }
+            registry.add("spring.datasource.url") {
+                "jdbc:postgresql://" +
+                        DB_CONTAINER.getServiceHost(POSTGRES_DOCKER_SERVICE_NAME, TEST_DB_EXPOSED_PORT) +
+                        ":" +
+                        DB_CONTAINER.getServicePort(POSTGRES_DOCKER_SERVICE_NAME, TEST_DB_EXPOSED_PORT) +
+                        "/" +
+                        TEST_DB_NAME
+            }
             registry.add("spring.datasource.username") { TEST_DB_USER }
             registry.add("spring.datasource.password") { TEST_DB_PASSWORD }
             registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
@@ -133,9 +141,7 @@ internal class AccountResourceTests {
 
         val updatedAccount = accountResource.get(account.id)
 
-        Assertions.assertThat(updatedAccount.expenses).contains(
-            Expense(testExpense.date, testExpense.description, testExpense.amount)
-        )
+        Assertions.assertThat(updatedAccount.expenses).contains(testExpense)
     }
 
     @Test
@@ -163,7 +169,7 @@ internal class AccountResourceTests {
     }
 
     private fun testExpense() = Expense(
-        date = SimpleDateFormat("yyyy-MM-dd").parse("2001-01-01").toInstant(),
+        date = Instant.parse("2001-01-01T00:00:00Z"),
         description = "Expense description",
         amount = BigDecimal.valueOf(99.99)
     )
