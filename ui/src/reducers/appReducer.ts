@@ -8,14 +8,17 @@ import { ADD_EXPENSE_RESULT_ACTION_TYPE } from 'commands/addExpense';
 import { DELETE_EXPENSE_RESULT_ACTION_TYPE } from 'commands/deleteExpense';
 import { START_COMMAND_ACTION_TYPE } from 'commands/startCommandAction';
 import { COMPLETE_COMMAND_ACTION_TYPE } from 'commands/completeCommandAction';
+import { FAIL_COMMAND_ACTION_TYPE } from 'commands/failCommandAction';
 
 export interface AppState {
   isLoadingCommand: boolean,
+  commandErrorMessage: string | null,
   accounts: Account[]
 }
 
 const initialState: AppState = {
   isLoadingCommand: false,
+  commandErrorMessage: null,
   accounts: []
 }
 
@@ -23,6 +26,8 @@ export function appReducer(state: AppState = initialState, action: Action) {
   switch (action.type) {
     case START_COMMAND_ACTION_TYPE:
       return { ...state, isLoadingCommand: true }
+    case FAIL_COMMAND_ACTION_TYPE:
+      return { ...state, ...{ isLoadingCommand: false, commandErrorMessage: action.payload } }
     case COMPLETE_COMMAND_ACTION_TYPE:
       return { ...state, isLoadingCommand: false }
     case GET_ACCOUNTS_RESULT_ACTION_TYPE:

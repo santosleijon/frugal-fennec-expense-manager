@@ -5,6 +5,7 @@ import Main from './Main';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { devToolsEnhancer  } from 'redux-devtools-extension';
+import CommandErrorSnackbar from './CommandErrorSnackbar';
 
 function App() {
   let store = createStore(appReducer, devToolsEnhancer({}));
@@ -14,6 +15,7 @@ function App() {
       <AppToolbar />
       <Main />
       <Footer />
+      <CommandErrorSnackbar />
     </Provider>
   )
 }
