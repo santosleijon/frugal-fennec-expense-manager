@@ -38,6 +38,24 @@ class AccountProjectionsDAO @Autowired constructor(
                 account_projections
             WHERE
                 account_id = :account_id
+            LIMIT 1
+        """.trimIndent(), paramMap, ProjectionMapping(objectMapper)
+        ).firstOrNull()
+    }
+
+    fun findByName(name: String): AccountProjection? {
+        val paramMap: Map<String, Any> = mapOf(
+            "account_name" to name,
+        )
+
+        return template.query("""
+            SELECT
+                 data
+            FROM
+                account_projections
+            WHERE
+                account_name = :account_name
+            LIMIT 1
         """.trimIndent(), paramMap, ProjectionMapping(objectMapper)
         ).firstOrNull()
     }

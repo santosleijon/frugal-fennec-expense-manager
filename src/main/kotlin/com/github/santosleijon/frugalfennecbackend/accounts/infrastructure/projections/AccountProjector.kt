@@ -11,7 +11,7 @@ import java.util.*
 
 @Component
 class AccountProjector @Autowired constructor(
-    private val accountProjectionRepository: AccountProjectionRepository
+    private val accountProjectionRepository: AccountProjectionRepository,
 ) : EventSubscriber {
 
     override fun handleEvent(event: DomainEvent) {

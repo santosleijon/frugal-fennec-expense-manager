@@ -68,6 +68,17 @@ class Account(
         return
     }
 
+    fun undelete() {
+        this.apply(
+            AccountUndeletedEvent(
+                id = this.id,
+                version = version+1
+            )
+        )
+
+        return
+    }
+
     fun addExpense(expense: Expense): Account {
         if (expenses.contains(expense)) {
             return this
@@ -106,6 +117,9 @@ class Account(
             }
             is AccountDeletedEvent -> {
                 deleted = true
+            }
+            is AccountUndeletedEvent -> {
+                deleted = false
             }
             is ExpenseAddedEvent -> {
                 expenses.add(event.expense)
