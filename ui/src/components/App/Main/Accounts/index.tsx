@@ -13,7 +13,6 @@ export default function Accounts() {
 
   useEffect(() => {
     dispatchCommand(getAccounts, dispatch)
-    // TODO: Display error message with notistack
   }, [dispatch]);
 
   const accounts = useSelector<AppState, Account[]>(
@@ -40,8 +39,6 @@ function AddAccountForm() {
     dispatchCommand(() => addAccount(account), dispatch)
 
     setAccount({ ...account, name: "" })
-
-    // TODO: Display error message with notistack
   }
 
   const onChangeAccountName = (event: React.ChangeEvent<HTMLInputElement>) => {
