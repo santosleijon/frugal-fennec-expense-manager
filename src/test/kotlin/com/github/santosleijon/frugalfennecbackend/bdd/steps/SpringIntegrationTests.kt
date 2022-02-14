@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.steps
+package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
 import io.cucumber.spring.CucumberContextConfiguration
 import org.springframework.boot.test.context.SpringBootTest

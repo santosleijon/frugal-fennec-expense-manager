@@ -1,6 +1,6 @@
-package com.github.santosleijon.frugalfennecbackend.steps
+package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
-import com.github.santosleijon.frugalfennecbackend.TestDbContainer
+import com.github.santosleijon.frugalfennecbackend.bdd.TestDbContainer
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.toUTCInstant
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjection

@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend
+package com.github.santosleijon.frugalfennecbackend.bdd
 
 import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.wait.strategy.Wait
