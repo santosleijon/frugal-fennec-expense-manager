@@ -5,5 +5,5 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @Suppress("unused")
 @CucumberContextConfiguration
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class SpringIntegrationTests

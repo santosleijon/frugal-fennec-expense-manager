@@ -74,18 +74,20 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
     <Card>
       <CardContent>
         <h3>Expenses</h3>
-        <DataGridContainer>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            disableSelectionOnClick
-            disableColumnSelector
-            checkboxSelection
-            onSelectionModelChange={(newSelectionModel) => {
-              setSelectionModel(newSelectionModel);
-            }}
-          />
-        </DataGridContainer>
+        <div id="expensesDataGrid">
+            <DataGridContainer>
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                disableSelectionOnClick
+                disableColumnSelector
+                checkboxSelection
+                onSelectionModelChange={(newSelectionModel) => {
+                  setSelectionModel(newSelectionModel);
+                }}
+              />
+            </DataGridContainer>
+        </div>
         <Button
           variant="contained"
           color="secondary"

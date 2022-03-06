@@ -44,7 +44,7 @@ export function AccountsDataGrid(props: AccountsDataGridProps) {
     <Card>
       <CardContent>
         <h3>Accounts</h3>
-        <div style={{height: "400px", marginBottom: "12px" }}>
+        <div id="accountsDataGrid" style={{height: "400px", marginBottom: "12px" }}>
           <DataGrid
             rows={rows}
             columns={columns}
