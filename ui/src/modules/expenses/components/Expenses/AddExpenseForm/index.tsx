@@ -123,6 +123,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
                   className="inputField"
               />
 
+              {/* TODO: Use common AccountFormField component? */}
               <TextField
                   id="account-field"
                   select

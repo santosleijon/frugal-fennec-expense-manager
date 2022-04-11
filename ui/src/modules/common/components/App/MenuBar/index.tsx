@@ -6,7 +6,7 @@ import './index.css'
 import { useSelector } from "react-redux";
 import { AppState } from "modules/common/reducers/appReducer";
 
-export default function AppToolbar() {
+export default function MenuBar() {
   const navigate = useNavigate();
 
   const isLoadingCommand = useSelector<AppState, boolean>(
@@ -27,7 +27,8 @@ export default function AppToolbar() {
             Frugal Fennec
           </Link>
         </Typography>
-        <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Expenses</Button>
+        <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Reports</Button>
+        <Button color="inherit" onClick={() => navigate('./expenses', { replace: true })}>Expenses</Button>
         <Button color="inherit" onClick={() => navigate('./accounts', { replace: true })}>Accounts</Button>
       </Toolbar>
     </AppBar>

@@ -1,4 +1,4 @@
-import AppToolbar from './AppToolbar';
+import MenuBar from './MenuBar';
 import Footer from './Footer';
 import Main from './Main';
 import { createStore } from 'redux';
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <Provider store={store}>
-      <AppToolbar />
+      <MenuBar />
       <Main />
       <Footer />
       <CommandErrorSnackbar />

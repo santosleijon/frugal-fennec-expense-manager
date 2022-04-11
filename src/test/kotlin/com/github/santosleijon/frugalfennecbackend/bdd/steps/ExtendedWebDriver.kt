@@ -8,6 +8,14 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.interactions.Actions
 
 class ExtendedWebDriver : ChromeDriver() {
+    fun getPageContent(): String {
+        return findElement(By.tagName("body")).text
+    }
+
+    fun findInputElementByValue(value: String): WebElement {
+        return findElement(By.xpath("//input[@value='$value']"))
+    }
+
     fun enterTextIntoElementWithId(text: String, id: String) {
         val element = findElement(By.id(id))
         clearInputElement(element)
@@ -25,21 +33,9 @@ class ExtendedWebDriver : ChromeDriver() {
         Actions(this).doubleClick(accountNameCell).perform()
     }
 
-    fun findInputElementByValue(value: String): WebElement {
-        return findElement(By.xpath("//input[@value='$value']"))
-    }
-
     fun enterValueIntoInputElement(inputElement: WebElement, newValue: String) {
         clearInputElement(inputElement)
         inputElement.sendKeys(newValue)
-    }
-
-    // Workaround since the clear() does not always work
-    // https://stackoverflow.com/questions/50677760/selenium-clear-command-doesnt-clear-the-element
-    private fun clearInputElement(inputElement: WebElement) {
-        while (inputElement.getAttribute("value") != "") {
-            inputElement.sendKeys(Keys.BACK_SPACE)
-        }
     }
 
     fun selectOptionFromDropdownElement(elementId: String, optionText: String) {
@@ -50,5 +46,13 @@ class ExtendedWebDriver : ChromeDriver() {
         this.findElement(
             By.xpath("//ul[@aria-labelledby='$elementId-label']/li[text()='$optionText']")
         ).click()
+    }
+
+    // Workaround since the clear() does not always work
+    // https://stackoverflow.com/questions/50677760/selenium-clear-command-doesnt-clear-the-element
+    private fun clearInputElement(inputElement: WebElement) {
+        while (inputElement.getAttribute("value") != "") {
+            inputElement.sendKeys(Keys.BACK_SPACE)
+        }
     }
 }
