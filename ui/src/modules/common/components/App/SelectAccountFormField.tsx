@@ -7,8 +7,7 @@ interface AccountFormFieldProps {
   onSelectAccount: (selectedAccountId: string) => void
 }
 
-export function AccountFormField(props: AccountFormFieldProps) {
-
+export function SelectAccountFormField(props: AccountFormFieldProps) {
   const onSelectAccount = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.onSelectAccount(event.target.value)
   }

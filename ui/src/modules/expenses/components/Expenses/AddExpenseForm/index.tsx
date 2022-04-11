@@ -4,6 +4,7 @@ import './index.css'
 import { getCurrentDate } from "utils/getCurrentDate"
 import { Account } from "modules/accounts/types/Account"
 import { Expense } from "modules/expenses/types/Expense"
+import { SelectAccountFormField } from "modules/common/components/App/SelectAccountFormField"
 
 interface AddExpenseFormProps {
   accounts: Account[],
@@ -40,8 +41,8 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
     }
   }
 
-  const onAccountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, accountId: event.target.value })
+  const onAccountChange = (selectedAccountId: string) => {
+    setValues({ ...values, accountId: selectedAccountId})
   }
   const onAmountChanged = (event: any) => {
     setValues({ ...values, amount: event.target.value})
@@ -124,22 +125,12 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
               />
 
               {/* TODO: Use common AccountFormField component? */}
-              <TextField
-                  id="account-field"
-                  select
-                  label="Account"
-                  value={values.accountId ?? props.accounts[0]?.id}
-                  variant="outlined"
-                  onChange={onAccountChange}
-                  className="inputField"
-              >
-                {props.accounts.map((account) => (
-                <MenuItem key={account.id} value={account.id}>
-                    {account.name}
-                </MenuItem>
-                ))}
-              </TextField>
-              
+              <SelectAccountFormField 
+                accounts={props.accounts}
+                selectedAccountId={values.accountId ?? props.accounts[0]?.id}
+                onSelectAccount={onAccountChange}
+              />
+
               <TextField
                   id="description-field"
                   label="Description"

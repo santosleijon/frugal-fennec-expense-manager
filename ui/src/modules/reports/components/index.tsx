@@ -3,7 +3,7 @@ import { Account } from "modules/accounts/types/Account";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "modules/common/reducers/appReducer";
-import { AccountFormField } from "./AccountFormField";
+import { SelectAccountFormField } from "../../common/components/App/SelectAccountFormField";
 import { dispatchCommand } from "modules/common/commands/dispatchCommand";
 import { getAccounts } from "modules/accounts/commands/getAccounts";
 import { ExpenseReport } from "./ExpenseReport";
@@ -38,7 +38,7 @@ export default function Reports() {
         <CardContent>
           <h2>Expenses by account</h2>
 
-          <AccountFormField
+          <SelectAccountFormField
             accounts={accounts}
             selectedAccountId={selectedAccount?.id}
             onSelectAccount={onSelectAccount}
