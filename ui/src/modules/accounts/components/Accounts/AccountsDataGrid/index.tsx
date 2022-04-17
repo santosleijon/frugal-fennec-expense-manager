@@ -20,6 +20,7 @@ export function AccountsDataGrid(props: AccountsDataGridProps) {
       field: 'name',
       headerName: 'Name',
       type: 'string',
+      width: 750,
       editable: true,
     },
   ]
