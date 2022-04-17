@@ -12,8 +12,7 @@ class AccountProjectionRepositoryImpl @Autowired constructor(
     val accountProjectionsDAO: AccountProjectionsDAO,
 ) : AccountProjectionRepository {
     override fun save(accountProjection: AccountProjection): AccountProjection {
-        accountProjectionsDAO.delete(accountProjection.id)
-        accountProjectionsDAO.insert(accountProjection)
+        accountProjectionsDAO.upsert(accountProjection)
 
         return accountProjection
     }

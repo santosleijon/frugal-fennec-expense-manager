@@ -60,7 +60,7 @@ class AccountProjectionsDAO @Autowired constructor(
         ).firstOrNull()
     }
 
-    fun insert(accountProjection: AccountProjection) {
+    fun upsert(accountProjection: AccountProjection) {
         val paramMap: Map<String, Any> = mapOf(
             "account_id" to accountProjection.id,
             "account_name" to accountProjection.name,
@@ -82,6 +82,12 @@ class AccountProjectionsDAO @Autowired constructor(
                 :data::jsonb,
                 :version
             )
+            ON CONFLICT (account_id)
+            DO
+                UPDATE SET
+                    account_name = :account_name,
+                    data = :data::jsonb,
+                    version = :version
         """.trimIndent(), paramMap)
     }
 
