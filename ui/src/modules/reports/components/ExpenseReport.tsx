@@ -13,7 +13,7 @@ interface ExpenseReportProps {
 
 type TotalExpenseByDate = {
   date: string,
-  amount: string,
+  amount: number,
 }
 
 export function ExpenseReport(props: ExpenseReportProps) {
@@ -65,9 +65,7 @@ function getTotalExpensesByDate(account: Account): TotalExpenseByDate[] {
   for (const date in expensesByDate) {
     const amountSum = expensesByDate[date].reduce((sum, expense) => sum + expense.amount, 0)
 
-    const formattedAmountSum = amountSum.toFixed(2)
-
-    totalExpensesByDate.push({ date: date, amount: formattedAmountSum })
+    totalExpensesByDate.push({ date: date, amount: amountSum })
   }
 
   return _.sortBy(totalExpensesByDate, (i: TotalExpenseByDate) => i.date)
