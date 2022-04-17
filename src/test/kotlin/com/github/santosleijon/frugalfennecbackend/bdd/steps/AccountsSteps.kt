@@ -5,6 +5,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjec
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.bdd.TestDbContainer
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
+import com.github.santosleijon.frugalfennecbackend.bdd.webdriver.ExtendedWebDriver
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
@@ -46,7 +47,7 @@ class AccountsSteps {
 
     @Before
     fun beforeScenario() {
-        webDriver = ExtendedWebDriver()
+        webDriver = ExtendedWebDriver.createWithWebDriverManager()
     }
 
     @After

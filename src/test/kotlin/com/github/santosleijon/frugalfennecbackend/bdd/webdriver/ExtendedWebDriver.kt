@@ -1,6 +1,7 @@
-package com.github.santosleijon.frugalfennecbackend.bdd.steps
+package com.github.santosleijon.frugalfennecbackend.bdd.webdriver
 
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
+import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
 import org.openqa.selenium.WebElement
@@ -8,6 +9,13 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.interactions.Actions
 
 class ExtendedWebDriver : ChromeDriver() {
+    companion object {
+        fun createWithWebDriverManager(): ExtendedWebDriver {
+            WebDriverManager.chromedriver().setup()
+            return ExtendedWebDriver()
+        }
+    }
+
     fun getPageContent(): String {
         return findElement(By.tagName("body")).text
     }
