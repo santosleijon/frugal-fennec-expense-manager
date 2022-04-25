@@ -1,11 +1,10 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
-import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjectionRepository
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.bdd.TestDbContainer
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
 import com.github.santosleijon.frugalfennecbackend.bdd.webdriver.ExtendedWebDriver
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.AccountProjectionRepository
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.Expense
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
@@ -40,7 +39,7 @@ class AccountsSteps {
     private val pageUrl = "http://localhost:8080"
 
     @Autowired
-    private lateinit var accountResource: AccountResource
+    private lateinit var accountResource: com.github.santosleijon.frugalfennecbackend.application.api.AccountResource
 
     @Autowired
     private lateinit var accountProjectionRepository: AccountProjectionRepository
@@ -58,7 +57,7 @@ class AccountsSteps {
 
     @Given("an account with the name {string}")
     fun givenAnAccount(accountName: String) {
-        accountResource.create(AccountResource.CreateAccountInputsDTO(accountName))
+        accountResource.create(com.github.santosleijon.frugalfennecbackend.application.api.AccountResource.CreateAccountInputsDTO(accountName))
     }
 
     @When("the user clicks on {string}")
