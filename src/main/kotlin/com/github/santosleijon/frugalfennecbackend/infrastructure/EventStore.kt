@@ -1,7 +1,7 @@
 package com.github.santosleijon.frugalfennecbackend.infrastructure
 
-import com.github.santosleijon.frugalfennecbackend.domain.EventServer
 import com.github.santosleijon.frugalfennecbackend.domain.DomainEvent
+import com.github.santosleijon.frugalfennecbackend.infrastructure.eventpubsub.EventServer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
