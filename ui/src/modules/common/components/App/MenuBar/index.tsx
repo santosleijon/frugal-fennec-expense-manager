@@ -1,10 +1,10 @@
 import { AppBar, Typography, Toolbar, Link, Box, Button, CircularProgress } from "@material-ui/core";
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import React from "react";
 import './index.css'
 import { useSelector } from "react-redux";
 import { AppState } from "modules/common/reducers/appReducer";
+import FrugalFennecIcon from './frugal-fennec-icon-32x32.png'; 
 
 export default function MenuBar() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function MenuBar() {
     (state) => state.isLoadingCommand
   );
 
-  const toolbarIcon = isLoadingCommand ? <CircularProgress color="inherit" size="24px" /> : <AccountBalanceIcon />
+  const toolbarIcon = isLoadingCommand ? <CircularProgress color="inherit" size="32px" /> : <img src={FrugalFennecIcon} alt="Frugal Fennec icon" />;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
