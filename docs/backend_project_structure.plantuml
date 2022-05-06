@@ -1,0 +1,32 @@
+@startuml
+
+folder domain [
+**Domain**
+---
+Domain Entities
+Value-Objects
+Repository interfaces
+]
+
+folder application [
+**Application**
+---
+REST Web API
+Commands
+Queries
+]
+
+folder infrastructure [
+**Infrastructure**
+---
+Repository implementations
+Data Access Objects
+Aggregate Projections
+Event Pub-Sub structure
+]
+
+infrastructure -u-> domain : depends on
+application -u-> domain : depends on
+application->infrastructure : depends on
+
+@enduml

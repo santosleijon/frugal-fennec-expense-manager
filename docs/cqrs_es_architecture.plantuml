@@ -1,0 +1,28 @@
+@startuml
+
+component rest_api as "REST API"
+
+package "Write model" {
+  database event_store as "Event\nStore" #Lightblue
+  [Command] -> [Entity\nRepository]
+  [Entity\nRepository] -> event_store
+}
+
+package "Read model" {
+  database entity_projections as "Entity\nProjections" #Lightblue
+
+  [Query] -> [Entity Projection\nRepository]
+  [Entity Projection\nRepository] .> [Query]
+
+  [Entity Projection\nRepository] -> entity_projections
+  entity_projections .> [Entity Projection\nRepository]
+
+  event_store -d-> [Entity Projector]
+
+  [Entity Projector] -> entity_projections
+}
+
+rest_api --> [Command]
+rest_api --> [Query]
+
+@enduml
