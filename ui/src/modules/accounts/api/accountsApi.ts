@@ -37,6 +37,21 @@ export const accountsApi = {
     return response.json()
   },
 
+  async updateAccountName(accountId: string, newName: string): Promise<void> {
+    const response = await fetch(`${baseUrl}/${accountId}`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "newName": newName }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to update account name (HTTP status = ${response.status})`);
+    }
+  },
+
   async delete(accountId: string): Promise<void> {
     const response = await fetch(`${baseUrl}/${accountId}`, {
       method: 'DELETE',
@@ -45,8 +60,6 @@ export const accountsApi = {
     if (!response.ok) {
       throw new Error(`Failed to delete account (HTTP status = ${response.status})`);
     }
-
-    return
   },
 
   async addExpense(accountId: string, expense: Expense): Promise<Expense> {
