@@ -4,7 +4,6 @@ import React from "react";
 import './index.css'
 import { useSelector } from "react-redux";
 import { AppState } from "modules/common/reducers/appReducer";
-import FrugalFennecIcon from './frugal-fennec-icon-32x32.png'; 
 
 export default function MenuBar() {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ export default function MenuBar() {
     (state) => state.isLoadingCommand
   );
 
-  const toolbarIcon = isLoadingCommand ? <CircularProgress color="inherit" size="32px" /> : <img src={FrugalFennecIcon} alt="Frugal Fennec icon" />;
+  const toolbarIcon = isLoadingCommand ? <CircularProgress color="inherit" size="32px" /> : <img src={process.env.PUBLIC_URL + '/frugal-fennec-icon-32x32.png'} alt="Frugal Fennec icon" />;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -24,7 +23,7 @@ export default function MenuBar() {
         </Box>
         <Typography variant="h6" className="toolbar-title" color="inherit">
           <Link href="./" title="Frugal Fennec Expense Manager" color="inherit">
-            Frugal Fennec
+            Frugal Fennec Expense Manager
           </Link>
         </Typography>
         <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Reports</Button>
