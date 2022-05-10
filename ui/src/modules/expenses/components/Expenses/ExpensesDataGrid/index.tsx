@@ -82,6 +82,11 @@ export default function ExpensesDataGrid(props: ExpensesDataGridProps) {
                 disableSelectionOnClick
                 disableColumnSelector
                 checkboxSelection
+                initialState={{
+                  sorting: {
+                    sortModel: [{ field: 'date', sort: 'desc' }],
+                  },
+                }}
                 onSelectionModelChange={(newSelectionModel) => {
                   setSelectionModel(newSelectionModel);
                 }}
