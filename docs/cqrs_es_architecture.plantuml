@@ -4,22 +4,22 @@ component rest_api as "REST API"
 
 package "Write model" {
   database event_store as "Event\nStore" #Lightblue
-  [Command] -> [Entity\nRepository]
-  [Entity\nRepository] -> event_store
+  [Command] -> [Domain Entity\nRepository]
+  [Domain Entity\nRepository] -> event_store
 }
 
 package "Read model" {
-  database entity_projections as "Entity\nProjections" #Lightblue
+  database entity_projections as "Domain Entity\nProjections" #Lightblue
 
-  [Query] -> [Entity Projection\nRepository]
-  [Entity Projection\nRepository] .> [Query]
+  [Query] -> [Domain Entity\nProjection Repository]
+  [Domain Entity\nProjection Repository] .> [Query]
 
-  [Entity Projection\nRepository] -> entity_projections
-  entity_projections .> [Entity Projection\nRepository]
+  [Domain Entity\nProjection Repository] -> entity_projections
+  entity_projections .> [Domain Entity\nProjection Repository]
 
-  event_store -d-> [Entity Projector]
+  event_store -d-> [Domain Entity\nProjector]
 
-  [Entity Projector] -> entity_projections
+  [Domain Entity\nProjector] -> entity_projections
 }
 
 rest_api --> [Command]

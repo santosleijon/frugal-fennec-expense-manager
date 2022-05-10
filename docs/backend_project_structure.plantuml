@@ -21,8 +21,7 @@ folder infrastructure [
 ---
 Repository implementations
 Data Access Objects
-Aggregate Projections
-Event Pub-Sub structure
+Domain Entity Projections
 ]
 
 infrastructure -u-> domain : depends on

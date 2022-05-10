@@ -70,9 +70,9 @@ This makes it possible to change these parts independently.
 * **Application layer** - Contains the REST web API and the commands and queries that can be triggered through it. Uses domain entities from the domain layer and the repository implementations from the infrastructure layer (through Dependency Injection).
 * **Infrastructure layer** - Contains repository implementations and the Data Access Objects (DAO) they use to read and write data to the database.
 
-## Event Sourcing and Command and Query Separation (CQRS)
+## Command and Query Separation (CQRS) and Event Sourcing
 
-This project uses a simplified [CQRS pattern](https://martinfowler.com/bliki/CQRS.html) where read operation (*queries*) and write operations (*commands*) use different models. 
+This project uses a simplified [CQRS pattern](https://martinfowler.com/bliki/CQRS.html) where read operation (*queries*) and write operations (*commands*) are modeled separately. 
 This separation makes it possible to use constructs that are optimized for the type of operation being performed, for example by using a database structure that is optimized for read performance when executing queries, but not having to use it when executing commands.
 
 CQRS fits well with [event sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) which this project also uses.
