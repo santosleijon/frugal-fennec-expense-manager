@@ -5,7 +5,7 @@
 * Post expenses to accounts
 * View expense reports as line charts
 
-![screen capture of demo](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/demo.gif?raw=true)
+![screen capture of demo](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/docs/demo.gif?raw=true)
 
 ## Technology stack
 
@@ -64,7 +64,7 @@ This command will trigger the following:
 The backend uses a layered project structure inspired by [Microsoft's Domain-Driven Design (DDD) practices](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice) with the aim to separate the domain entities with business logic, the REST web API and the persistence layer from each other.
 This makes it possible to change these parts independently.
 
-![backend project structure](https://github.com/santosleijon/frugal-fennec/blob/main/docs/backend_project_structure.png?raw=true)
+![backend project structure](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/docs/backend_project_structure.png?raw=true)
 
 * **Domain layer** - Contains domain entities and value-objects (i.e. *Account* and *Expense*) with their associated business logic, as well as repository contracts.
 * **Application layer** - Contains the REST web API and the commands and queries that can be triggered through it. Uses domain entities from the domain layer and the repository implementations from the infrastructure layer (through Dependency Injection).
@@ -79,4 +79,4 @@ CQRS fits well with [event sourcing](https://martinfowler.com/eaaDev/EventSourci
 With event sourcing all changes in the system are captured as a sequence of *events* and the state of a domain entity (i.e. an *Account*) is derived from these events.
 This is unlike in a pure CRUD (Create, Retrieve, Update, Delete) system where only the last state is recorded, and we have no knowledge about the sequence of changes that led to that state.
 
-![cqrs and event sourcing architecture(https://github.com/santosleijon/frugal-fennec/blob/main/docs/cqrs_es_architecture.png?raw=true)
+![cqrs and event sourcing architecture](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/docs/cqrs_es_architecture.png?raw=true)
