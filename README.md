@@ -5,7 +5,7 @@
 * Post expenses to accounts
 * View expense reports as line charts
 
-*TODO: Insert Gif with demo here after fennec image has been added*
+![screen capture of demo](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/demo.gif?raw=true)
 
 ## Technology stack
 
@@ -26,8 +26,6 @@
 
 
 ## Launching the application
-
-*TODO: Just write "docker-compose up" after the Dockerfiles for the UI and backend has been created*
 
 1. Download the Git repo:
 
