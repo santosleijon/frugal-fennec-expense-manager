@@ -37,7 +37,7 @@ git clone https://github.com/santosleijon/frugal-fennec-expense-manager.git
 
 ```
 mvn clean install
-java -jar `ls ./target/frugal-fennec-backend-*.jar`
+java -jar ./target/frugal-fennec-expense-manager-0.0.1.jar
 ```
 
 3. Build and start the React frontend:

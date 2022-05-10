@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.santosleijon</groupId>
-	<artifactId>frugal-fennec-backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>frugal-fennec-backend</name>
-	<description>Backend för Frugal Fennec</description>
+	<artifactId>frugal-fennec-expense-manager</artifactId>
+	<version>0.0.1</version>
+	<name>Frugal Fennec Expense Manager</name>
+	<description>Backend for Frugal Fennec Expense Manager</description>
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.4.32</kotlin.version>
