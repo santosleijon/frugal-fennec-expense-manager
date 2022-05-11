@@ -43,7 +43,6 @@ class EventStoreDAO @Autowired constructor(
             "data" to objectMapper.writeValueAsString(event),
         )
 
-        // TODO: Handle error when result code <> 0
         template.update("""
             INSERT INTO event_store (
                 event_id,

@@ -68,7 +68,6 @@ class AccountProjectionsDAO @Autowired constructor(
             "version" to accountProjection.version,
         )
 
-        // TODO: Handle error when result code <> 0
         template.update("""
             INSERT INTO account_projections (
                 account_id,
@@ -96,7 +95,6 @@ class AccountProjectionsDAO @Autowired constructor(
             "account_id" to accountId,
         )
 
-        // TODO: Handle error when result code <> 0
         template.update("""
             DELETE FROM account_projections
             WHERE account_id = :account_id
