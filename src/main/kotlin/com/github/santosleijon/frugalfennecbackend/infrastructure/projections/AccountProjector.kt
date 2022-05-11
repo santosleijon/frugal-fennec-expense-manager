@@ -1,18 +1,21 @@
 package com.github.santosleijon.frugalfennecbackend.infrastructure.projections
 
 import com.github.santosleijon.frugalfennecbackend.domain.DomainEvent
+import com.github.santosleijon.frugalfennecbackend.domain.accounts.Account
 import com.github.santosleijon.frugalfennecbackend.infrastructure.eventpubsub.EventSubscriber
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.AccountProjection
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.domain.accounts.events.*
+import com.github.santosleijon.frugalfennecbackend.infrastructure.eventpubsub.EventServer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
 class AccountProjector @Autowired constructor(
+    eventServer: EventServer,
     private val accountProjectionRepository: AccountProjectionRepository,
-) : EventSubscriber {
+) : EventSubscriber(Account.aggregateName, eventServer) {
 
     override fun handleEvent(event: DomainEvent) {
         when (event) {

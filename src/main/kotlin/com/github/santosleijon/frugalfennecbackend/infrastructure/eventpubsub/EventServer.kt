@@ -1,25 +1,29 @@
 package com.github.santosleijon.frugalfennecbackend.infrastructure.eventpubsub
 
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.Account
 import com.github.santosleijon.frugalfennecbackend.domain.DomainEvent
-import com.github.santosleijon.frugalfennecbackend.infrastructure.projections.AccountProjector
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class EventServer @Autowired constructor(
-    // TODO: Replace this dependency by binding the projector to the event server during startup instead of injecting it here
-    accountProjector: AccountProjector,
-) {
-    private val subscriberList: Map<String, List<EventSubscriber>> =
-        mapOf(Account.aggregateName to listOf(accountProjector))
+class EventServer {
+    private val eventHandlers: MutableMap<String, List<(DomainEvent) -> Unit>> =
+        emptyMap<String, List<(DomainEvent) -> Unit>>().toMutableMap()
+
+    fun registerEventHandler(aggregateName: String, eventHandler: (DomainEvent) -> Unit) {
+        val currentSubscribers = eventHandlers.getOrElse(aggregateName) { emptyList() }
+        eventHandlers[aggregateName] = currentSubscribers.plus(eventHandler)
+    }
+
+    fun deregisterEventHandler(aggregateName: String, eventHandler: (DomainEvent) -> Unit) {
+        val currentSubscribers = eventHandlers.getOrElse(aggregateName) { emptyList() }
+        eventHandlers[aggregateName] = currentSubscribers.minus(eventHandler)
+    }
 
     fun publishEvent(event: DomainEvent) {
-        val eventSubscribers = subscriberList[event.aggregateName]
+        val eventHandlers = eventHandlers[event.aggregateName]
             ?: return
 
-        eventSubscribers.forEach { subscriber ->
-            subscriber.handleEvent(event)
+        eventHandlers.forEach { handleEvent ->
+            handleEvent(event)
         }
     }
 }
