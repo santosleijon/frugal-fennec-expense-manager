@@ -15,7 +15,7 @@
 	<description>Backend for Frugal Fennec Expense Manager</description>
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.4.32</kotlin.version>
+		<kotlin.version>1.7.10</kotlin.version>
 		<jackson.version>2.12.5</jackson.version>
 		<mockito-kotlin.version>4.0.0</mockito-kotlin.version>
 		<testcontainers.version>1.16.2</testcontainers.version>
