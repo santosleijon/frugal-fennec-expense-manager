@@ -1,10 +1,10 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
+import com.github.santosleijon.frugalfennecbackend.accounts.application.api.utils.toUTCInstant
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.toDateString
-import com.github.santosleijon.frugalfennecbackend.application.api.utils.toUTCInstant
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.AccountProjectionRepository
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.AccountRepository
-import com.github.santosleijon.frugalfennecbackend.domain.accounts.Expense
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjectionRepository
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import io.cucumber.java.DataTableType
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
