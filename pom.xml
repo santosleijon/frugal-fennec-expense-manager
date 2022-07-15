@@ -17,6 +17,7 @@
 		<java.version>11</java.version>
 		<kotlin.version>1.4.32</kotlin.version>
 		<jackson.version>2.12.5</jackson.version>
+		<mockito-kotlin.version>4.0.0</mockito-kotlin.version>
 		<testcontainers.version>1.16.2</testcontainers.version>
 		<cucumber.version>7.2.3</cucumber.version>
 		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
@@ -24,6 +25,7 @@
 		<exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
 		<selenium.version>4.1.3</selenium.version>
 		<webdrivermanager.version>5.1.1</webdrivermanager.version>
+		<sendgrid-java.version>4.9.2</sendgrid-java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -75,6 +77,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>sendgrid-java</artifactId>
+			<version>${sendgrid-java.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -103,6 +111,13 @@
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-test-junit</artifactId>
 			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito.kotlin</groupId>
+			<artifactId>mockito-kotlin</artifactId>
+			<version>${mockito-kotlin.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -199,6 +214,9 @@
 					<includes>
 						<include>**/RunCucumberTest*</include>
 					</includes>
+					<environmentVariables>
+						<SENDGRID_API_KEY>test</SENDGRID_API_KEY>
+					</environmentVariables>
 				</configuration>
 				<executions>
 					<execution>
