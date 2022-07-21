@@ -1,14 +1,12 @@
 package com.github.santosleijon.frugalfennecbackend.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.santosleijon.frugalfennecbackend.common.utils.toZuluLocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 
 @Component
@@ -70,6 +68,4 @@ class EventStoreDAO @Autowired constructor(
             return objectMapper.readValue(eventAsJsonString, DomainEvent::class.java)
         }
     }
-
-    private fun Instant.toZuluLocalDateTime(): LocalDateTime = LocalDateTime.ofInstant(this, ZoneId.of("Z"))
 }

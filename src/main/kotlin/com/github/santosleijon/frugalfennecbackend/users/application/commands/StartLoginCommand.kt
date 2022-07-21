@@ -1,55 +1,63 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
+import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCode
+import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCodeRepository
+import com.github.santosleijon.frugalfennecbackend.users.domain.RandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.infrastructure.MailSender
 import com.sendgrid.helpers.mail.Mail
-import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import com.sendgrid.helpers.mail.objects.Personalization
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import kotlin.math.floor
+import java.time.Duration
+import java.time.Instant
 
 @Component
 class StartLoginCommand @Autowired constructor(
-    private val mailSender: MailSender,
+    private val randomEmailVerificationCodeGenerator: RandomEmailVerificationCodeGenerator,
+    private val emailVerificationCodeRepository: EmailVerificationCodeRepository,
+    private val mailSender: MailSender
 ) {
 
-    fun handle(userEmail: String) {
-        val verificationCode = generateUniqueVerificationCode(userEmail)
+    private var logger = LoggerFactory.getLogger(this::class.java)
 
-        val verificationMail = createEmailVerificationMail(userEmail, verificationCode)
+    fun handle(email: String) {
+        val emailVerificationCode = createEmailVerificationCode(email)
 
-        val mailResponse = mailSender.send(verificationMail)
+        val verificationMail = createEmailVerificationMail(email, emailVerificationCode.verificationCode)
 
-        println(mailResponse.body)
-        println(mailResponse.headers)
-        println(mailResponse.statusCode)
+        mailSender.send(verificationMail)
+
+        logger.info("Started login and sent email verification code ${emailVerificationCode.verificationCode} to $email")
     }
 
-    private fun generateUniqueVerificationCode(userEmail: String): String {
-        val maxLimit = 9999
-        val minLimit = 1000
+    private fun createEmailVerificationCode(email: String): EmailVerificationCode {
+        val uniqueVerificationCode = randomEmailVerificationCodeGenerator.generate()
 
-        val verificationCode = floor(Math.random() * (maxLimit - minLimit + 1) + minLimit).toString()
+        val emailVerificationCode = EmailVerificationCode(
+            email = email,
+            verificationCode = uniqueVerificationCode,
+            issued = Instant.now(),
+            validTo = Instant.now().plus(Duration.ofHours(1))
+        )
 
-        // TODO: Verify uniqueness by querying DB
-        // TODO: Save verification code in DB
-        return verificationCode
+        emailVerificationCodeRepository.save(emailVerificationCode)
+
+        return emailVerificationCode
     }
 
     private fun createEmailVerificationMail(recipientAddress: String, verificationCode: String): Mail {
-        val from = Email("santos.leijon@gmail.com")
-        val subject = "Sending with SendGrid is Fun"
         val to = Email(recipientAddress)
-        val content = Content("text/plain", "and easy to do anywhere, even with Java")
-        val templateId = "d-bcf8c873247f4bb68f4551d54df9ec6b"
 
         val personalization = Personalization().also {
+            it.addTo(to)
             it.addDynamicTemplateData("verificationCode", verificationCode)
         }
 
-        return Mail(from, subject, to, content).also {
-            it.templateId = templateId
+        return Mail().also {
+            it.from = Email("santos.leijon@gmail.com")
+            it.templateId = "d-bcf8c873247f4bb68f4551d54df9ec6b"
             it.addPersonalization(personalization)
         }
     }

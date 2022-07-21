@@ -1,19 +1,28 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.mocks
 
 import com.github.santosleijon.frugalfennecbackend.users.infrastructure.MailSender
-import com.sendgrid.Response
 import com.sendgrid.helpers.mail.Mail
+import org.mockito.Mockito
 import org.mockito.kotlin.whenever
-import org.springframework.http.HttpStatus
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
+import org.springframework.context.annotation.Profile
+
+@Profile("test")
+@Configuration
+@Suppress("unused")
+class MockMailSenderBeanConfiguration {
+    @Bean
+    @Primary
+    fun mailSender(): MailSender {
+        return Mockito.mock(MailSender::class.java)
+    }
+}
 
 object MockMailSender : MailSender {
-    val sentEmails: MutableList<Mail> = emptyList<Mail>().toMutableList()
 
-    private val successfulResponse = Response(
-        HttpStatus.ACCEPTED.value(),
-        "{}",
-        emptyMap(),
-    )
+    val sentEmails: MutableList<Mail> = emptyList<Mail>().toMutableList()
 
     fun init(mockedMailSender: MailSender) {
         sentEmails.clear()
@@ -24,9 +33,7 @@ object MockMailSender : MailSender {
         }
     }
 
-    override fun send(mail: Mail): Response {
+    override fun send(mail: Mail) {
         sentEmails.add(mail)
-
-        return successfulResponse
     }
 }

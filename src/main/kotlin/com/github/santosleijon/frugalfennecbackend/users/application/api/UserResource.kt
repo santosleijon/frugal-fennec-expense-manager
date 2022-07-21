@@ -2,10 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.users.application.api
 
 import com.github.santosleijon.frugalfennecbackend.users.application.commands.StartLoginCommand
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin(origins = ["http://localhost:8080"])
@@ -14,7 +11,7 @@ class UserResource @Autowired constructor(
     private val startCommandHandler: StartLoginCommand,
 ) {
     @PostMapping("start-login")
-    fun startLogin(startLoginInputsDTO: StartLoginInputsDTO) {
+    fun startLogin(@RequestBody(required = true) startLoginInputsDTO: StartLoginInputsDTO) {
         startCommandHandler.handle(startLoginInputsDTO.userEmail)
     }
 
