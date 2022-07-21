@@ -20,4 +20,8 @@ class EmailVerificationCodeRepositoryImpl constructor(
     override fun isValid(email: String, verificationCode: String, currentTime: Instant): Boolean {
         return emailVerificationCodesDAO.isValid(email, verificationCode, currentTime)
     }
+
+    override fun markAsConsumed(email: String, verificationCode: String) {
+        emailVerificationCodesDAO.markAsConsumed(email, verificationCode)
+    }
 }

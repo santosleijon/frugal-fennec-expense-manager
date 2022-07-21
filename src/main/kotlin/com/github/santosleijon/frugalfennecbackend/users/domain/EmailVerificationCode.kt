@@ -7,4 +7,5 @@ data class EmailVerificationCode (
     val verificationCode: String,
     val issued: Instant,
     val validTo: Instant,
+    val consumed: Instant? = null,
 )

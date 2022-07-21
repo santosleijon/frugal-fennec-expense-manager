@@ -29,7 +29,7 @@ class StartLoginCommand @Autowired constructor(
 
         mailSender.send(verificationMail)
 
-        logger.info("Started login and sent email verification code ${emailVerificationCode.verificationCode} to $email")
+        logger.info("Started login for $email. Sent email verification code: ${emailVerificationCode.verificationCode} ")
     }
 
     private fun createEmailVerificationCode(email: String): EmailVerificationCode {
@@ -39,7 +39,7 @@ class StartLoginCommand @Autowired constructor(
             email = email,
             verificationCode = uniqueVerificationCode,
             issued = Instant.now(),
-            validTo = Instant.now().plus(Duration.ofHours(1))
+            validTo = Instant.now().plus(Duration.ofHours(1)),
         )
 
         emailVerificationCodeRepository.save(emailVerificationCode)

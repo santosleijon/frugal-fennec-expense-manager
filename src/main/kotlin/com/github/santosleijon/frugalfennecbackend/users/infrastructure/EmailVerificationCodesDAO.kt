@@ -13,11 +13,12 @@ class EmailVerificationCodesDAO @Autowired constructor(
 ) {
 
     fun upsert(emailVerificationCode: EmailVerificationCode) {
-        val paramMap: Map<String, Any> = mapOf(
+        val paramMap: Map<String, Any?> = mapOf(
             "email" to emailVerificationCode.email,
             "verification_code" to emailVerificationCode.verificationCode,
             "issued" to emailVerificationCode.issued.toZuluLocalDateTime(),
             "valid_to" to emailVerificationCode.validTo.toZuluLocalDateTime(),
+            "consumed" to emailVerificationCode.consumed?.toZuluLocalDateTime(),
         )
 
         template.update("""
@@ -25,13 +26,15 @@ class EmailVerificationCodesDAO @Autowired constructor(
                 email,
                 verification_code,
                 issued,
-                valid_to
+                valid_to,
+                consumed
             )
             VALUES (
                 :email,
                 :verification_code,
                 :issued,
-                :valid_to
+                :valid_to,
+                :consumed
             )
         """.trimIndent(), paramMap)
     }
@@ -51,10 +54,29 @@ class EmailVerificationCodesDAO @Autowired constructor(
             WHERE
                 email = :email AND
                 verification_code = :verification_code AND
+                consumed IS NULL AND
                 issued <= :current_time AND
                 valid_to > :current_time
         """.trimIndent(), paramMap, Int::class.java)
 
         return validMatchesCount != null && validMatchesCount > 0
+    }
+
+    fun markAsConsumed(email: String, verificationCode: String) {
+        val paramMap: Map<String, Any> = mapOf(
+            "email" to email,
+            "verification_code" to verificationCode,
+            "consumed" to Instant.now().toZuluLocalDateTime(),
+        )
+
+        template.update("""
+            UPDATE
+                email_verification_codes
+            SET
+                consumed = :consumed
+            WHERE
+                email = :email AND
+                verification_code = :verification_code
+        """.trimIndent(), paramMap)
     }
 }
