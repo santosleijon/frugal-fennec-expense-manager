@@ -12,7 +12,7 @@ class EmailVerificationCodesDAO @Autowired constructor(
     private val template: NamedParameterJdbcTemplate,
 ) {
 
-    fun upsert(emailVerificationCode: EmailVerificationCode) {
+    fun insert(emailVerificationCode: EmailVerificationCode) {
         val paramMap: Map<String, Any?> = mapOf(
             "email" to emailVerificationCode.email,
             "verification_code" to emailVerificationCode.verificationCode,

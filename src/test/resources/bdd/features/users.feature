@@ -7,6 +7,8 @@ Feature: User registration and login
     When a user with email "test@example.com" completes the login with verification code "1234"
     Then the user receives a valid session token
 
+  # Scenario: An error is displayed when trying to start a login with an invalid email address
+
   Scenario: An error is displayed when trying to complete the login with an invalid email verification code
     Given that the randomly generated email verification code will be "1234"
     When a user with email "test@example.com" starts logging in

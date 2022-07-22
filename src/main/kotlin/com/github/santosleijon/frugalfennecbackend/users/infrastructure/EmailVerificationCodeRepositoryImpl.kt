@@ -12,7 +12,7 @@ class EmailVerificationCodeRepositoryImpl constructor(
 ) : EmailVerificationCodeRepository {
 
     override fun save(emailVerificationCode: EmailVerificationCode): EmailVerificationCode {
-        emailVerificationCodesDAO.upsert(emailVerificationCode)
+        emailVerificationCodesDAO.insert(emailVerificationCode)
 
         return emailVerificationCode
     }

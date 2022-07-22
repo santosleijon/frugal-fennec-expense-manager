@@ -4,7 +4,8 @@ import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
 import com.github.santosleijon.frugalfennecbackend.users.domain.RandomEmailVerificationCodeGenerator
-import com.github.santosleijon.frugalfennecbackend.users.domain.SessionTokens
+import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
+import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
 import com.github.santosleijon.frugalfennecbackend.users.infrastructure.MailSender
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
@@ -25,9 +26,9 @@ class UsersSteps {
     private lateinit var randomEmailVerificationCodeGenerator: RandomEmailVerificationCodeGenerator
 
     @Autowired
-    private lateinit var sessionTokens: SessionTokens
+    private lateinit var userSessions: UserSessions
 
-    private var sessionToken: String? = null
+    private var userSession: UserSession? = null
     private var requestError: Exception? = null
 
     @Before
@@ -35,7 +36,7 @@ class UsersSteps {
         MockMailSender.init(mailSender)
         MockRandomEmailVerificationCodeGenerator.init(randomEmailVerificationCodeGenerator)
 
-        sessionToken = null
+        userSession = null
         requestError = null
     }
 
@@ -59,7 +60,7 @@ class UsersSteps {
         )
 
         try {
-            sessionToken = userResource.completeLogin(completeLoginInputsDTO).sessionToken
+            userSession = userResource.completeLogin(completeLoginInputsDTO)
         } catch (e: Exception) {
             requestError = e
         }
@@ -87,9 +88,9 @@ class UsersSteps {
 
     @Then("the user receives a valid session token")
     fun assertUserReceivesAValidSessionToken() {
-        Assertions.assertThat(sessionToken).isNotNull
+        Assertions.assertThat(userSession).isNotNull
 
-        sessionTokens.verifyToken(sessionToken!!)
+        userSessions.isValid(userSession!!.token)
     }
 
     @Then("an {string} error is returned")
