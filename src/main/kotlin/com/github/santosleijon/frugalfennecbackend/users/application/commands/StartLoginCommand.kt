@@ -1,9 +1,7 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
-import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCode
-import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
-import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.RandomEmailVerificationCodeGenerator
-import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailAddressError
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.*
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Email
 import com.sendgrid.helpers.mail.objects.Personalization
@@ -23,6 +21,10 @@ class StartLoginCommand @Autowired constructor(
     private var logger = LoggerFactory.getLogger(this::class.java)
 
     fun handle(email: String) {
+        if (!isValidEmail(email)) {
+            throw InvalidEmailAddressError(email)
+        }
+
         val emailVerificationCode = createEmailVerificationCode(email)
 
         val verificationMail = createEmailVerificationMail(email, emailVerificationCode.verificationCode)

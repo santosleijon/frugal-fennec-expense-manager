@@ -1,8 +1,10 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
+import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailAddressError
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailVerificationCodeError
 import com.github.santosleijon.frugalfennecbackend.users.domain.*
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.isValidEmail
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,12 +22,16 @@ class CompleteLoginCommand @Autowired constructor(
 
     private var logger = LoggerFactory.getLogger(this::class.java)
 
-    fun handle(userEmail: String, verificationCode: String): UserSession {
-        if (!emailVerificationCodeRepository.isValid(userEmail, verificationCode, Instant.now())) {
-            throw InvalidEmailVerificationCodeError(userEmail)
+    fun handle(email: String, verificationCode: String): UserSession {
+        if (!isValidEmail(email)) {
+            throw InvalidEmailAddressError(email)
         }
 
-        val existingUser = userProjectionRepository.findByEmail(userEmail)
+        if (!emailVerificationCodeRepository.isValid(email, verificationCode, Instant.now())) {
+            throw InvalidEmailVerificationCodeError(email)
+        }
+
+        val existingUser = userProjectionRepository.findByEmail(email)
 
         val userId: UUID?
 
@@ -34,21 +40,21 @@ class CompleteLoginCommand @Autowired constructor(
 
             val newUser = User(
                 userId,
-                userEmail,
+                email,
             )
 
             userRepository.save(newUser)
 
-            logger.info("New user for email $userEmail created. User ID: $userId")
+            logger.info("New user for email $email created. User ID: $userId")
         } else {
             userId = existingUser.id
         }
 
         val userSession = userSessions.create(userId!!)
 
-        emailVerificationCodeRepository.markAsConsumed(userEmail, verificationCode)
+        emailVerificationCodeRepository.markAsConsumed(email, verificationCode)
 
-        logger.info("Completed login for user $userEmail. Given session token: $userSession")
+        logger.info("Completed login for user $email. Given session token: $userSession")
 
         return userSession
     }

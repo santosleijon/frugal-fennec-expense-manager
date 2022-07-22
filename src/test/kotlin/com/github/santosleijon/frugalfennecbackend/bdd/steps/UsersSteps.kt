@@ -51,12 +51,16 @@ class UsersSteps {
 
     @When("a user with email {string} starts logging in")
     fun userWithEmailStartsLoggingIn(email: String) {
-        userResource.startLogin(
-            UserResource.StartLoginInputsDTO(email)
-        )
+        try {
+            userResource.startLogin(
+                UserResource.StartLoginInputsDTO(email)
+            )
+        } catch (e: Exception) {
+            requestError = e
+        }
     }
 
-    @When("a user with email {string} completes the login with verification code {string}")
+    @When("a user with email {string} completes a login with verification code {string}")
     fun userCompletedLogin(email: String, verificationCode: String) {
         val completeLoginInputsDTO = UserResource.CompleteLoginInputsDTO(
             email,
