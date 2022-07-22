@@ -2,6 +2,8 @@ package com.github.santosleijon.frugalfennecbackend.accounts.infrastructure.proj
 
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.*
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.events.*
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjection
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.common.DomainEvent
 import com.github.santosleijon.frugalfennecbackend.common.eventpubsub.EventServer
 import com.github.santosleijon.frugalfennecbackend.common.eventpubsub.EventSubscriber

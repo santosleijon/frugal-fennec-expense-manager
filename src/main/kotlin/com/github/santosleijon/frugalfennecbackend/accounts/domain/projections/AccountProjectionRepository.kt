@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.accounts.domain
+package com.github.santosleijon.frugalfennecbackend.accounts.domain.projections
 
 import java.util.*
 

@@ -2,7 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.accounts.application.command
 
 import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.AccountNotFoundError
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjectionRepository
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

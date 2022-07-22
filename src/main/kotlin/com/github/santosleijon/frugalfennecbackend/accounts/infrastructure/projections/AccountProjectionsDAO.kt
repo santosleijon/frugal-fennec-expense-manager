@@ -1,7 +1,7 @@
 package com.github.santosleijon.frugalfennecbackend.accounts.infrastructure.projections
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjection
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate

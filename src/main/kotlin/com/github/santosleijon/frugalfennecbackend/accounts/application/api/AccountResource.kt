@@ -5,7 +5,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.application.commands
 import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAccountQuery
 import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAllAccountsQuery
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjection
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType

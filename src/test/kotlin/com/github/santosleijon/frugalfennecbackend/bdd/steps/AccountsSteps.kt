@@ -4,7 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.application.api.Acco
 import com.github.santosleijon.frugalfennecbackend.bdd.TestDbContainer
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
 import com.github.santosleijon.frugalfennecbackend.bdd.webdriver.ExtendedWebDriver
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountProjectionRepository
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import io.cucumber.java.After
 import io.cucumber.java.Before
