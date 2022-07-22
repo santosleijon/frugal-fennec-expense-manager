@@ -13,11 +13,15 @@ class UserRepositoryImpl @Autowired constructor(
     private val eventStore: EventStore,
 ) : UserRepository {
 
-    override fun save(user: User) {
-        TODO("Not yet implemented")
+    override fun save(user: User): User? {
+        user.pendingEvents.forEach {
+            eventStore.append(it)
+        }
+
+        return findById(user.id)
     }
 
-    override fun getById(id: UUID): User? {
+    override fun findById(id: UUID): User? {
         val eventStream = eventStore.loadStream(id)
 
         if (eventStream.events.isEmpty()) {
@@ -25,9 +29,5 @@ class UserRepositoryImpl @Autowired constructor(
         }
 
         return User.loadFrom(eventStream.events, id, eventStream.version)
-    }
-
-    override fun getByEmail(email: String): User? {
-        TODO("Not yet implemented")
     }
 }

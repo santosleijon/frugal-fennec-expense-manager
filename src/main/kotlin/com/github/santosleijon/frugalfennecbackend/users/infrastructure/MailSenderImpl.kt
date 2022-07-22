@@ -1,5 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.users.infrastructure
 
+import com.github.santosleijon.frugalfennecbackend.users.domain.MailSender
 import com.sendgrid.Method
 import com.sendgrid.Request
 import com.sendgrid.SendGrid

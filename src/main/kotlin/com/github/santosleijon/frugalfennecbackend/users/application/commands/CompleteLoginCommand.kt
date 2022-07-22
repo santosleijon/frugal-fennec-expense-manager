@@ -2,6 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailVerificationCodeError
 import com.github.santosleijon.frugalfennecbackend.users.domain.*
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -12,6 +13,8 @@ import java.util.*
 class CompleteLoginCommand @Autowired constructor(
     private val emailVerificationCodeRepository: EmailVerificationCodeRepository,
     private val userSessions: UserSessions,
+    private val userProjectionRepository: UserProjectionRepository,
+    private val userRepository: UserRepository,
 ) {
 
     private var logger = LoggerFactory.getLogger(this::class.java)
@@ -21,10 +24,26 @@ class CompleteLoginCommand @Autowired constructor(
             throw InvalidEmailVerificationCodeError(userEmail)
         }
 
-        // TODO: Fetch existing user, or save new user if not existing
-        val userId = UUID.randomUUID()
+        val existingUser = userProjectionRepository.findByEmail(userEmail)
 
-        val userSession = userSessions.create(userId)
+        val userId: UUID?
+
+        if (existingUser == null) {
+            userId = UUID.randomUUID()
+
+            val newUser = User(
+                userId,
+                userEmail,
+            )
+
+            userRepository.save(newUser)
+
+            logger.info("New user for email $userEmail created. User ID: $userId")
+        } else {
+            userId = existingUser.id
+        }
+
+        val userSession = userSessions.create(userId!!)
 
         emailVerificationCodeRepository.markAsConsumed(userEmail, verificationCode)
 

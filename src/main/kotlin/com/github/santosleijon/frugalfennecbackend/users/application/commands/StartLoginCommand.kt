@@ -3,7 +3,7 @@ package com.github.santosleijon.frugalfennecbackend.users.application.commands
 import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCode
 import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCodeRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.RandomEmailVerificationCodeGenerator
-import com.github.santosleijon.frugalfennecbackend.users.infrastructure.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.domain.MailSender
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Email
 import com.sendgrid.helpers.mail.objects.Personalization

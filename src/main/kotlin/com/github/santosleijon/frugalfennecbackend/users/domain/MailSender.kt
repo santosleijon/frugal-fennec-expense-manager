@@ -1,4 +1,4 @@
-package com.github.santosleijon.frugalfennecbackend.users.infrastructure
+package com.github.santosleijon.frugalfennecbackend.users.domain
 
 import com.sendgrid.helpers.mail.Mail
 

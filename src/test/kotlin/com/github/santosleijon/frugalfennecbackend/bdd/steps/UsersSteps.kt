@@ -6,7 +6,8 @@ import com.github.santosleijon.frugalfennecbackend.users.application.api.UserRes
 import com.github.santosleijon.frugalfennecbackend.users.domain.RandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
-import com.github.santosleijon.frugalfennecbackend.users.infrastructure.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.domain.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -27,6 +28,9 @@ class UsersSteps {
 
     @Autowired
     private lateinit var userSessions: UserSessions
+
+    @Autowired
+    private lateinit var userProjectionRepository: UserProjectionRepository
 
     private var userSession: UserSession? = null
     private var requestError: Exception? = null
@@ -84,6 +88,13 @@ class UsersSteps {
 
         Assertions.assertThat(actualRecipientEmail).isEqualTo(email)
         Assertions.assertThat(actualVerificationCode).isEqualTo(verificationCode)
+    }
+
+    @Then("a user is created for email {string}")
+    fun assertUserIsCreatedFor(email: String) {
+        val user = userProjectionRepository.findByEmail(email)
+
+        Assertions.assertThat(user).isNotNull
     }
 
     @Then("the user receives a valid session token")

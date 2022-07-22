@@ -5,7 +5,8 @@ Feature: User registration and login
     When a user with email "test@example.com" starts logging in
     Then an email with verification code "1234" is sent to "test@example.com"
     When a user with email "test@example.com" completes the login with verification code "1234"
-    Then the user receives a valid session token
+    Then a user is created for email "test@example.com"
+    And the user receives a valid session token
 
   # Scenario: An error is displayed when trying to start a login with an invalid email address
 

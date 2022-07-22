@@ -1,6 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.mocks
 
-import com.github.santosleijon.frugalfennecbackend.users.infrastructure.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.domain.MailSender
 import com.sendgrid.helpers.mail.Mail
 import org.mockito.Mockito
 import org.mockito.kotlin.whenever
