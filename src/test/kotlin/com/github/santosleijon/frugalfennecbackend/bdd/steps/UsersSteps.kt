@@ -3,6 +3,8 @@ package com.github.santosleijon.frugalfennecbackend.bdd.steps
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
+import com.github.santosleijon.frugalfennecbackend.users.domain.User
+import com.github.santosleijon.frugalfennecbackend.users.domain.UserRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.RandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
@@ -14,6 +16,7 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.*
 
 class UsersSteps {
 
@@ -28,6 +31,9 @@ class UsersSteps {
 
     @Autowired
     private lateinit var userSessions: UserSessions
+
+    @Autowired
+    private lateinit var userRepository: UserRepository
 
     @Autowired
     private lateinit var userProjectionRepository: UserProjectionRepository
@@ -47,6 +53,16 @@ class UsersSteps {
     @Given("that the randomly generated email verification code will be {string}")
     fun givenRandomlyGeneratedEmailVerificationCode(verificationCode: String) {
         MockRandomEmailVerificationCodeGenerator.setVerificationCode(verificationCode)
+    }
+
+    @Given("a registered user {string}")
+    fun givenARegisteredUser(email: String) {
+        val user = User(
+            id = UUID.randomUUID(),
+            email = email,
+        )
+
+        userRepository.save(user)
     }
 
     @When("a user with email {string} starts logging in")
