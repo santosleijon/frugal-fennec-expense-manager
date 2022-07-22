@@ -1,13 +1,12 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailVerificationCodeError
-import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCodeRepository
-import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
-import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
+import com.github.santosleijon.frugalfennecbackend.users.domain.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.util.*
 
 @Component
 class CompleteLoginCommand @Autowired constructor(
@@ -22,9 +21,10 @@ class CompleteLoginCommand @Autowired constructor(
             throw InvalidEmailVerificationCodeError(userEmail)
         }
 
-        // TODO: Create user if not existing
+        // TODO: Fetch existing user, or save new user if not existing
+        val userId = UUID.randomUUID()
 
-        val userSession = userSessions.create(userEmail)
+        val userSession = userSessions.create(userId)
 
         emailVerificationCodeRepository.markAsConsumed(userEmail, verificationCode)
 

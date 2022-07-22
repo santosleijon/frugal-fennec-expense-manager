@@ -1,6 +1,6 @@
 \c frugal_fennec;
 CREATE TABLE IF NOT EXISTS user_sessions (
-  user_email VARCHAR(255) NOT NULL,
+  user_id UUID PRIMARY KEY,
   token VARCHAR(512) NOT NULL,
   issued TIMESTAMP WITH TIME ZONE NOT NULL,
   valid_to TIMESTAMP WITH TIME ZONE NOT NULL

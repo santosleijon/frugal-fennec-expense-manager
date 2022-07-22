@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
+import java.util.*
 
 @Component
 class UserSessionsDAO @Autowired constructor(
@@ -14,7 +15,7 @@ class UserSessionsDAO @Autowired constructor(
 ) {
     fun insert(userSession: UserSession) {
         val paramMap: Map<String, Any?> = mapOf(
-            "user_email" to userSession.userEmail,
+            "user_id" to userSession.userId,
             "token" to userSession.token,
             "issued" to userSession.issued.toZuluLocalDateTime(),
             "valid_to" to userSession.validTo.toZuluLocalDateTime(),
@@ -22,13 +23,13 @@ class UserSessionsDAO @Autowired constructor(
 
         template.update("""
             INSERT INTO user_sessions (
-                user_email,
+                user_id,
                 token,
                 issued,
                 valid_to
             )
             VALUES (
-                :user_email,
+                :user_id,
                 :token,
                 :issued,
                 :valid_to
@@ -43,7 +44,7 @@ class UserSessionsDAO @Autowired constructor(
 
         return template.query("""
             SELECT
-                 user_email,
+                 user_id,
                  token,
                  issued,
                  valid_to
@@ -58,13 +59,13 @@ class UserSessionsDAO @Autowired constructor(
 
     class RowMapping: RowMapper<UserSession> {
         override fun mapRow(resultSet: ResultSet, arg1: Int): UserSession {
-            val userEmail = resultSet.getString("user_email")
+            val userId = UUID.fromString(resultSet.getString("user_id"))
             val token = resultSet.getString("token")
             val issued = resultSet.getTimestamp("issued").toInstant()
             val validTo = resultSet.getTimestamp("valid_to").toInstant()
 
             return UserSession(
-                userEmail = userEmail,
+                userId = userId,
                 token = token,
                 issued = issued,
                 validTo = validTo,

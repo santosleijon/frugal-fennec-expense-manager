@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.Duration
 import java.time.Instant
+import java.util.*
 
 @Component
 class UserSessions @Autowired constructor(
@@ -18,19 +19,19 @@ class UserSessions @Autowired constructor(
 
     private val algorithm = Algorithm.HMAC256(sessionTokenSecretKey)
 
-    fun create(userEmail: String): UserSession {
+    fun create(userId: UUID): UserSession {
         val issuedDate = Instant.now()
         val expirationDate = Instant.now().plus(Duration.ofDays(7))
 
         val token = JWT.create()
                 .withIssuer(sessionTokenIssuer)
-                .withSubject(userEmail)
+                .withSubject(userId.toString())
                 .withIssuedAt(issuedDate)
                 .withExpiresAt(expirationDate)
                 .sign(algorithm)
 
         val userSession = UserSession(
-            userEmail = userEmail,
+            userId = userId,
             token = token,
             issued = issuedDate,
             validTo = expirationDate,
