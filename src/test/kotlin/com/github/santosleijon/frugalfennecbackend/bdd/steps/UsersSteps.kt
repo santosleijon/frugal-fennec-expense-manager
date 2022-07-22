@@ -3,10 +3,10 @@ package com.github.santosleijon.frugalfennecbackend.bdd.steps
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
-import com.github.santosleijon.frugalfennecbackend.users.domain.RandomEmailVerificationCodeGenerator
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.RandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
-import com.github.santosleijon.frugalfennecbackend.users.domain.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.MailSender
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given

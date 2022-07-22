@@ -1,6 +1,6 @@
-package com.github.santosleijon.frugalfennecbackend.users.infrastructure
+package com.github.santosleijon.frugalfennecbackend.users.infrastructure.emailverification
 
-import com.github.santosleijon.frugalfennecbackend.users.domain.RandomEmailVerificationCodeGenerator
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.RandomEmailVerificationCodeGenerator
 import org.springframework.stereotype.Component
 import kotlin.math.floor
 

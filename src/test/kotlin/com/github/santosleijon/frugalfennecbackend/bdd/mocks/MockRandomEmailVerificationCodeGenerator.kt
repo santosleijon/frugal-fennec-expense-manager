@@ -1,6 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.mocks
 
-import com.github.santosleijon.frugalfennecbackend.users.domain.RandomEmailVerificationCodeGenerator
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.RandomEmailVerificationCodeGenerator
 import org.mockito.Mockito
 import org.mockito.kotlin.whenever
 import org.springframework.context.annotation.Bean

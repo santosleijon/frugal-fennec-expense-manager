@@ -1,7 +1,7 @@
-package com.github.santosleijon.frugalfennecbackend.users.infrastructure
+package com.github.santosleijon.frugalfennecbackend.users.infrastructure.emailverification
 
 import com.github.santosleijon.frugalfennecbackend.common.utils.toZuluLocalDateTime
-import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCode
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component

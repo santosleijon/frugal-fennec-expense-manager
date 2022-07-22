@@ -1,7 +1,7 @@
-package com.github.santosleijon.frugalfennecbackend.users.infrastructure
+package com.github.santosleijon.frugalfennecbackend.users.infrastructure.emailverification
 
-import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCode
-import com.github.santosleijon.frugalfennecbackend.users.domain.EmailVerificationCodeRepository
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCode
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
 import org.springframework.stereotype.Component
 import java.time.Instant
 

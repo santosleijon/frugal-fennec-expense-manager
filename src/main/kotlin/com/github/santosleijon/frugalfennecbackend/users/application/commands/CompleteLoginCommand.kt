@@ -2,6 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailVerificationCodeError
 import com.github.santosleijon.frugalfennecbackend.users.domain.*
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

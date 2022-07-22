@@ -1,6 +1,6 @@
-package com.github.santosleijon.frugalfennecbackend.users.infrastructure
+package com.github.santosleijon.frugalfennecbackend.users.infrastructure.emailverification
 
-import com.github.santosleijon.frugalfennecbackend.users.domain.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.MailSender
 import com.sendgrid.Method
 import com.sendgrid.Request
 import com.sendgrid.SendGrid
