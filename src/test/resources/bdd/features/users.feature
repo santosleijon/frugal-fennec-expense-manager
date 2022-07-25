@@ -1,6 +1,6 @@
-Feature: Password-less user registration and login
+Feature: Password-less user registration and login using email verification
 
-  Scenario: A new user is registered by logging in using an email verification code
+  Scenario: A new user can be registered by logging in
     Given that the randomly generated email verification code will be "1234"
     When a user with email "test@example.com" starts logging in
     Then an email with verification code "1234" is sent to "test@example.com"
@@ -8,7 +8,7 @@ Feature: Password-less user registration and login
     Then a user is created for email "test@example.com"
     And the user receives a valid session token
 
-  Scenario: An existing user can log in using an email verification code
+  Scenario: An existing user can log in
     Given a registered user "test@example.com"
     And that the randomly generated email verification code will be "1234"
     When a user with email "test@example.com" starts logging in
