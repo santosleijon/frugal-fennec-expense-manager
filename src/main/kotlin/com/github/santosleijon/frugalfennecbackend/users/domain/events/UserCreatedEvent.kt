@@ -15,5 +15,6 @@ class UserCreatedEvent(
     override val eventId = id
     override val aggregateName = User.aggregateName
     override val aggregateId = id
+    override val userId = id
     override val date: Instant = Instant.now()
 }

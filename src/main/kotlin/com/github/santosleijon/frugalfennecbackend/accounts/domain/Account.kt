@@ -12,6 +12,9 @@ class Account(
     var name: String? = null
         private set
 
+    var userId: UUID? = null
+        private set
+
     var deleted: Boolean = false
         private set
 
@@ -34,52 +37,57 @@ class Account(
 
     constructor(
         id: UUID,
-        name: String
+        name: String,
+        userId: UUID,
     ) : this(id = id, version = 0) {
         this.apply(
             AccountCreatedEvent(
                 id,
                 version,
                 name,
+                userId,
             )
         )
     }
 
-    fun setName(newName: String): Account {
+    fun setName(newName: String, actorUserId: UUID): Account {
         this.apply(
             AccountNameUpdatedEvent(
                 id = id,
                 version = version+1,
-                newName = newName
+                newName = newName,
+                actorUserId
             )
         )
 
         return this
     }
 
-    fun delete() {
+    fun delete(actorUserId: UUID) {
         this.apply(
             AccountDeletedEvent(
                 id = this.id,
-                version = version+1
+                version = version+1,
+                actorUserId,
             )
         )
 
         return
     }
 
-    fun undelete() {
+    fun undelete(actorUserId: UUID) {
         this.apply(
             AccountUndeletedEvent(
                 id = this.id,
-                version = version+1
+                version = version+1,
+                userId = actorUserId,
             )
         )
 
         return
     }
 
-    fun addExpense(expense: Expense): Account {
+    fun addExpense(expense: Expense, actorUserId: UUID): Account {
         if (expenses.contains(expense)) {
             return this
         }
@@ -89,18 +97,20 @@ class Account(
                 accountId = this.id,
                 version = version+1,
                 expense = expense,
+                userId = actorUserId,
             )
         )
 
         return this
     }
 
-    fun deleteExpense(expense: Expense): Account {
+    fun deleteExpense(expense: Expense, actorUserId: UUID): Account {
         this.apply(
             ExpenseDeletedEvent(
                 accountId = this.id,
                 version = version+1,
                 expense = expense,
+                userId = actorUserId,
             )
         )
 
@@ -111,6 +121,7 @@ class Account(
         when (event) {
             is AccountCreatedEvent -> {
                 name = event.name
+                userId = event.userId
             }
             is AccountNameUpdatedEvent -> {
                 name = event.newName

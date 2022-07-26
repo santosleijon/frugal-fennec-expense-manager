@@ -14,11 +14,12 @@ class UpdateAccountNameCommand @Autowired constructor(
     fun handle(
         id: UUID,
         newName: String,
+        userId: UUID,
     ): Account {
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 
-        account.setName(newName)
+        account.setName(newName, userId)
 
         return accountRepository.save(account)
             ?: throw AccountNotFoundError(id)

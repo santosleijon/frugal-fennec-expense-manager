@@ -19,13 +19,14 @@ class AddExpenseCommand @Autowired constructor(
         date: Instant,
         description: String,
         amount: BigDecimal,
+        userId: UUID,
     ): Account {
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 
         val expense = Expense(date, description, amount)
 
-        account.addExpense(expense)
+        account.addExpense(expense, userId)
 
         return accountRepository.save(account)
             ?: throw AccountNotFoundError(id)

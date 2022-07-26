@@ -1,6 +1,7 @@
 \c frugal_fennec;
 CREATE TABLE IF NOT EXISTS account_projections (
   account_id UUID PRIMARY KEY,
+  user_id UUID NOT NULL,
   account_name VARCHAR(255) NOT NULL,
   data JSONB NOT NULL,
   version INT NOT NULL

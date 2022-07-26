@@ -4,10 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -21,20 +18,28 @@ import java.util.concurrent.ThreadLocalRandom
 class AdminResource @Autowired constructor(
     private val accountRepository: AccountRepository,
 ) {
-    @PostMapping("insert-sample-data")
-    fun insertSampleData() {
-        val accounts = listOf(
-            Account(UUID.randomUUID(), "Housing"),
-            Account(UUID.randomUUID(), "Transportation"),
-            Account(UUID.randomUUID(), "Food"),
-            Account(UUID.randomUUID(), "Utilities"),
-            Account(UUID.randomUUID(), "Health"),
-            Account(UUID.randomUUID(), "Insurance"),
-            Account(UUID.randomUUID(), "Interest rates and debt payments"),
-            Account(UUID.randomUUID(), "Personal care"),
-            Account(UUID.randomUUID(), "Entertainment"),
-            Account(UUID.randomUUID(), "Miscellaneous"),
+    @PostMapping("insert-sample-data/{userId}")
+    fun insertSampleData(@PathVariable(value = "userId") userId: UUID) {
+        val accountNames = listOf(
+            "Housing",
+            "Transportation",
+            "Food",
+            "Utilities",
+            "Health",
+            "Insurance",
+            "Interest rates and debt payments",
+            "Personal care",
+            "Entertainment",
+            "Miscellaneous",
         )
+
+        val accounts = accountNames.map {
+            Account(
+                id = UUID.randomUUID(),
+                name = it,
+                userId = userId,
+            )
+        }
 
         accounts.forEach { account ->
             val expensesCount = ThreadLocalRandom.current().nextInt(5, 15)
@@ -51,7 +56,7 @@ class AdminResource @Autowired constructor(
                     amount = BigDecimal.valueOf(expenseAmount)
                 )
 
-                account.addExpense(expense)
+                account.addExpense(expense, userId)
             }
 
             accountRepository.save(account)

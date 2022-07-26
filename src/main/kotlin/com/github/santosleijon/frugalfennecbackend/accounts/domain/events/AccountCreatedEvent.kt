@@ -11,6 +11,7 @@ class AccountCreatedEvent(
     val id: UUID,
     override val version: Int,
     val name: String,
+    override val userId: UUID,
 ) : DomainEvent {
     override val eventId = id
     override val aggregateName = Account.aggregateName

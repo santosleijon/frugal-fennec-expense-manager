@@ -1,6 +1,8 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.bdd.TestDbContainer
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
 import com.github.santosleijon.frugalfennecbackend.bdd.webdriver.ExtendedWebDriver
@@ -18,6 +20,7 @@ import org.openqa.selenium.Keys
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import java.util.*
 
 class AccountsSteps {
 
@@ -45,6 +48,9 @@ class AccountsSteps {
     @Autowired
     private lateinit var accountProjectionRepository: AccountProjectionRepository
 
+    @Autowired
+    private lateinit var accountRepository: AccountRepository
+
     @Before
     fun beforeScenario() {
         webDriver = ExtendedWebDriver.createWithWebDriverManager()
@@ -58,7 +64,11 @@ class AccountsSteps {
 
     @Given("an account with the name {string}")
     fun givenAnAccount(accountName: String) {
-        accountResource.create(AccountResource.CreateAccountInputsDTO(accountName))
+        val userId = UUID.randomUUID() // TODO
+
+        val account = Account(UUID.randomUUID(), accountName, userId)
+
+        accountRepository.save(account)
     }
 
     @When("the user clicks on {string}")
@@ -88,7 +98,7 @@ class AccountsSteps {
     }
 
     @When("the user enters account name {string}")
-    fun enterAccountName(accountName: String) {
+    fun enterAccountName(accountName: String) = runBlocking {
         webDriver.enterTextIntoElementWithId(accountName, "name-field")
     }
 
@@ -120,7 +130,7 @@ class AccountsSteps {
 
     private fun deleteAllAccounts() {
         accountResource.getAll().forEach { accountProjection ->
-            accountResource.delete(accountProjection.id)
+            accountResource.delete(accountProjection.id, null) // TODO: User real/mocked user ID
         }
     }
 }

@@ -24,10 +24,11 @@ class ExtendedWebDriver : ChromeDriver() {
         return findElement(By.xpath("//input[@value='$value']"))
     }
 
-    fun enterTextIntoElementWithId(text: String, id: String) {
+    suspend fun enterTextIntoElementWithId(text: String, id: String) {
         val element = findElement(By.id(id))
         clearInputElement(element)
         element.sendKeys(text)
+        waitFor(500L)
     }
 
     suspend fun clickOnButton(buttonText: String) {

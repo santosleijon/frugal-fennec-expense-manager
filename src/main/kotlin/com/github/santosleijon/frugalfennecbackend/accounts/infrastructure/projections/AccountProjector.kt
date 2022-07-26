@@ -23,6 +23,7 @@ class AccountProjector @Autowired constructor(
             is AccountCreatedEvent -> {
                 val projection = AccountProjection(
                     id = event.aggregateId,
+                    userId = event.userId,
                     name = event.name,
                     expenses = emptyList(),
                     version = event.version,

@@ -63,6 +63,7 @@ class AccountProjectionsDAO @Autowired constructor(
     fun upsert(accountProjection: AccountProjection) {
         val paramMap: Map<String, Any> = mapOf(
             "account_id" to accountProjection.id,
+            "user_id" to accountProjection.userId,
             "account_name" to accountProjection.name,
             "data" to objectMapper.writeValueAsString(accountProjection),
             "version" to accountProjection.version,
@@ -71,12 +72,14 @@ class AccountProjectionsDAO @Autowired constructor(
         template.update("""
             INSERT INTO account_projections (
                 account_id,
+                user_id,
                 account_name,
                 data,
                 version
             )
             VALUES (
                 :account_id,
+                :user_id,
                 :account_name,
                 :data::jsonb,
                 :version
@@ -85,6 +88,7 @@ class AccountProjectionsDAO @Autowired constructor(
             DO
                 UPDATE SET
                     account_name = :account_name,
+                    user_id = :user_id,
                     data = :data::jsonb,
                     version = :version
         """.trimIndent(), paramMap)

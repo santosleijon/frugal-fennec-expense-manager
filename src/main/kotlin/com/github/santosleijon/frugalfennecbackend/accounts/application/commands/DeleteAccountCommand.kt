@@ -10,11 +10,11 @@ import java.util.*
 class DeleteAccountCommand @Autowired constructor(
     private val accountRepository: AccountRepository
 ) {
-    fun handle(id: UUID) {
+    fun handle(id: UUID, userId: UUID) {
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 
-        account.delete()
+        account.delete(userId)
 
         accountRepository.save(account)
     }

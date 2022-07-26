@@ -35,6 +35,7 @@ class EventStoreDAO @Autowired constructor(
             "event_id" to event.eventId,
             "aggregate_name" to event.aggregateName,
             "aggregate_id" to event.aggregateId,
+            "user_id" to event.userId,
             "event_date" to event.date.toZuluLocalDateTime(),
             "version" to event.version,
             "data" to objectMapper.writeValueAsString(event),
@@ -45,6 +46,7 @@ class EventStoreDAO @Autowired constructor(
                 event_id,
                 aggregate_name,
                 aggregate_id,
+                user_id,
                 event_date,
                 version,
                 data
@@ -53,6 +55,7 @@ class EventStoreDAO @Autowired constructor(
                 :event_id,
                 :aggregate_name,
                 :aggregate_id,
+                :user_id,
                 :event_date,
                 :version,
                 :data::jsonb

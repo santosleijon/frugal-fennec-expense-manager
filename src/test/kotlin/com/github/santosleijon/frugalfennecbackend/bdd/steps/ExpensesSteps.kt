@@ -16,6 +16,7 @@ import org.openqa.selenium.Keys
 import org.springframework.beans.factory.annotation.Autowired
 import java.math.BigDecimal
 import java.time.Instant
+import java.util.*
 
 class ExpensesSteps {
 
@@ -32,8 +33,10 @@ class ExpensesSteps {
         val accountProjection = accountProjectionRepository.findByNameOrNull(accountName)
         val account = accountRepository.findByIdOrNull(accountProjection!!.id)!!
 
+        val userId = UUID.randomUUID() // TODO
+
         expenses.forEach { expense ->
-            account.addExpense(expense)
+            account.addExpense(expense, userId)
         }
 
         accountRepository.save(account)
@@ -70,12 +73,12 @@ class ExpensesSteps {
     }
 
     @When("the user enters expense description {string} in the add expense form")
-    fun enterExpenseDescriptionInAddExpenseForm(description: String) {
+    fun enterExpenseDescriptionInAddExpenseForm(description: String) = runBlocking {
         AccountsSteps.webDriver.enterTextIntoElementWithId(description, "description-field")
     }
 
     @When("the user enters amount {bigdecimal} in the add expense form")
-    fun enterAmountInAddExpenseForm(amount: BigDecimal) {
+    fun enterAmountInAddExpenseForm(amount: BigDecimal) = runBlocking {
         AccountsSteps.webDriver.enterTextIntoElementWithId(amount.toString(), "amount-field")
     }
 

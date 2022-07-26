@@ -57,6 +57,10 @@ class UsersSteps {
 
     @Given("a registered user {string}")
     fun givenARegisteredUser(email: String) {
+        if (userProjectionRepository.findByEmail(email) != null) {
+            return
+        }
+
         val user = User(
             id = UUID.randomUUID(),
             email = email,

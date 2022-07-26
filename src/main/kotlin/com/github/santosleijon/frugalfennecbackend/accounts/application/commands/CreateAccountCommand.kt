@@ -16,6 +16,7 @@ class CreateAccountCommand @Autowired constructor(
     fun handle(
         id: UUID,
         name: String,
+        userId: UUID,
     ): Account {
         val accountProjection = accountProjectionRepository.findByNameOrNull(name)
 
@@ -23,13 +24,13 @@ class CreateAccountCommand @Autowired constructor(
             val account = accountRepository.findByIdOrNull(accountProjection.id)
                 ?: throw AccountNotFoundError(id)
 
-            account.undelete()
+            account.undelete(userId)
 
             return accountRepository.save(account)
                 ?: throw AccountNotFoundError(id)
         }
 
-        val newAccount = Account(id, name)
+        val newAccount = Account(id, name, userId)
 
         return accountRepository.save(newAccount)
             ?: throw AccountNotFoundError(id)

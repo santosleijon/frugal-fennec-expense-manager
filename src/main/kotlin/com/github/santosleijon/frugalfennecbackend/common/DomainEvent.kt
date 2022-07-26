@@ -13,6 +13,7 @@ interface DomainEvent {
     val eventId: UUID
     val aggregateName: String
     val aggregateId: UUID
+    val userId: UUID
     val date: Instant
     val version: Int
 }

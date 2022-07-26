@@ -19,13 +19,14 @@ class DeleteExpenseCommand @Autowired constructor(
         date: Instant,
         description: String,
         amount: BigDecimal,
+        userId: UUID,
     ): Account {
         val account = accountRepository.findByIdOrNull(accountId)
             ?: throw AccountNotFoundError(accountId)
 
         val expense = Expense(date, description, amount)
 
-        account.deleteExpense(expense)
+        account.deleteExpense(expense, userId)
 
         return accountRepository.save(account)
             ?: throw AccountNotFoundError(accountId)

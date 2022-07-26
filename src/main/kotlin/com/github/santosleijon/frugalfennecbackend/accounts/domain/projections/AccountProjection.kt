@@ -7,6 +7,7 @@ import java.util.UUID
 @JsonIgnoreProperties("version")
 data class AccountProjection(
     val id: UUID,
+    val userId: UUID,
     val name: String,
     val expenses: List<Expense>,
     val version: Int,

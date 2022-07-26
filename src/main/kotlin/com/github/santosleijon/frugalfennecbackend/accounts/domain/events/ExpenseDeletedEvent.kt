@@ -12,6 +12,7 @@ class ExpenseDeletedEvent(
     val accountId: UUID,
     override val version: Int,
     val expense: Expense,
+    override val userId: UUID,
 ) : DomainEvent {
     override val eventId: UUID = UUID.randomUUID()
     override val aggregateName = Account.aggregateName

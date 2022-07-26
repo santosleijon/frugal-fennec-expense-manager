@@ -10,6 +10,7 @@ import java.util.*
 class AccountUndeletedEvent(
     val id: UUID,
     override val version: Int,
+    override val userId: UUID,
 ) : DomainEvent {
     override val eventId: UUID = UUID.randomUUID()
     override val aggregateName = Account.aggregateName
