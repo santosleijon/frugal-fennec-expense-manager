@@ -6,6 +6,8 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.*
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.isValidEmail
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
+import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
+import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

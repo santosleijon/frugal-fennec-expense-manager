@@ -124,8 +124,8 @@ class UsersSteps {
     @Then("the user receives a valid session token")
     fun assertUserReceivesAValidSessionToken() {
         Assertions.assertThat(userSession).isNotNull
-
-        userSessions.isValid(userSession!!.token)
+        Assertions.assertThat(userSession?.token).isNotNull
+        Assertions.assertThat(userSessions.isValid(userSession!!.token!!)).isTrue
     }
 
     @Then("an {string} error is returned")

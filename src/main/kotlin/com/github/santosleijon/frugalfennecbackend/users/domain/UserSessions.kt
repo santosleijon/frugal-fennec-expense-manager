@@ -3,6 +3,7 @@ package com.github.santosleijon.frugalfennecbackend.users.domain
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.Duration
@@ -11,7 +12,8 @@ import java.util.*
 
 @Component
 class UserSessions @Autowired constructor(
-    private val userSessionsRepository: UserSessionsRepository,
+    private val userSessionRepository: UserSessionRepository,
+    private val userSessionProjectionRepository: UserSessionProjectionRepository,
 ) {
 
     private val sessionTokenSecretKey: String = System.getenv("SESSION_TOKEN_SECRET_KEY")
@@ -31,15 +33,15 @@ class UserSessions @Autowired constructor(
                 .sign(algorithm)
 
         val userSession = UserSession(
+            id = UUID.randomUUID(),
             userId = userId,
             token = token,
             issued = issuedDate,
             validTo = expirationDate,
         )
 
-        userSessionsRepository.save(userSession)
-
-        return userSession
+        return userSessionRepository.save(userSession)
+            ?: error("Failed to save new user session")
     }
 
     fun isValid(token: String): Boolean {
@@ -49,7 +51,7 @@ class UserSessions @Autowired constructor(
             return false
         }
 
-        return userSessionsRepository.getByToken(token) != null
+       return userSessionProjectionRepository.findByToken(token) != null
     }
 
     private fun verifyToken(token: String) {

@@ -1,0 +1,23 @@
+package com.github.santosleijon.frugalfennecbackend.users.infrastructure.projections
+
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjection
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+
+@Component
+@Suppress("unused")
+class UserSessionProjectionRepositoryImpl @Autowired constructor(
+    private val userSessionProjectionsDAO: UserSessionProjectionsDAO,
+) : UserSessionProjectionRepository {
+
+    override fun save(userSessionProjection: UserSessionProjection): UserSessionProjection {
+        userSessionProjectionsDAO.upsert(userSessionProjection)
+
+        return userSessionProjection
+    }
+
+    override fun findByToken(token: String): UserSessionProjection? {
+        return userSessionProjectionsDAO.findByToken(token)
+    }
+}
