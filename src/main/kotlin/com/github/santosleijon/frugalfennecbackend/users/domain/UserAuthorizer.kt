@@ -7,19 +7,11 @@ import java.util.*
 class UserAuthorizer {
     private val tempUserId = UUID.fromString("70a9bd8e-2aec-4623-9191-f3cdc1f8748f")
 
-    fun getUserIdFromAuthorizationHeader(authorizationHeader: String?): UUID {
-        if (authorizationHeader == null){
+    fun getUserIdFromSessionToken(sessionToken: String?): UUID {
+        if (sessionToken == null){
             // TODO: Remove
             return tempUserId
         }
-
-        val parts = authorizationHeader.split(" ")
-
-        if (parts.isEmpty() || parts.size < 2 || parts[1].isBlank()) {
-            error("Invalid Bearer Authentication value")
-        }
-
-        val sessionToken = parts[1]
 
         // TODO: Check if session exists in user_sessions table
 

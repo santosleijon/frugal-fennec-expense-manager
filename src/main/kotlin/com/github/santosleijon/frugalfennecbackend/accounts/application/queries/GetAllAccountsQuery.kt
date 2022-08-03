@@ -4,12 +4,14 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.A
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class GetAllAccountsQuery @Autowired constructor(
     private val accountProjectionRepository: AccountProjectionRepository,
 ) {
-    fun handle(): List<AccountProjection> {
-        return accountProjectionRepository.findAll()
+    fun handle(userId: UUID): List<AccountProjection> {
+        // TODO: Authorization
+        return accountProjectionRepository.findAll(userId)
     }
 }

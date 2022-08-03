@@ -24,6 +24,7 @@ class CompleteLoginCommand @Autowired constructor(
 
     private var logger = LoggerFactory.getLogger(this::class.java)
 
+    // TODO: All of these "handle" command should be called "execute" since these classes are not command handlers
     fun handle(email: String, verificationCode: String): UserSession {
         if (!isValidEmail(email)) {
             throw InvalidEmailAddressError(email)
@@ -56,7 +57,7 @@ class CompleteLoginCommand @Autowired constructor(
 
         emailVerificationCodeRepository.markAsConsumed(email, verificationCode)
 
-        logger.info("Completed login for user $email. Given session token: $userSession")
+        logger.info("Completed login for user $email. Given session token: ${userSession.token}")
 
         return userSession
     }

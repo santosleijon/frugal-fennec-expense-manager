@@ -16,7 +16,6 @@ import org.openqa.selenium.Keys
 import org.springframework.beans.factory.annotation.Autowired
 import java.math.BigDecimal
 import java.time.Instant
-import java.util.*
 
 class ExpensesSteps {
 
@@ -26,17 +25,18 @@ class ExpensesSteps {
     @Autowired
     private lateinit var accountProjectionRepository: AccountProjectionRepository
 
+    @Autowired
+    private lateinit var usersSteps: UsersSteps
+
     private val pageUrl = "http://localhost:8080"
 
     @Given("the account with the name {string} has the following expenses")
     fun givenExpenses(accountName: String, expenses: List<Expense>) {
-        val accountProjection = accountProjectionRepository.findByNameOrNull(accountName)
+        val accountProjection = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)
         val account = accountRepository.findByIdOrNull(accountProjection!!.id)!!
 
-        val userId = UUID.randomUUID() // TODO
-
         expenses.forEach { expense ->
-            account.addExpense(expense, userId)
+            account.addExpense(expense, usersSteps.sessionUserId)
         }
 
         accountRepository.save(account)

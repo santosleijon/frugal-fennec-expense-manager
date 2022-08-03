@@ -11,8 +11,9 @@ import java.util.*
 class GetAccountQuery @Autowired constructor(
     private val accountProjectionRepository: AccountProjectionRepository,
 ) {
-    fun handle(id: UUID): AccountProjection {
-        return accountProjectionRepository.findByIdOrNull(id)
-            ?: throw AccountNotFoundError(id)
+    fun handle(accountId: UUID, userId: UUID): AccountProjection {
+        // TODO: Authorization
+        return accountProjectionRepository.findByIdOrNull(accountId)
+            ?: throw AccountNotFoundError(accountId)
     }
 }

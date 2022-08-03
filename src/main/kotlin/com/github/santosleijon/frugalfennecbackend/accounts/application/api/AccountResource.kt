@@ -30,9 +30,9 @@ class AccountResource @Autowired constructor(
     @PostMapping("", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun create(
         @RequestBody(required = true) createAccountInputsDTO: CreateAccountInputsDTO,
-        @RequestHeader("Authorization") authorizationHeader: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
     ): Account {
-        val userId = userAuthorizer.getUserIdFromAuthorizationHeader(authorizationHeader)
+        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
 
         return createAccountCommand.handle(
             id = UUID.randomUUID(),
@@ -46,13 +46,22 @@ class AccountResource @Autowired constructor(
     )
 
     @GetMapping
-    fun getAll(): List<AccountProjection> {
-        return getAllAccounts.handle()
+    fun getAll(
+        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+    ): List<AccountProjection> {
+        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+
+        return getAllAccounts.handle(userId)
     }
 
     @RequestMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun get(@PathVariable(value = "id") id: UUID): AccountProjection {
-        return getAccountQuery.handle(id)
+    fun get(
+        @PathVariable(value = "id") id: UUID,
+        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+    ): AccountProjection {
+        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+
+        return getAccountQuery.handle(id, userId)
     }
 
     @PatchMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -60,9 +69,9 @@ class AccountResource @Autowired constructor(
     fun updateName(
         @PathVariable(value = "id") id: UUID,
         @RequestBody(required = true) updateAccountNameInputsDTO: UpdateAccountNameInputsDTO,
-        @RequestHeader("Authorization") authorizationHeader: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
     ): Account? {
-        val userId = userAuthorizer.getUserIdFromAuthorizationHeader(authorizationHeader)
+        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
 
         return updateAccountNameCommand.handle(id, updateAccountNameInputsDTO.newName, userId)
     }
@@ -75,9 +84,9 @@ class AccountResource @Autowired constructor(
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun delete(
         @PathVariable(value = "id") id: UUID,
-        @RequestHeader("Authorization") authorizationHeader: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
     ) {
-        val userId = userAuthorizer.getUserIdFromAuthorizationHeader(authorizationHeader)
+        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
 
         return deleteAccountCommand.handle(id, userId)
     }
@@ -87,9 +96,9 @@ class AccountResource @Autowired constructor(
     fun addExpense(
         @PathVariable("id") id: UUID,
         @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
-        @RequestHeader("Authorization") authorizationHeader: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
     ): Account? {
-        val userId = userAuthorizer.getUserIdFromAuthorizationHeader(authorizationHeader)
+        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
 
         return addExpenseCommand.handle(
             id,
@@ -111,9 +120,9 @@ class AccountResource @Autowired constructor(
     fun deleteExpense(
         @PathVariable("id") id: UUID,
         @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
-        @RequestHeader("Authorization") authorizationHeader: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
     ): Account? {
-        val userId = userAuthorizer.getUserIdFromAuthorizationHeader(authorizationHeader)
+        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
 
         return deleteExpenseCommand.handle(
             id,

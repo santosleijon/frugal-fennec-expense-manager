@@ -38,7 +38,9 @@ class UsersSteps {
     @Autowired
     private lateinit var userProjectionRepository: UserProjectionRepository
 
-    private var userSession: UserSession? = null
+    var userSession: UserSession? = null
+    var sessionUserId: UUID = userSession?.userId ?: UUID.randomUUID()
+
     private var requestError: Exception? = null
 
     @Before
@@ -88,7 +90,7 @@ class UsersSteps {
         )
 
         try {
-            userSession = userResource.completeLogin(completeLoginInputsDTO)
+            userSession = userResource.completeLogin(completeLoginInputsDTO, null)
         } catch (e: Exception) {
             requestError = e
         }

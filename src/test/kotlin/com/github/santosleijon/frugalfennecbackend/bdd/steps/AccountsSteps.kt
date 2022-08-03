@@ -51,6 +51,9 @@ class AccountsSteps {
     @Autowired
     private lateinit var accountRepository: AccountRepository
 
+    @Autowired
+    private lateinit var usersSteps: UsersSteps
+
     @Before
     fun beforeScenario() {
         webDriver = ExtendedWebDriver.createWithWebDriverManager()
@@ -116,21 +119,22 @@ class AccountsSteps {
 
     @Then("an account with the name {string} exists")
     fun assertAccountExists(accountName: String) {
-        val account = accountProjectionRepository.findByNameOrNull(accountName)
+        val account = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)
         Assertions.assertThat(account).isNotNull
     }
 
     @Then("the account with the name {string} has the following expenses:")
     fun assertAccountHasExpenses(accountName: String, expectedExpenses: List<Expense>) {
-        val accountProjection = accountProjectionRepository.findByNameOrNull(accountName)!!
+        val accountProjection = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)!!
         val actualExpenses = accountProjection.expenses
 
         Assertions.assertThat(actualExpenses).containsAll(expectedExpenses)
     }
 
     private fun deleteAllAccounts() {
-        accountResource.getAll().forEach { accountProjection ->
-            accountResource.delete(accountProjection.id, null) // TODO: User real/mocked user ID
+        // TODO: User real/mocked session token
+        accountResource.getAll(null).forEach { accountProjection ->
+            accountResource.delete(accountProjection.id, null)
         }
     }
 }

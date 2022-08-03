@@ -21,6 +21,8 @@ class DeleteExpenseCommand @Autowired constructor(
         amount: BigDecimal,
         userId: UUID,
     ): Account {
+        // TODO: Authorization
+
         val account = accountRepository.findByIdOrNull(accountId)
             ?: throw AccountNotFoundError(accountId)
 

@@ -43,7 +43,7 @@ class AccountProjectionsDAO @Autowired constructor(
         ).firstOrNull()
     }
 
-    fun findByName(name: String): AccountProjection? {
+    fun findByName(name: String, userId: UUID): AccountProjection? {
         val paramMap: Map<String, Any> = mapOf(
             "account_name" to name,
         )

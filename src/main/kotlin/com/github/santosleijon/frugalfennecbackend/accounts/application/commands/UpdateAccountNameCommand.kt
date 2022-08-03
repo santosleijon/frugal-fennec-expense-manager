@@ -16,6 +16,8 @@ class UpdateAccountNameCommand @Autowired constructor(
         newName: String,
         userId: UUID,
     ): Account {
+        // TODO: Authorization
+
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 

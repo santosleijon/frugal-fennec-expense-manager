@@ -21,6 +21,8 @@ class AddExpenseCommand @Autowired constructor(
         amount: BigDecimal,
         userId: UUID,
     ): Account {
+        // TODO: Authorization
+
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 

@@ -11,6 +11,8 @@ class DeleteAccountCommand @Autowired constructor(
     private val accountRepository: AccountRepository
 ) {
     fun handle(id: UUID, userId: UUID) {
+        // TODO: Authorization
+
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 
