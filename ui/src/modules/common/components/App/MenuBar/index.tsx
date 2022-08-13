@@ -26,7 +26,8 @@ export default function MenuBar() {
             Frugal Fennec Expense Manager
           </Link>
         </Typography>
-        <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Reports</Button>
+        <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Login</Button>
+        <Button color="inherit" onClick={() => navigate('./reports', { replace: true })}>Reports</Button>
         <Button color="inherit" onClick={() => navigate('./expenses', { replace: true })}>Expenses</Button>
         <Button color="inherit" onClick={() => navigate('./accounts', { replace: true })}>Accounts</Button>
       </Toolbar>

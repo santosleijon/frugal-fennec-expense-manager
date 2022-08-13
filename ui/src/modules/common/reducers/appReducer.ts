@@ -10,6 +10,7 @@ import { DELETE_ACCOUNT_RESULT_ACTION_TYPE } from 'modules/accounts/commands/del
 import { ADD_EXPENSE_RESULT_ACTION_TYPE } from 'modules/expenses/commands/addExpense';
 import { Account } from 'modules/accounts/types/Account';
 import { UPDATE_ACCOUNT_NAME_ACTION_TYPE } from 'modules/accounts/commands/updateAccountName';
+import { RESET_COMMAND_ACTION_TYPE } from '../commands/resetCommandAction';
 
 export interface AppState {
   isLoadingCommand: boolean,
@@ -31,6 +32,8 @@ export function appReducer(state: AppState = initialState, action: Action) {
       return { ...state, ...{ isLoadingCommand: false, commandErrorMessage: action.payload } }
     case COMPLETE_COMMAND_ACTION_TYPE:
       return { ...state, isLoadingCommand: false }
+    case RESET_COMMAND_ACTION_TYPE:
+      return { ...state, ...{ isLoadingCommand: false, commandErrorMessage: "" } }
     case GET_ACCOUNTS_RESULT_ACTION_TYPE:
       return { ...state, accounts: action.payload }
     case ADD_ACCOUNT_RESULT_ACTION_TYPE:
