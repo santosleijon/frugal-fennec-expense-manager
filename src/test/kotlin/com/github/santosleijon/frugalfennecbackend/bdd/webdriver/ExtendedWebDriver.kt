@@ -34,7 +34,7 @@ class ExtendedWebDriver : ChromeDriver() {
     suspend fun clickOnButton(buttonText: String) {
         val button = findElement(By.xpath("//button/*[text()='$buttonText']/.."))
         button.click()
-        waitFor(1500L)
+        waitFor(1000L)
     }
 
     fun doubleClickOnElementWithText(text: String) {

@@ -15,6 +15,10 @@ export const usersApi = {
       },
       body: JSON.stringify(payload),
     })
+
+    if (response.status === 400) {
+      throw new Error(`Invalid email address`)
+    }
     
     if (!response.ok) {
       throw new Error(`Failed to start login (HTTP status = ${response.status})`)

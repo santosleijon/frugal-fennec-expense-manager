@@ -48,9 +48,9 @@ export default function Login() {
     event.preventDefault()
 
     const onSubmitCommand = async () => {
-      const r = await completeLogin(formValues.email, formValues.verificationCode)
-      navigate("../")
-      return r
+      const result = await completeLogin(formValues.email, formValues.verificationCode)
+      navigate("../reports")
+      return result
     }
 
     dispatchCommand(onSubmitCommand, dispatch)

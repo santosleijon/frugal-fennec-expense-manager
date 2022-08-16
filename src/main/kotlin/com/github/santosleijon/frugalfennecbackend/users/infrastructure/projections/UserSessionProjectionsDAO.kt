@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
+import java.util.UUID
 
 @Component
 class UserSessionProjectionsDAO @Autowired constructor(
@@ -54,7 +55,7 @@ class UserSessionProjectionsDAO @Autowired constructor(
 
         return template.query("""
             SELECT
-                 data
+                data
             FROM
                 user_session_projections
             WHERE
@@ -62,6 +63,22 @@ class UserSessionProjectionsDAO @Autowired constructor(
             LIMIT 1
         """.trimIndent(), paramMap, RowMapping(objectMapper)
         ).firstOrNull()
+    }
+
+    fun findByUserId(userId: UUID): List<UserSessionProjection> {
+        val paramMap: Map<String, UUID> = mapOf(
+            "userId" to userId,
+        )
+
+        return template.query("""
+            SELECT
+                data
+            FROM
+                user_session_projections
+            WHERE
+                user_id = :userId
+            LIMIT 1
+        """.trimIndent(), paramMap, RowMapping(objectMapper))
     }
 
     class RowMapping constructor(

@@ -2,6 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
+import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
 import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
 import com.github.santosleijon.frugalfennecbackend.users.domain.User
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserRepository
@@ -10,6 +11,8 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.MailSender
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -17,6 +20,8 @@ import io.cucumber.java.en.When
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.delay
 
 class UsersSteps {
 
@@ -38,10 +43,13 @@ class UsersSteps {
     @Autowired
     private lateinit var userProjectionRepository: UserProjectionRepository
 
+    @Autowired
+    private lateinit var userSessionProjectionRepsitory: UserSessionProjectionRepository
+
     var userSession: UserSession? = null
     var sessionUserId: UUID = userSession?.userId ?: UUID.randomUUID()
 
-    private var requestError: Exception? = null
+    private val loginPageUrl = "http://localhost:8080"
 
     @Before
     fun before() {
@@ -49,7 +57,6 @@ class UsersSteps {
         MockRandomEmailVerificationCodeGenerator.init(randomEmailVerificationCodeGenerator)
 
         userSession = null
-        requestError = null
     }
 
     @Given("that the randomly generated email verification code will be {string}")
@@ -71,15 +78,19 @@ class UsersSteps {
         userRepository.save(user)
     }
 
-    @When("a user with email {string} starts logging in")
-    fun userWithEmailStartsLoggingIn(email: String) {
-        try {
-            userResource.startLogin(
-                UserResource.StartLoginInputsDTO(email)
-            )
-        } catch (e: Exception) {
-            requestError = e
-        }
+    @When("the user opens the login page")
+    fun theUserOpensTheLoginPage() {
+        AccountsSteps.webDriver.get(loginPageUrl)
+    }
+
+    @When("the user enters email {string}")
+    fun enterAccountName(email: String) = runBlocking {
+        AccountsSteps.webDriver.enterTextIntoElementWithId(email, "email-field")
+    }
+
+    @When("the user enters email verification code {string}")
+    fun enterEmailVerificationCode(verificationCode: String) = runBlocking {
+        AccountsSteps.webDriver.enterTextIntoElementWithId(verificationCode, "verification-code-field")
     }
 
     @When("a user with email {string} completes a login with verification code {string}")
@@ -89,11 +100,7 @@ class UsersSteps {
             verificationCode,
         )
 
-        try {
-            userSession = userResource.completeLogin(completeLoginInputsDTO, null)
-        } catch (e: Exception) {
-            requestError = e
-        }
+        userSession = userResource.completeLogin(completeLoginInputsDTO, null)
     }
 
     @Then("an email with verification code {string} is sent to {string}")
@@ -123,17 +130,35 @@ class UsersSteps {
         Assertions.assertThat(user).isNotNull
     }
 
-    @Then("the user receives a valid session token")
-    fun assertUserReceivesAValidSessionToken() {
-        Assertions.assertThat(userSession).isNotNull
-        Assertions.assertThat(userSession?.token).isNotNull
-        Assertions.assertThat(userSessions.isValid(userSession!!.token!!)).isTrue
+    @Then("a user session is created for user with email {string}")
+    fun assertUserSessionIsCreatedForUserWith(email: String) {
+        val user = userProjectionRepository.findByEmail(email)
+
+        val userSession = userSessionProjectionRepsitory.findByUserId(user!!.id)
+
+        Assertions.assertThat(userSession).isNotEmpty
     }
 
-    @Then("an {string} error is returned")
-    fun assertAnErrorIsReturned(errorName: String) {
-        val actualErrorName = requestError!!::class.java.simpleName
+    @Then("the user sees the complete login form")
+    fun assertUserSeesTheCompleteLoginForm() {
+        val pageContent = AccountsSteps.webDriver.getPageContent()
 
-        Assertions.assertThat(actualErrorName).isEqualTo(errorName)
+        Assertions.assertThat(pageContent).contains("Complete login by entering verification code")
+    }
+
+    @Then("the user is redirected to the reports page")
+    fun assertTheUserIsRedirectedToTheReportsPage() = runBlocking {
+        waitFor(1000)
+
+        val currentUrl = AccountsSteps.webDriver.currentUrl
+
+        Assertions.assertThat(currentUrl).contains("reports")
+    }
+
+    @Then("the user sees the error message {string}")
+    fun assertTheUserSeesError(message: String) = runBlocking {
+        val pageContent = AccountsSteps.webDriver.getPageContent()
+
+        Assertions.assertThat(pageContent).contains(message)
     }
 }

@@ -4,6 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.projections.User
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.UUID
 
 @Component
 @Suppress("unused")
@@ -19,5 +20,9 @@ class UserSessionProjectionRepositoryImpl @Autowired constructor(
 
     override fun findByToken(token: String): UserSessionProjection? {
         return userSessionProjectionsDAO.findByToken(token)
+    }
+
+    override fun findByUserId(userId: UUID): List<UserSessionProjection> {
+        return userSessionProjectionsDAO.findByUserId(userId)
     }
 }
