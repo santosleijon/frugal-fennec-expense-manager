@@ -4,7 +4,7 @@ export const usersApi = {
 
   async startLogin(email: string) {
     const payload = {
-      userEmail: email,
+      email: email,
     }
 
     const response = await fetch(`${baseUrl}/start-login`, {
@@ -27,7 +27,7 @@ export const usersApi = {
 
   async completeLogin(email: string, verificationCode: string) {
     const payload = {
-      userEmail: email,
+      email: email,
       verificationCode: verificationCode,
     }
 
@@ -46,6 +46,25 @@ export const usersApi = {
 
     if (!response.ok) {
       throw new Error(`Failed to complete login (HTTP status = ${response.status})`)
+    }
+  },
+
+  async abortLogin(email: string) {
+    const payload = {
+      email: email,
+    }
+
+    const response = await fetch(`${baseUrl}/abort-login`, {
+      method: 'POST',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to abort login (HTTP status = ${response.status})`)
     }
   },
 }

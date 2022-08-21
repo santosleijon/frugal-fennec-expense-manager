@@ -1,10 +1,13 @@
-import { Button, Card, CardContent, FormControl, TextField } from "@material-ui/core"
+import { Card, CardContent} from "@material-ui/core"
 import { useState } from "react"
 import { startLogin } from "modules/users/commands/startLogin"
 import { dispatchCommand } from "modules/common/commands/dispatchCommand"
 import { useDispatch } from "react-redux"
 import { completeLogin } from "modules/users/commands/completeLogin"
 import { useNavigate } from "react-router-dom"
+import { CompleteLoginForm } from "./CompleteLoginForm"
+import { StartLoginForm } from "./StartLoginForm"
+import { abortLogin } from "modules/users/commands/abortLogin"
 
 export default function Login() {
   const dispatch = useDispatch()
@@ -29,11 +32,13 @@ export default function Login() {
   const onSubmitStartLogin = async (event: React.FormEvent) => {
     event.preventDefault()
 
-    dispatchCommand(async () => { 
+    const startLoginCommand = async () => { 
       const result = await startLogin(formValues.email)
       setLoginStarted(true)
       return result
-    }, dispatch)
+    }
+
+    dispatchCommand(startLoginCommand, dispatch)
   }
 
   const onVerificationCodeChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,13 +52,24 @@ export default function Login() {
   const onSubmitCompleteLogin = (event: React.FormEvent) => {
     event.preventDefault()
 
-    const onSubmitCommand = async () => {
+    const completeLoginCommand = async () => {
       const result = await completeLogin(formValues.email, formValues.verificationCode)
       navigate("../reports")
       return result
     }
 
-    dispatchCommand(onSubmitCommand, dispatch)
+    dispatchCommand(completeLoginCommand, dispatch)
+  }
+
+  const onAbortLogin = () => {
+    const abortLoginCommand = async () => {
+      const result = await abortLogin(formValues.email)
+      setFormValues({ ...formValues, ...{ email: "", verificationCode: "" } })
+      setLoginStarted(false)
+      return result
+    }
+
+    dispatchCommand(abortLoginCommand, dispatch)
   }
 
   return (
@@ -67,6 +83,7 @@ export default function Login() {
                 verificationCode={formValues.verificationCode}
                 onVerificationCodeChanged={onVerificationCodeChanged}
                 onSubmit={onSubmitCompleteLogin}
+                onAbort={onAbortLogin}
               />
               :
               <StartLoginForm
@@ -77,98 +94,6 @@ export default function Login() {
             }
           </CardContent>
         </Card>
-    </>
-  )
-}
-
-
-interface StartLoginFormProps {
-  email: string,
-  onEmailChanged: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  onSubmit: (event: React.FormEvent) => void
-}
-
-function StartLoginForm(props: StartLoginFormProps) {
-  return (
-    <>
-      <form noValidate onSubmit={props.onSubmit}>
-        <h3>Enter email to start login</h3>
-        <FormControl variant="outlined" style={{display: "flex", alignItems: "flex-start", flexDirection: "row"}}>
-          <TextField
-            id="email-field"
-            label="Email"
-            value={props.email}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="outlined"
-            onChange={props.onEmailChanged}
-            style={{ flexGrow: 1, marginRight: "12px" }}
-          />
-
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            className="submitButton"
-            type="submit"
-          >
-            Start login
-          </Button>
-        </FormControl>
-      </form>
-    </>
-  )
-}
-
-interface CompleteLoginFormProps {
-  email: string,
-  verificationCode: string,
-  onVerificationCodeChanged: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  onSubmit: (event: React.FormEvent) => void
-}
-
-// TODO: Add "reset login" button to abort a started login
-
-function CompleteLoginForm(props: CompleteLoginFormProps) {
-  return (
-    <>
-      <form noValidate onSubmit={props.onSubmit}>
-        <h3>Complete login by entering verification code sent by email</h3>
-        <FormControl variant="outlined" style={{display: "flex", alignItems: "flex-start", flexDirection: "row"}}>
-          <TextField
-            id="email-field"
-            label="Email"
-            value={props.email}
-            disabled={true}
-            variant="outlined"
-            style={{ flexGrow: 1, marginRight: "12px" }}
-          />
-
-          <TextField
-            id="verification-code-field"
-            label="Verification code"
-            value={props.verificationCode}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="outlined"
-            autoFocus={true}
-            onChange={props.onVerificationCodeChanged}
-            style={{ flexGrow: 1, marginRight: "12px" }}
-          />
-
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            className="submitButton"
-            type="submit"
-          >
-            Complete login
-          </Button>
-        </FormControl>
-      </form>
     </>
   )
 }

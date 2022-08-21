@@ -49,8 +49,14 @@ Feature: Password-less user registration and login using email verification
     And the user clicks on "Complete login"
     Then the user sees the error message "Invalid verification code"
 
-  # TODO: Logout
+  Scenario: A started login can be aborted
+    When the user opens the login page
+    And the user enters email "test@example.com"
+    And the user clicks on "Start login"
+    And the user clicks on "Abort"
+    Then the user is redirected back the start login form
+    And no unconsumed email verification codes exist for user with email "test@example.com"
 
-  # TODO: Abort started login
+  # TODO: Logout
 
   # TODO: Max allowed started logins

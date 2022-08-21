@@ -10,6 +10,7 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.emailverificatio
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.MailSender
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
@@ -45,6 +46,9 @@ class UsersSteps {
 
     @Autowired
     private lateinit var userSessionProjectionRepsitory: UserSessionProjectionRepository
+
+    @Autowired
+    private lateinit var emailVerificationCodeRepository: EmailVerificationCodeRepository
 
     var userSession: UserSession? = null
     var sessionUserId: UUID = userSession?.userId ?: UUID.randomUUID()
@@ -160,5 +164,19 @@ class UsersSteps {
         val pageContent = AccountsSteps.webDriver.getPageContent()
 
         Assertions.assertThat(pageContent).contains(message)
+    }
+
+    @Then("the user is redirected back the start login form")
+    fun assertTheUserIsRedirectedBackToStartLoginForm() {
+        val pageContent = AccountsSteps.webDriver.getPageContent()
+
+        Assertions.assertThat(pageContent).contains("Enter email to start login")
+    }
+
+    @Then("no unconsumed email verification codes exist for user with email {string}")
+    fun assertTheUserIsRedirectedBackToStartLoginForm(email: String) {
+        val unconsumedVerificationCodesCount = emailVerificationCodeRepository.countUnconsumedByEmail(email)
+
+        Assertions.assertThat(unconsumedVerificationCodesCount).isEqualTo(0)
     }
 }

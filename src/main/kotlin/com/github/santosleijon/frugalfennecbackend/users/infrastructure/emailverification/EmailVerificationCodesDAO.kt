@@ -79,4 +79,34 @@ class EmailVerificationCodesDAO @Autowired constructor(
                 verification_code = :verification_code
         """.trimIndent(), paramMap)
     }
+
+    fun deleteUnconsumed(email: String) {
+        val paramMap: Map<String, Any> = mapOf(
+            "email" to email,
+        )
+
+        template.update("""
+            DELETE FROM
+                email_verification_codes
+            WHERE
+                email = :email AND
+                consumed IS NULL
+        """.trimIndent(), paramMap)
+    }
+
+    fun countUnconsumedByEmail(email: String): Int {
+        val paramMap: Map<String, Any> = mapOf(
+            "email" to email,
+        )
+
+        return template.queryForObject("""
+            SELECT
+                 count(*)
+            FROM
+                email_verification_codes
+            WHERE
+                email = :email AND
+                consumed IS NULL
+        """.trimIndent(), paramMap, Int::class.java) ?: 0
+    }
 }
