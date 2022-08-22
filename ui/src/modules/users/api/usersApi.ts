@@ -19,6 +19,10 @@ export const usersApi = {
     if (response.status === 400) {
       throw new Error(`Invalid email address`)
     }
+
+    if (response.status === 429) {
+      throw new Error(`Max number of started logins reached. Please wait and try again.`)
+    }
     
     if (!response.ok) {
       throw new Error(`Failed to start login (HTTP status = ${response.status})`)

@@ -7,5 +7,6 @@ interface EmailVerificationCodeRepository {
     fun isValid(email: String, verificationCode: String, currentTime: Instant): Boolean
     fun markAsConsumed(email: String, verificationCode: String)
     fun deleteUnconsumed(email: String)
+    fun countValidUnconsumed(): Int
     fun countUnconsumedByEmail(email: String): Int
 }

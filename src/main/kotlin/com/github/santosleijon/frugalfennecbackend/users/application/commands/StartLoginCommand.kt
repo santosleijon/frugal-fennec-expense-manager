@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.Duration
 import java.time.Instant
+import MaxNumberOfStartedLoginsReached
 
 @Component
 class StartLoginCommand @Autowired constructor(
@@ -18,11 +19,19 @@ class StartLoginCommand @Autowired constructor(
     private val mailSender: MailSender
 ) {
 
+    companion object {
+        const val MAX_NUMBER_OF_STARTED_LOGINS_ALLOWED = 10
+    }
+
     private var logger = LoggerFactory.getLogger(this::class.java)
 
     fun handle(email: String) {
         if (!isValidEmail(email)) {
             throw InvalidEmailAddressError(email)
+        }
+
+        if (emailVerificationCodeRepository.countValidUnconsumed() >= MAX_NUMBER_OF_STARTED_LOGINS_ALLOWED) {
+            throw MaxNumberOfStartedLoginsReached()
         }
 
         val emailVerificationCode = createEmailVerificationCode(email)
@@ -31,7 +40,7 @@ class StartLoginCommand @Autowired constructor(
 
         mailSender.send(verificationMail)
 
-        logger.info("Started login for $email. Sent email verification code: ${emailVerificationCode.verificationCode} ")
+        logger.info("Started login for $email. Sent email verification code: ${emailVerificationCode.verificationCode}")
     }
 
     private fun createEmailVerificationCode(email: String): EmailVerificationCode {

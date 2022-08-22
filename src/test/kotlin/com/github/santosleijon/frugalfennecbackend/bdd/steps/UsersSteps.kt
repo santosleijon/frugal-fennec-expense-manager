@@ -11,6 +11,7 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.MailSender
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
+import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCode
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
@@ -21,6 +22,8 @@ import io.cucumber.java.en.When
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
+import java.time.Duration
+import java.time.Instant
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.delay
 
@@ -80,6 +83,22 @@ class UsersSteps {
         )
 
         userRepository.save(user)
+    }
+
+    @Given("{int} logins have been started")
+    fun givenANumberOfLoginsHaveBeenStarted(startedLoginsCount: Int) {
+        repeat(startedLoginsCount) { index ->
+            val emailVerificationCode = EmailVerificationCode(
+                email = "test@example.com",
+                verificationCode = (1000 + index).toString(),
+                issued = Instant.now(),
+                validTo = Instant.now().plus(Duration.ofMinutes(1)),
+            )
+
+            emailVerificationCodeRepository.save(emailVerificationCode)
+
+            println("emailVerificationCode.verificationCode = ${emailVerificationCode.verificationCode}")
+        }
     }
 
     @When("the user opens the login page")

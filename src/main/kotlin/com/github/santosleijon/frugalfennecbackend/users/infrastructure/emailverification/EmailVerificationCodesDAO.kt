@@ -94,6 +94,22 @@ class EmailVerificationCodesDAO @Autowired constructor(
         """.trimIndent(), paramMap)
     }
 
+    fun countValidUnconsumed(): Int {
+        val paramMap: Map<String, Any> = mapOf(
+            "current_time" to Instant.now().toZuluLocalDateTime(),
+        )
+
+        return template.queryForObject("""
+            SELECT
+                 count(*)
+            FROM
+                email_verification_codes
+            WHERE
+                consumed IS NULL AND
+                valid_to >= :current_time
+        """.trimIndent(), paramMap, Int::class.java) ?: 0
+    }
+
     fun countUnconsumedByEmail(email: String): Int {
         val paramMap: Map<String, Any> = mapOf(
             "email" to email,

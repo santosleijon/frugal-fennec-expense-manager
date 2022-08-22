@@ -57,6 +57,11 @@ Feature: Password-less user registration and login using email verification
     Then the user is redirected back the start login form
     And no unconsumed email verification codes exist for user with email "test@example.com"
 
-  # TODO: Logout
+  Scenario: An error is returned after the max number of started logins in reached (a rate limiting measure)
+    Given 10 logins have been started
+    When the user opens the login page
+    And the user enters email "test@example.com"
+    And the user clicks on "Start login"
+    Then the user sees the error message "Max number of started logins reached"
 
-  # TODO: Max allowed started logins
+  # TODO: Logout

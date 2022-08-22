@@ -29,6 +29,10 @@ class EmailVerificationCodeRepositoryImpl constructor(
         emailVerificationCodesDAO.deleteUnconsumed(email)
     }
 
+    override fun countValidUnconsumed(): Int {
+        return emailVerificationCodesDAO.countValidUnconsumed()
+    }
+
     override fun countUnconsumedByEmail(email: String): Int {
         return emailVerificationCodesDAO.countUnconsumedByEmail(email)
     }
