@@ -1,4 +1,5 @@
 import { Button, FormControl, TextField } from "@material-ui/core"
+import { useEffect, useState } from "react"
 
 interface CompleteLoginFormProps {
   email: string,
@@ -9,10 +10,25 @@ interface CompleteLoginFormProps {
 }
 
 export function CompleteLoginForm(props: CompleteLoginFormProps) {
+
+  const [secondsUntilVerificationCodeExpires, setSecondsUntilVerificationCodeExpires] = useState(60)
+
+  const verificationCodeHasExpired = secondsUntilVerificationCodeExpires < 1
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (secondsUntilVerificationCodeExpires > 0) {
+        setSecondsUntilVerificationCodeExpires(secondsUntilVerificationCodeExpires-1)
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [secondsUntilVerificationCodeExpires, setSecondsUntilVerificationCodeExpires]);
+
   return (
     <>
       <form noValidate onSubmit={props.onSubmit}>
-        <h3>Complete login by entering verification code sent by email</h3>
+        <h3>Complete login by entering verification code sent by email (expires in {secondsUntilVerificationCodeExpires} seconds)</h3>
         <FormControl variant="outlined" style={{ display: "flex", alignItems: "flex-start", flexDirection: "row" }}>
           <TextField
             id="email-field"
@@ -33,6 +49,7 @@ export function CompleteLoginForm(props: CompleteLoginFormProps) {
             variant="outlined"
             autoFocus={true}
             onChange={props.onVerificationCodeChanged}
+            disabled={verificationCodeHasExpired}
             style={{ flexGrow: 1, marginRight: "12px" }}
           />
 
@@ -43,6 +60,7 @@ export function CompleteLoginForm(props: CompleteLoginFormProps) {
             className="submitButton"
             type="submit"
             style={{ marginRight: "12px" }}
+            disabled={verificationCodeHasExpired}
           >
             Complete login
           </Button>

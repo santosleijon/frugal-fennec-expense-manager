@@ -41,7 +41,7 @@ class StartLoginCommand @Autowired constructor(
             email = email,
             verificationCode = uniqueVerificationCode,
             issued = Instant.now(),
-            validTo = Instant.now().plus(Duration.ofHours(1)),
+            validTo = Instant.now().plus(Duration.ofMinutes(1)),
         )
 
         emailVerificationCodeRepository.save(emailVerificationCode)
