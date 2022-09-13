@@ -3,6 +3,7 @@ package com.github.santosleijon.frugalfennecbackend.users.domain
 import com.github.santosleijon.frugalfennecbackend.common.AggregateRoot
 import com.github.santosleijon.frugalfennecbackend.common.DomainEvent
 import com.github.santosleijon.frugalfennecbackend.users.domain.events.UserSessionCreatedEvent
+import com.github.santosleijon.frugalfennecbackend.users.domain.events.UserSessionLoggedOutEvent
 import java.time.Instant
 import java.util.*
 
@@ -64,6 +65,19 @@ class UserSession(
                 issued = event.issued
                 validTo = event.validTo
             }
+            is UserSessionLoggedOutEvent -> {
+                validTo = event.date
+            }
         }
+    }
+
+    fun logout(actorUserId: UUID) {
+        this.apply(
+            UserSessionLoggedOutEvent(
+                userSessionId = this.id,
+                version = this.version+1,
+                userId = actorUserId,
+            )
+        )
     }
 }

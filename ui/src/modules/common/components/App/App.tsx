@@ -1,4 +1,4 @@
-import MenuBar from './MenuBar';
+import MenuBar from './MenuBar/MenuBar';
 import Footer from './Footer';
 import Main from './Main';
 import { createStore } from 'redux';

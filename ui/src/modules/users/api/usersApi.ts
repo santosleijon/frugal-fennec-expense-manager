@@ -41,6 +41,7 @@ export const usersApi = {
         'Accept': '*/*',
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(payload),
     })
 
@@ -51,6 +52,8 @@ export const usersApi = {
     if (!response.ok) {
       throw new Error(`Failed to complete login (HTTP status = ${response.status})`)
     }
+
+    return response.json()
   },
 
   async abortLogin(email: string) {
@@ -69,6 +72,21 @@ export const usersApi = {
 
     if (!response.ok) {
       throw new Error(`Failed to abort login (HTTP status = ${response.status})`)
+    }
+  },
+
+  async logout() {
+    const response = await fetch(`${baseUrl}/logout`, {
+      method: 'POST',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to logout (HTTP status = ${response.status})`)
     }
   },
 }

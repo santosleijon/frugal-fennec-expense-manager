@@ -11,6 +11,7 @@ export const accountsApi = {
       headers: {
         'Accept': 'application/json'
       },
+      credentials: "include",
     })
     
     if (!response.ok) {

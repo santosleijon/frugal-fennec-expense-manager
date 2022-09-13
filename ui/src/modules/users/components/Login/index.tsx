@@ -54,7 +54,7 @@ export default function Login() {
 
     const completeLoginCommand = async () => {
       const result = await completeLogin(formValues.email, formValues.verificationCode)
-      navigate("../reports")
+      navigate("./")
       return result
     }
 

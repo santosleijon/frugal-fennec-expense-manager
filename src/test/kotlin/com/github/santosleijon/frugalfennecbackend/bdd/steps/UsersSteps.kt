@@ -21,6 +21,7 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.mock.web.MockHttpServletResponse
 import java.util.*
 import java.time.Duration
 import java.time.Instant
@@ -96,9 +97,18 @@ class UsersSteps {
             )
 
             emailVerificationCodeRepository.save(emailVerificationCode)
-
-            println("emailVerificationCode.verificationCode = ${emailVerificationCode.verificationCode}")
         }
+    }
+
+    @Given("a user with email {string} has logged in")
+    fun givenAUserHasLoggedIn(email: String) = runBlocking {
+        givenARegisteredUser(email)
+        givenRandomlyGeneratedEmailVerificationCode("1234")
+        theUserOpensTheLoginPage()
+        enterEmail(email)
+        AccountsSteps.webDriver.clickOnButton("Start login")
+        enterEmailVerificationCode("1234")
+        AccountsSteps.webDriver.clickOnButton("Complete login")
     }
 
     @When("the user opens the login page")
@@ -107,7 +117,7 @@ class UsersSteps {
     }
 
     @When("the user enters email {string}")
-    fun enterAccountName(email: String) = runBlocking {
+    fun enterEmail(email: String) = runBlocking {
         AccountsSteps.webDriver.enterTextIntoElementWithId(email, "email-field")
     }
 
@@ -123,7 +133,9 @@ class UsersSteps {
             verificationCode,
         )
 
-        userSession = userResource.completeLogin(completeLoginInputsDTO, null)
+        val completeLoginResult = userResource.completeLogin(completeLoginInputsDTO, MockHttpServletResponse())
+
+        userSession = completeLoginResult.userSession
     }
 
     @Then("an email with verification code {string} is sent to {string}")
@@ -169,13 +181,13 @@ class UsersSteps {
         Assertions.assertThat(pageContent).contains("Complete login by entering verification code")
     }
 
-    @Then("the user is redirected to the reports page")
-    fun assertTheUserIsRedirectedToTheReportsPage() = runBlocking {
+    @Then("the user is redirected to the start page")
+    fun assertTheUserIsRedirectedToTheStartPage() = runBlocking {
         waitFor(1000)
 
         val currentUrl = AccountsSteps.webDriver.currentUrl
 
-        Assertions.assertThat(currentUrl).contains("reports")
+        Assertions.assertThat(currentUrl).isEqualTo("http://localhost:8080/")
     }
 
     @Then("the user sees the error message {string}")
@@ -197,5 +209,15 @@ class UsersSteps {
         val unconsumedVerificationCodesCount = emailVerificationCodeRepository.countUnconsumedByEmail(email)
 
         Assertions.assertThat(unconsumedVerificationCodesCount).isEqualTo(0)
+    }
+
+    @Then("the user session is ended for user with email {string}")
+    fun assertTheUserSessionIsEnded(email: String) {
+        val user = userProjectionRepository.findByEmail(email)!!
+        val userSession = userSessionProjectionRepsitory.findByUserId(user.id).last()
+        
+        val sessionHasEnded = Duration.between(userSession.validTo, Instant.now()).isNegative
+
+        Assertions.assertThat(sessionHasEnded).isTrue
     }
 }

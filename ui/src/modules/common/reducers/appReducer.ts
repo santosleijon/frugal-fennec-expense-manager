@@ -11,16 +11,21 @@ import { ADD_EXPENSE_RESULT_ACTION_TYPE } from 'modules/expenses/commands/addExp
 import { Account } from 'modules/accounts/types/Account';
 import { UPDATE_ACCOUNT_NAME_ACTION_TYPE } from 'modules/accounts/commands/updateAccountName';
 import { RESET_COMMAND_ACTION_TYPE } from '../commands/resetCommandAction';
+import { COMPLETE_LOGIN_RESULT_ACTION_TYPE } from 'modules/users/commands/completeLogin';
+import { User } from 'modules/users/types/User';
+import { LOGOUT_RESULT_ACTION_TYPE } from 'modules/users/commands/logout';
 
 export interface AppState {
   isLoadingCommand: boolean,
   commandErrorMessage: string | null,
+  loggedInUser: User | null
   accounts: Account[]
 }
 
 const initialState: AppState = {
   isLoadingCommand: false,
   commandErrorMessage: null,
+  loggedInUser: null,
   accounts: []
 }
 
@@ -48,6 +53,10 @@ export function appReducer(state: AppState = initialState, action: Action) {
       return { ...state, accounts: replaceAccount(action.payload, state.accounts) }
     case DELETE_EXPENSE_RESULT_ACTION_TYPE:
       return { ...state, accounts: replaceAccount(action.payload, state.accounts) }
+    case COMPLETE_LOGIN_RESULT_ACTION_TYPE: 
+      return { ...state, loggedInUser: action.payload }
+    case LOGOUT_RESULT_ACTION_TYPE:
+      return { ...state, loggedInUser: null }
     default:
       return state
   }

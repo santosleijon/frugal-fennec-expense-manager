@@ -11,7 +11,7 @@ Feature: Password-less user registration and login using email verification
     And the user clicks on "Complete login"
     Then a user is created for email "test@example.com"
     And a user session is created for user with email "test@example.com"
-    And the user is redirected to the reports page
+    And the user is redirected to the start page
 
   Scenario: An existing user can log in
     Given a registered user "test@example.com"
@@ -22,7 +22,13 @@ Feature: Password-less user registration and login using email verification
     And the user enters email verification code "1234"
     And the user clicks on "Complete login"
     Then a user session is created for user with email "test@example.com"
-    And the user is redirected to the reports page
+    And the user is redirected to the start page
+
+  Scenario: A user can logout
+    Given a user with email "test@example.com" has logged in
+    When the user clicks on "Logout"
+    Then the user session is ended for user with email "test@example.com"
+    And the user is redirected to the start page
 
   Scenario: An error is displayed when trying to start a login with an invalid email address
     When the user opens the login page
@@ -64,4 +70,3 @@ Feature: Password-less user registration and login using email verification
     And the user clicks on "Start login"
     Then the user sees the error message "Max number of started logins reached"
 
-  # TODO: Logout

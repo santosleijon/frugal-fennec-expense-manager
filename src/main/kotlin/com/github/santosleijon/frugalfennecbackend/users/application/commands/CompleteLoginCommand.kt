@@ -2,6 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailAddressError
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailVerificationCodeError
+import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
 import com.github.santosleijon.frugalfennecbackend.users.domain.*
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.isValidEmail
@@ -25,7 +26,7 @@ class CompleteLoginCommand @Autowired constructor(
     private var logger = LoggerFactory.getLogger(this::class.java)
 
     // TODO: All of these "handle" command should be called "execute" since these classes are not command handlers
-    fun handle(email: String, verificationCode: String): UserSession {
+    fun handle(email: String, verificationCode: String): CompleteLoginResult {
         if (!isValidEmail(email)) {
             throw InvalidEmailAddressError(email)
         }
@@ -59,6 +60,12 @@ class CompleteLoginCommand @Autowired constructor(
 
         logger.info("Completed login for user $email. Given session token: ${userSession.token}")
 
-        return userSession
+        return CompleteLoginResult(userId, email, userSession)
     }
+
+    data class CompleteLoginResult(
+        val userId: UUID,
+        val userEmail: String,
+        val userSession: UserSession,
+    )
 }

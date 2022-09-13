@@ -22,18 +22,20 @@ class UserSessions @Autowired constructor(
     private val algorithm = Algorithm.HMAC256(sessionTokenSecretKey)
 
     fun create(userId: UUID): UserSession {
+        val sessionId = UUID.randomUUID()
         val issuedDate = Instant.now()
         val expirationDate = Instant.now().plus(Duration.ofDays(7))
 
         val token = JWT.create()
                 .withIssuer(sessionTokenIssuer)
+                .withJWTId(sessionId.toString())
                 .withSubject(userId.toString())
                 .withIssuedAt(issuedDate)
                 .withExpiresAt(expirationDate)
                 .sign(algorithm)
 
         val userSession = UserSession(
-            id = UUID.randomUUID(),
+            id = sessionId,
             userId = userId,
             token = token,
             issued = issuedDate,
@@ -52,6 +54,10 @@ class UserSessions @Autowired constructor(
         }
 
        return userSessionProjectionRepository.findByToken(token) != null
+    }
+
+    fun getSessionIdFromSessionToken(sessionToken: String): UUID {
+        return UUID.fromString(JWT.decode(sessionToken).id)
     }
 
     private fun verifyToken(token: String) {
