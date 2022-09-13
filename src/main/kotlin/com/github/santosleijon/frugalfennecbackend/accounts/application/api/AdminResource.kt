@@ -12,7 +12,6 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:8080"])
 @RequestMapping("admin")
 @Suppress("unused")
 class AdminResource @Autowired constructor(

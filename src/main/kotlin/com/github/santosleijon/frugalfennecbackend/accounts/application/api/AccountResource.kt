@@ -15,7 +15,6 @@ import java.math.BigDecimal
 import java.util.*
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:8080"])
 @RequestMapping("account")
 class AccountResource @Autowired constructor(
     private val userAuthorizer: UserAuthorizer,
