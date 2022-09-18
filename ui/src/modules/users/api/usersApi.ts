@@ -89,4 +89,26 @@ export const usersApi = {
       throw new Error(`Failed to logout (HTTP status = ${response.status})`)
     }
   },
+
+  async getCurrentUserSession() {
+    const response = await fetch(`${baseUrl}/current-session`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to get current user session (HTTP status = ${response.status})`)
+    }
+
+    const validUserSessionData = await response.json()
+
+    if (!validUserSessionData.hasValidUserSession) {
+      return null
+    }
+
+    return validUserSessionData
+  },
 }

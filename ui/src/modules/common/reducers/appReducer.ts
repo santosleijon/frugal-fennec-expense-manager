@@ -14,6 +14,7 @@ import { RESET_COMMAND_ACTION_TYPE } from '../commands/resetCommandAction';
 import { COMPLETE_LOGIN_RESULT_ACTION_TYPE } from 'modules/users/commands/completeLogin';
 import { User } from 'modules/users/types/User';
 import { LOGOUT_RESULT_ACTION_TYPE } from 'modules/users/commands/logout';
+import { GET_CURRENT_USER_SESSION_RESULT_ACTION_TYPE } from 'modules/users/commands/getCurrentUserSession';
 
 export interface AppState {
   isLoadingCommand: boolean,
@@ -57,6 +58,8 @@ export function appReducer(state: AppState = initialState, action: Action) {
       return { ...state, loggedInUser: action.payload }
     case LOGOUT_RESULT_ACTION_TYPE:
       return { ...state, loggedInUser: null }
+    case GET_CURRENT_USER_SESSION_RESULT_ACTION_TYPE:
+      return { ...state, loggedInUser: action.payload }
     default:
       return state
   }
