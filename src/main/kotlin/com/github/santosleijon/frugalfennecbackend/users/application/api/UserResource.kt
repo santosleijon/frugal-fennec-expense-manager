@@ -1,19 +1,20 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.api
 
-import com.github.santosleijon.frugalfennecbackend.users.application.commands.CompleteLoginCommand
-import com.github.santosleijon.frugalfennecbackend.users.application.commands.StartLoginCommand
 import com.github.santosleijon.frugalfennecbackend.users.application.commands.AbortLoginCommand
+import com.github.santosleijon.frugalfennecbackend.users.application.commands.CompleteLoginCommand
 import com.github.santosleijon.frugalfennecbackend.users.application.commands.LogoutCommand
+import com.github.santosleijon.frugalfennecbackend.users.application.commands.StartLoginCommand
+import com.github.santosleijon.frugalfennecbackend.users.application.queries.GetCurrentUserSessionQuery
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserAuthorizer
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import org.springframework.http.ResponseCookie
 import java.time.Duration
 import java.time.Instant
+import java.util.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
-import java.util.UUID
 
 @RestController
 @RequestMapping("user")
@@ -22,11 +23,12 @@ class UserResource @Autowired constructor(
     private val completeLoginCommand: CompleteLoginCommand,
     private val abortLoginCommand: AbortLoginCommand,
     private val logoutCommand: LogoutCommand,
+    private val getCurrentUserSessionQuery: GetCurrentUserSessionQuery,
     private val userAuthorizer: UserAuthorizer,
 ) {
 
     companion object {
-        private val SESSION_TOKEN_COOKIE_NAME = "sessionToken"
+        private const val SESSION_TOKEN_COOKIE_NAME = "sessionToken"
     }
 
     @PostMapping("start-login")
@@ -61,6 +63,11 @@ class UserResource @Autowired constructor(
         response?.addCookie(createDeletedSessionTokenCookie())
     }
 
+    @GetMapping("current-session")
+    fun getCurrentUserSession(@CookieValue(value = "sessionToken") sessionToken: String?): GetCurrentUserSessionDTO {
+        return getCurrentUserSessionQuery.handle(sessionToken)
+    }
+
     data class StartLoginInputsDTO(
         val email: String,
     )
@@ -78,6 +85,13 @@ class UserResource @Autowired constructor(
 
     data class AbortLoginInputsDTO(
         val email: String,
+    )
+
+    data class GetCurrentUserSessionDTO(
+        val hasValidUserSession: Boolean,
+        val userId: UUID? = null,
+        val email: String? = null,
+        val userSession: UserSessionProjection? = null,
     )
 
     private fun createSessionTokenCookie(userSession: UserSession): Cookie {
