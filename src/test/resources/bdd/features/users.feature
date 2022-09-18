@@ -24,6 +24,11 @@ Feature: Password-less user registration and login using email verification
     Then a user session is created for user with email "test@example.com"
     And the user is redirected to the start page
 
+  Scenario: A user is still logged in after refreshing the page
+    Given a user with email "test@example.com" has logged in
+    When the user refreshes the page
+    Then the user is still logged in
+
   Scenario: A user can logout
     Given a user with email "test@example.com" has logged in
     When the user clicks on "Logout"

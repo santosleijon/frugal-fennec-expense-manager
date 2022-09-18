@@ -14,7 +14,6 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.emailverificatio
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCode
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
-import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -26,7 +25,7 @@ import java.util.*
 import java.time.Duration
 import java.time.Instant
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.delay
+import org.openqa.selenium.Cookie
 
 class UsersSteps {
 
@@ -103,12 +102,18 @@ class UsersSteps {
     @Given("a user with email {string} has logged in")
     fun givenAUserHasLoggedIn(email: String) = runBlocking {
         givenARegisteredUser(email)
-        givenRandomlyGeneratedEmailVerificationCode("1234")
-        theUserOpensTheLoginPage()
-        enterEmail(email)
-        AccountsSteps.webDriver.clickOnButton("Start login")
-        enterEmailVerificationCode("1234")
-        AccountsSteps.webDriver.clickOnButton("Complete login")
+
+        val userId = userProjectionRepository.findByEmail(email)!!.id
+
+        val sessionToken = userSessions.create(userId).token
+
+        val cookie = Cookie.Builder("sessionToken", sessionToken)
+            .path("/")
+            .build()
+
+        AccountsSteps.webDriver.get(loginPageUrl)
+        AccountsSteps.webDriver.manage().addCookie(cookie)
+        AccountsSteps.webDriver.navigate().refresh()
     }
 
     @When("the user opens the login page")
@@ -136,6 +141,11 @@ class UsersSteps {
         val completeLoginResult = userResource.completeLogin(completeLoginInputsDTO, MockHttpServletResponse())
 
         userSession = completeLoginResult.userSession
+    }
+
+    @When("the user refreshes the page")
+    fun theUserRefreshesThePage() {
+        AccountsSteps.webDriver.navigate().refresh()
     }
 
     @Then("an email with verification code {string} is sent to {string}")
@@ -219,5 +229,10 @@ class UsersSteps {
         val sessionHasEnded = Duration.between(userSession.validTo, Instant.now()).isNegative
 
         Assertions.assertThat(sessionHasEnded).isTrue
+    }
+
+    @Then("the user is still logged in")
+    fun assertUserIsStillLoggedIn() {
+        Assertions.assertThat(AccountsSteps.webDriver.getPageContent().lowercase()).contains("logout")
     }
 }
