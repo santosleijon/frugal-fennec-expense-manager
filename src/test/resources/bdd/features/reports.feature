@@ -1,7 +1,8 @@
 Feature: Expense report creation
 
   Scenario: Expense reports can be created and viewed
-    Given an account with the name "Account 1"
+    Given a user with email "test@example.com" has logged in
+    And an account with the name "Account 1"
     And the account with the name "Account 1" has the following expenses
       | date                  | description | amount  |
       | 2022-01-01T00:00:00Z  | Expense 1   | 1.00    |

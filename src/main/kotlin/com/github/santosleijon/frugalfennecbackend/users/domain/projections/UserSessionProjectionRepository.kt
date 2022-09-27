@@ -4,6 +4,6 @@ import java.util.UUID
 
 interface UserSessionProjectionRepository {
     fun save(userSessionProjection: UserSessionProjection): UserSessionProjection
-    fun findByToken(token: String): UserSessionProjection?
+    fun findValidSessionByToken(token: String): UserSessionProjection?
     fun findByUserId(userId: UUID): List<UserSessionProjection>
 }

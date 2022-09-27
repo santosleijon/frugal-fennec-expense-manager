@@ -5,6 +5,7 @@ import org.springframework.boot.runApplication
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.context.annotation.Bean
+import org.springframework.http.HttpMethod
 
 @SpringBootApplication
 class FrugalFennecBackendApplication {
@@ -15,6 +16,15 @@ class FrugalFennecBackendApplication {
 				registry.addMapping("/**")
 					.allowedOrigins("http://localhost:8080")
 					.allowCredentials(true)
+					.allowedMethods(
+						HttpMethod.GET.name,
+						HttpMethod.HEAD.name,
+						HttpMethod.OPTIONS.name,
+						HttpMethod.POST.name,
+						HttpMethod.PUT.name,
+						HttpMethod.PATCH.name,
+						HttpMethod.DELETE.name,
+					)
 			}
 		}
 	}

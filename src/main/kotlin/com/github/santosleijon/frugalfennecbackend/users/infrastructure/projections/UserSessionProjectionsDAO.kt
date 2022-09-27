@@ -1,12 +1,14 @@
 package com.github.santosleijon.frugalfennecbackend.users.infrastructure.projections
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.santosleijon.frugalfennecbackend.common.utils.toZuluLocalDateTime
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
+import java.time.Instant
 import java.util.UUID
 
 @Component
@@ -19,6 +21,7 @@ class UserSessionProjectionsDAO @Autowired constructor(
             "id" to userSessionProjection.id,
             "user_id" to userSessionProjection.userId,
             "token" to userSessionProjection.token,
+            "valid_to" to userSessionProjection.validTo.toZuluLocalDateTime(),
             "data" to objectMapper.writeValueAsString(userSessionProjection),
             "version" to userSessionProjection.version,
         )
@@ -28,6 +31,7 @@ class UserSessionProjectionsDAO @Autowired constructor(
                 id,
                 user_id,
                 token,
+                valid_to,
                 data,
                 version
             )
@@ -35,6 +39,7 @@ class UserSessionProjectionsDAO @Autowired constructor(
                 :id,
                 :user_id,
                 :token,
+                :valid_to,
                 :data::jsonb,
                 :version
             )
@@ -43,14 +48,16 @@ class UserSessionProjectionsDAO @Autowired constructor(
                 UPDATE SET
                     user_id = :user_id,
                     token = :token,
+                    valid_to = :valid_to,
                     data = :data::jsonb,
                     version = :version
         """.trimIndent(), paramMap)
     }
 
-    fun findByToken(token: String): UserSessionProjection? {
-        val paramMap: Map<String, String> = mapOf(
+    fun findValidSessionByToken(token: String): UserSessionProjection? {
+        val paramMap: Map<String, Any> = mapOf(
             "token" to token,
+            "current_time" to Instant.now().toZuluLocalDateTime(),
         )
 
         return template.query("""
@@ -59,7 +66,8 @@ class UserSessionProjectionsDAO @Autowired constructor(
             FROM
                 user_session_projections
             WHERE
-                token = :token
+                token = :token AND
+                valid_to >= :current_time
             LIMIT 1
         """.trimIndent(), paramMap, RowMapping(objectMapper)
         ).firstOrNull()

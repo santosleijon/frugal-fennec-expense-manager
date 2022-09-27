@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS user_session_projections (
   id UUID PRIMARY KEY,
   user_id UUID NOT NULL,
   token VARCHAR(512) NOT NULL,
+  valid_to TIMESTAMP WITH TIME ZONE NOT NULL,
   data JSONB NOT NULL,
   version INT NOT NULL
 );

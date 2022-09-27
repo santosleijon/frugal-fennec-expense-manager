@@ -53,7 +53,7 @@ class UserSessions @Autowired constructor(
             return false
         }
 
-       return userSessionProjectionRepository.findByToken(token) != null
+       return userSessionProjectionRepository.findValidSessionByToken(token) != null
     }
 
     fun getSessionIdFromSessionToken(sessionToken: String): UUID {

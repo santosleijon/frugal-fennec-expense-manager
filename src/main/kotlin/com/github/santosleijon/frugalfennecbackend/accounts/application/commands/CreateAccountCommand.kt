@@ -18,8 +18,6 @@ class CreateAccountCommand @Autowired constructor(
         name: String,
         userId: UUID,
     ): Account {
-        // TODO: Authorization
-
         val accountProjection = accountProjectionRepository.findByNameOrNull(name, userId)
 
         if (accountProjection != null) {

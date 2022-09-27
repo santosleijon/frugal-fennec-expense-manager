@@ -20,7 +20,7 @@ class GetCurrentUserSessionQuery @Autowired constructor(
             return noValidUserSessionResponse
         }
 
-        val userSessionProjection = userSessionProjectionRepository.findByToken(userSessionToken)
+        val userSessionProjection = userSessionProjectionRepository.findValidSessionByToken(userSessionToken)
             ?: return noValidUserSessionResponse
 
         val userProjection = userProjectionRepository.findById(userSessionProjection.userId)

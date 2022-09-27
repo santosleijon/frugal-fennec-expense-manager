@@ -29,9 +29,9 @@ class AccountResource @Autowired constructor(
     @PostMapping("", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun create(
         @RequestBody(required = true) createAccountInputsDTO: CreateAccountInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String,
     ): Account {
-        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
         return createAccountCommand.handle(
             id = UUID.randomUUID(),
@@ -46,9 +46,9 @@ class AccountResource @Autowired constructor(
 
     @GetMapping
     fun getAll(
-        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String,
     ): List<AccountProjection> {
-        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
         return getAllAccounts.handle(userId)
     }
@@ -56,9 +56,9 @@ class AccountResource @Autowired constructor(
     @RequestMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun get(
         @PathVariable(value = "id") id: UUID,
-        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String,
     ): AccountProjection {
-        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
         return getAccountQuery.handle(id, userId)
     }
@@ -68,9 +68,9 @@ class AccountResource @Autowired constructor(
     fun updateName(
         @PathVariable(value = "id") id: UUID,
         @RequestBody(required = true) updateAccountNameInputsDTO: UpdateAccountNameInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String,
     ): Account? {
-        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
         return updateAccountNameCommand.handle(id, updateAccountNameInputsDTO.newName, userId)
     }
@@ -83,9 +83,9 @@ class AccountResource @Autowired constructor(
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun delete(
         @PathVariable(value = "id") id: UUID,
-        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String,
     ) {
-        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
         return deleteAccountCommand.handle(id, userId)
     }
@@ -95,9 +95,9 @@ class AccountResource @Autowired constructor(
     fun addExpense(
         @PathVariable("id") id: UUID,
         @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String,
     ): Account? {
-        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
         return addExpenseCommand.handle(
             id,
@@ -119,9 +119,9 @@ class AccountResource @Autowired constructor(
     fun deleteExpense(
         @PathVariable("id") id: UUID,
         @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String?, // TODO: Make non-nullable
+        @CookieValue(value = "sessionToken") sessionToken: String,
     ): Account? {
-        val userId = userAuthorizer.getUserIdFromSessionToken(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
         return deleteExpenseCommand.handle(
             id,

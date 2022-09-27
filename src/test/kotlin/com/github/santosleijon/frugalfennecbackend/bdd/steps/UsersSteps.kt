@@ -105,9 +105,11 @@ class UsersSteps {
 
         val userId = userProjectionRepository.findByEmail(email)!!.id
 
-        val sessionToken = userSessions.create(userId).token
+        val newUserSession = userSessions.create(userId)
 
-        val cookie = Cookie.Builder("sessionToken", sessionToken)
+        userSession = newUserSession
+
+        val cookie = Cookie.Builder("sessionToken", newUserSession.token)
             .path("/")
             .build()
 
@@ -192,7 +194,7 @@ class UsersSteps {
     }
 
     @Then("the user is redirected to the start page")
-    fun assertTheUserIsRedirectedToTheStartPage() = runBlocking {
+    fun assertTheUserIsRedirectedToTheStartPage(): Any = runBlocking {
         waitFor(1000)
 
         val currentUrl = AccountsSteps.webDriver.currentUrl
@@ -201,7 +203,7 @@ class UsersSteps {
     }
 
     @Then("the user sees the error message {string}")
-    fun assertTheUserSeesError(message: String) = runBlocking {
+    fun assertTheUserSeesError(message: String): Any = runBlocking {
         val pageContent = AccountsSteps.webDriver.getPageContent()
 
         Assertions.assertThat(pageContent).contains(message)

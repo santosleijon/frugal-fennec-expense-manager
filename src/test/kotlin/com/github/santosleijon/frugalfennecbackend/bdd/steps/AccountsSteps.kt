@@ -132,9 +132,12 @@ class AccountsSteps {
     }
 
     private fun deleteAllAccounts() {
-        // TODO: User real/mocked session token
-        accountResource.getAll(null).forEach { accountProjection ->
-            accountResource.delete(accountProjection.id, null)
+        val sessionToken = usersSteps.userSession?.token
+
+        if (sessionToken != null) {
+            accountResource.getAll(sessionToken).forEach { accountProjection ->
+                accountResource.delete(accountProjection.id, sessionToken)
+            }
         }
     }
 }
