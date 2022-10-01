@@ -1,9 +1,9 @@
 Feature: Account management
 
   Scenario: Accounts can be viewed
-    Given a user with email "test@example.com" has logged in
-    And an account with the name "Account 1"
-    And an account with the name "Account 2"
+    Given the user with email "test@example.com" has logged in
+    And user "test@example.com" has an account with the name "Account 1"
+    And user "test@example.com" has an account with the name "Account 2"
     When the user opens the accounts page
     Then the account "Account 1" is displayed in the accounts list
     And the account "Account 2" is displayed in the accounts list
@@ -12,10 +12,17 @@ Feature: Account management
     When accounts are retrieved without a valid user session cookie
     Then an InvalidSessionToken error is returned
 
-  #TODO: Scenario: Only accounts belonging to the logged-in users can be viewed
+  Scenario: Only accounts belonging to the logged-in users can be viewed
+    Given a registered user "user-1@example.com"
+    And a registered user "user-2@example.com"
+    And user "user-1@example.com" has an account with the name "User 1s account"
+    And user "user-2@example.com" has an account with the name "User 2s account"
+    And the user with email "user-1@example.com" has logged in
+    When the user opens the accounts page
+    Then the account "User 2s account" is not displayed in the accounts list
 
   Scenario: An account can be created
-    Given a user with email "test@example.com" has logged in
+    Given the user with email "test@example.com" has logged in
     When the user opens the accounts page
     And the user enters account name "Account 1"
     And the user clicks on "Add"
@@ -26,8 +33,8 @@ Feature: Account management
     Then an InvalidSessionToken error is returned
 
   Scenario: An account can be renamed
-    Given a user with email "test@example.com" has logged in
-    And an account with the name "Old account"
+    Given the user with email "test@example.com" has logged in
+    And user "test@example.com" has an account with the name "Old account"
     When the user opens the accounts page
     And the user enters new account name "New account" into the account name cell for "Old account"
     Then the account "New account" is displayed in the accounts list
@@ -39,8 +46,8 @@ Feature: Account management
   #TODO: Scenario: Only an account belonging to the logged-in user can be renamed
 
   Scenario: An account can be deleted
-    Given a user with email "test@example.com" has logged in
-    And an account with the name "Account 1"
+    Given the user with email "test@example.com" has logged in
+    And user "test@example.com" has an account with the name "Account 1"
     When the user opens the accounts page
     And the user selects "Account 1" in the accounts list
     And the user clicks on "Delete accounts"
@@ -53,9 +60,9 @@ Feature: Account management
   #TODO: Scenario: Only an account belonging to the logged-in user can be deleted
 
   Scenario: Multiple accounts can be deleted at he same time
-    Given a user with email "test@example.com" has logged in
-    And an account with the name "Account 1"
-    And an account with the name "Account 2"
+    Given the user with email "test@example.com" has logged in
+    And user "test@example.com" has an account with the name "Account 1"
+    And user "test@example.com" has an account with the name "Account 2"
     When the user opens the accounts page
     And the user selects "Account 1" in the accounts list
     And the user selects "Account 2" in the accounts list

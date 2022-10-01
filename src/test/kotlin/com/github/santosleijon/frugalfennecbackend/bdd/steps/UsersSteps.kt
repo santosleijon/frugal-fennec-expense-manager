@@ -54,7 +54,7 @@ class UsersSteps {
     private lateinit var emailVerificationCodeRepository: EmailVerificationCodeRepository
 
     var userSession: UserSession? = null
-    var sessionUserId: UUID = userSession?.userId ?: UUID.randomUUID()
+    var sessionUserId: UUID? = userSession?.userId
 
     private val loginPageUrl = "http://localhost:8080"
 
@@ -73,7 +73,10 @@ class UsersSteps {
 
     @Given("a registered user {string}")
     fun givenARegisteredUser(email: String) {
-        if (userProjectionRepository.findByEmail(email) != null) {
+        val existingUser = userProjectionRepository.findByEmail(email)
+
+        if (existingUser != null) {
+            sessionUserId = existingUser.id
             return
         }
 
@@ -81,6 +84,8 @@ class UsersSteps {
             id = UUID.randomUUID(),
             email = email,
         )
+
+        sessionUserId = user.id
 
         userRepository.save(user)
     }
@@ -99,8 +104,8 @@ class UsersSteps {
         }
     }
 
-    @Given("a user with email {string} has logged in")
-    fun givenAUserHasLoggedIn(email: String) = runBlocking {
+    @Given("the user with email {string} has logged in")
+    fun givenUserHasLoggedIn(email: String) = runBlocking {
         givenARegisteredUser(email)
 
         val userId = userProjectionRepository.findByEmail(email)!!.id

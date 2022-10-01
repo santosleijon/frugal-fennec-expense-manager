@@ -25,12 +25,12 @@ Feature: Password-less user registration and login using email verification
     And the user is redirected to the start page
 
   Scenario: A user is still logged in after refreshing the page
-    Given a user with email "test@example.com" has logged in
+    Given the user with email "test@example.com" has logged in
     When the user refreshes the page
     Then the user is still logged in
 
   Scenario: A user can logout
-    Given a user with email "test@example.com" has logged in
+    Given the user with email "test@example.com" has logged in
     When the user clicks on "Logout"
     Then the user session is ended for user with email "test@example.com"
     And the user is redirected to the start page

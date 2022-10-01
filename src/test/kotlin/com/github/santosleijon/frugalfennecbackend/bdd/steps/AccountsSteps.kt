@@ -8,6 +8,7 @@ import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
 import com.github.santosleijon.frugalfennecbackend.bdd.webdriver.ExtendedWebDriver
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
+import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
@@ -52,6 +53,9 @@ class AccountsSteps {
     private lateinit var accountRepository: AccountRepository
 
     @Autowired
+    private lateinit var userProjectionRepository: UserProjectionRepository
+
+    @Autowired
     private lateinit var usersSteps: UsersSteps
 
     @Autowired
@@ -68,9 +72,9 @@ class AccountsSteps {
         deleteAllAccounts()
     }
 
-    @Given("an account with the name {string}")
-    fun givenAnAccount(accountName: String) {
-        val userId = UUID.randomUUID() // TODO
+    @Given("user {string} has an account with the name {string}")
+    fun givenAnAccount(userEmail: String, accountName: String) {
+        val userId = userProjectionRepository.findByEmail(userEmail)!!.id
 
         val account = Account(UUID.randomUUID(), accountName, userId)
 
@@ -168,13 +172,13 @@ class AccountsSteps {
 
     @Then("an account with the name {string} exists")
     fun assertAccountExists(accountName: String) {
-        val account = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)
+        val account = accountProjectionRepository.findByNameAndUserIdOrNull(accountName, usersSteps.sessionUserId!!)
         Assertions.assertThat(account).isNotNull
     }
 
     @Then("the account with the name {string} has the following expenses:")
     fun assertAccountHasExpenses(accountName: String, expectedExpenses: List<Expense>) {
-        val accountProjection = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)!!
+        val accountProjection = accountProjectionRepository.findByNameAndUserIdOrNull(accountName, usersSteps.sessionUserId!!)!!
         val actualExpenses = accountProjection.expenses
 
         Assertions.assertThat(actualExpenses).containsAll(expectedExpenses)

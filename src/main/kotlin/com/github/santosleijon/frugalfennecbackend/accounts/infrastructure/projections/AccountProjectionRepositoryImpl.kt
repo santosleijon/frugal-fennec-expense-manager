@@ -21,12 +21,16 @@ class AccountProjectionRepositoryImpl @Autowired constructor(
         return accountProjectionsDAO.findById(accountId)
     }
 
-    override fun findByNameOrNull(name: String, userId: UUID): AccountProjection? {
+    override fun findByIdAndUserIdOrNull(accountId: UUID, userId: UUID): AccountProjection? {
+        return accountProjectionsDAO.findByIdAndUserId(accountId, userId)
+    }
+
+    override fun findByNameAndUserIdOrNull(name: String, userId: UUID): AccountProjection? {
         return accountProjectionsDAO.findByName(name, userId)
     }
 
-    override fun findAll(userId: UUID): List<AccountProjection> {
-        return accountProjectionsDAO.findAll()
+    override fun findByUserId(userId: UUID): List<AccountProjection> {
+        return accountProjectionsDAO.findByUserId(userId)
     }
 
     override fun delete(id: UUID) {

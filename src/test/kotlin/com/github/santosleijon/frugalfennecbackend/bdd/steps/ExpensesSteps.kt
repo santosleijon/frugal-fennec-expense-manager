@@ -48,11 +48,11 @@ class ExpensesSteps {
 
     @Given("the account with the name {string} has the following expenses")
     fun givenExpenses(accountName: String, expenses: List<Expense>) {
-        val accountProjection = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)
+        val accountProjection = accountProjectionRepository.findByNameAndUserIdOrNull(accountName, usersSteps.sessionUserId!!)
         val account = accountRepository.findByIdOrNull(accountProjection!!.id)!!
 
         expenses.forEach { expense ->
-            account.addExpense(expense, usersSteps.sessionUserId)
+            account.addExpense(expense, usersSteps.sessionUserId!!)
         }
 
         accountRepository.save(account)
@@ -116,7 +116,7 @@ class ExpensesSteps {
 
     @When("an expense is added to account {string} by a user without a valid user session cookie")
     fun addExpenseToAccountWithoutAValidUserSessionCookie(accountName: String) {
-        val account = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)!!
+        val account = accountProjectionRepository.findByNameAndUserIdOrNull(accountName, usersSteps.sessionUserId!!)!!
 
         try {
             accountResource.addExpense(
@@ -135,7 +135,7 @@ class ExpensesSteps {
 
     @When("the expense on account {string} is deleted by a user without a valid user session cookie")
     fun expenseOnAccountIsDeletedWithoutAValidUserSessionCookie(accountName: String) {
-        val account = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)!!
+        val account = accountProjectionRepository.findByNameAndUserIdOrNull(accountName, usersSteps.sessionUserId!!)!!
 
         val expenseToDelete = account.expenses.first()
 

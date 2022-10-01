@@ -14,20 +14,8 @@ class AccountProjectionsDAO @Autowired constructor(
     private val template: NamedParameterJdbcTemplate,
     private val objectMapper: ObjectMapper,
 ) {
-    fun findAll(): MutableList<AccountProjection> {
-        return template.query("""
-            SELECT
-                data
-            FROM
-                account_projections
-            ORDER BY
-                account_name
-        """.trimIndent(), ProjectionMapping(objectMapper)
-        )
-    }
-
     fun findById(accountId: UUID): AccountProjection? {
-        val paramMap: Map<String, Any> = mapOf(
+        val paramMap: Map<String, UUID> = mapOf(
             "account_id" to accountId,
         )
 
@@ -43,9 +31,28 @@ class AccountProjectionsDAO @Autowired constructor(
         ).firstOrNull()
     }
 
-    fun findByName(name: String, userId: UUID): AccountProjection? {
-        val paramMap: Map<String, Any> = mapOf(
-            "account_name" to name,
+    fun findByUserId(userId: UUID): MutableList<AccountProjection> {
+        val paramMap: Map<String, UUID> = mapOf(
+            "user_id" to userId,
+        )
+
+        return template.query("""
+            SELECT
+                data
+            FROM
+                account_projections
+            WHERE
+                user_id = :user_id
+            ORDER BY
+                account_name
+        """.trimIndent(), paramMap, ProjectionMapping(objectMapper)
+        )
+    }
+
+    fun findByIdAndUserId(accountId: UUID, userId: UUID): AccountProjection? {
+        val paramMap: Map<String, UUID> = mapOf(
+            "account_id" to accountId,
+            "user_id" to userId,
         )
 
         return template.query("""
@@ -54,7 +61,27 @@ class AccountProjectionsDAO @Autowired constructor(
             FROM
                 account_projections
             WHERE
-                account_name = :account_name
+                account_id = :account_id AND
+                user_id = :user_id
+            LIMIT 1
+        """.trimIndent(), paramMap, ProjectionMapping(objectMapper)
+        ).firstOrNull()
+    }
+
+    fun findByName(name: String, userId: UUID): AccountProjection? {
+        val paramMap: Map<String, Any> = mapOf(
+            "account_name" to name,
+            "user_id" to userId,
+        )
+
+        return template.query("""
+            SELECT
+                 data
+            FROM
+                account_projections
+            WHERE
+                account_name = :account_name AND
+                user_id = :user_id
             LIMIT 1
         """.trimIndent(), paramMap, ProjectionMapping(objectMapper)
         ).firstOrNull()

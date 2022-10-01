@@ -18,7 +18,7 @@ class CreateAccountCommand @Autowired constructor(
         name: String,
         userId: UUID,
     ): Account {
-        val accountProjection = accountProjectionRepository.findByNameOrNull(name, userId)
+        val accountProjection = accountProjectionRepository.findByNameAndUserIdOrNull(name, userId)
 
         if (accountProjection != null) {
             val account = accountRepository.findByIdOrNull(accountProjection.id)

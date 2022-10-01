@@ -11,7 +11,6 @@ class GetAllAccountsQuery @Autowired constructor(
     private val accountProjectionRepository: AccountProjectionRepository,
 ) {
     fun handle(userId: UUID): List<AccountProjection> {
-        // TODO: Authorization
-        return accountProjectionRepository.findAll(userId)
+        return accountProjectionRepository.findByUserId(userId)
     }
 }
