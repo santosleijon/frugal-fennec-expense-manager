@@ -1,10 +1,12 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
+import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.utils.toUTCInstant
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.toDateString
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
+import io.cucumber.java.After
 import io.cucumber.java.DataTableType
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -26,9 +28,23 @@ class ExpensesSteps {
     private lateinit var accountProjectionRepository: AccountProjectionRepository
 
     @Autowired
+    private lateinit var accountResource: AccountResource
+
+    @Autowired
     private lateinit var usersSteps: UsersSteps
 
+    @Autowired
+    private lateinit var commonSteps: CommonSteps
+
+    @Autowired
+    private lateinit var accountSteps: AccountsSteps
+
     private val pageUrl = "http://localhost:8080"
+
+    @After
+    fun afterScenario() {
+        accountSteps.deleteAllAccounts()
+    }
 
     @Given("the account with the name {string} has the following expenses")
     fun givenExpenses(accountName: String, expenses: List<Expense>) {
@@ -98,6 +114,46 @@ class ExpensesSteps {
         }
     }
 
+    @When("an expense is added to account {string} by a user without a valid user session cookie")
+    fun addExpenseToAccountWithoutAValidUserSessionCookie(accountName: String) {
+        val account = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)!!
+
+        try {
+            accountResource.addExpense(
+                account.id,
+                AccountResource.ExpenseInputsDTO(
+                    "2022-01-01",
+                    "Expense description",
+                    BigDecimal.ONE,
+                ),
+                sessionToken = commonSteps.invalidUserSessionToken,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
+    @When("the expense on account {string} is deleted by a user without a valid user session cookie")
+    fun expenseOnAccountIsDeletedWithoutAValidUserSessionCookie(accountName: String) {
+        val account = accountProjectionRepository.findByNameOrNull(accountName, usersSteps.sessionUserId)!!
+
+        val expenseToDelete = account.expenses.first()
+
+        try {
+            accountResource.deleteExpense(
+                account.id,
+                AccountResource.ExpenseInputsDTO(
+                    expenseToDelete.date.toDateString(),
+                    expenseToDelete.description,
+                    expenseToDelete.amount,
+                ),
+                sessionToken = commonSteps.invalidUserSessionToken,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
     @Then("the following expenses are displayed in the expenses list")
     fun assertExpensesAreDisplayedInExpensesList(expenses: List<Expense>) {
         val expensesDataGrid = AccountsSteps.webDriver.findElement(By.id("expensesDataGrid"))
@@ -119,7 +175,6 @@ class ExpensesSteps {
             Assertions.assertThat(expensesDataGrid.text).doesNotContain(it.amount.toString())
         }
     }
-
     @Suppress("unused")
     @DataTableType
     fun expenseTransformer(entry: Map<String, String>): Expense {

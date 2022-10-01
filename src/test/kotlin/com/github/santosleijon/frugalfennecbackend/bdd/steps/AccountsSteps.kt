@@ -54,6 +54,9 @@ class AccountsSteps {
     @Autowired
     private lateinit var usersSteps: UsersSteps
 
+    @Autowired
+    private lateinit var commonSteps: CommonSteps
+
     @Before
     fun beforeScenario() {
         webDriver = ExtendedWebDriver.createWithWebDriverManager()
@@ -105,6 +108,52 @@ class AccountsSteps {
         webDriver.enterTextIntoElementWithId(accountName, "name-field")
     }
 
+    @When("accounts are retrieved without a valid user session cookie")
+    fun retrieveAccountsWithoutAValidUserSessionCookie() {
+        try {
+            accountResource.getAll(commonSteps.invalidUserSessionToken)
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
+    @When("an account is created without a valid user session cookie")
+    fun createAnAccountWithoutAValidUserSessionCookie() {
+        try {
+            accountResource.create(
+                createAccountInputsDTO = AccountResource.CreateAccountInputsDTO("test-account"),
+                sessionToken = commonSteps.invalidUserSessionToken,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
+    @When("an account is renamed without a valid user session cookie")
+    fun renameAnAccountWithoutAValidUserSessionCookie() {
+        try {
+            accountResource.updateName(
+                id = UUID.randomUUID(),
+                updateAccountNameInputsDTO = AccountResource.UpdateAccountNameInputsDTO("new-test-account-name"),
+                sessionToken = commonSteps.invalidUserSessionToken,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
+    @When("an account is deleted without a valid user session cookie")
+    fun deleteAnAccountWithoutAValidUserSessionCookie() {
+        try {
+            accountResource.delete(
+                id = UUID.randomUUID(),
+                sessionToken = commonSteps.invalidUserSessionToken,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
     @Then("the account {string} is displayed in the accounts list")
     fun assertAccountIsDisplayedInList(accountName: String) {
         val accountsDataGrid = webDriver.findElement(By.id("accountsDataGrid"))
@@ -131,7 +180,7 @@ class AccountsSteps {
         Assertions.assertThat(actualExpenses).containsAll(expectedExpenses)
     }
 
-    private fun deleteAllAccounts() {
+    fun deleteAllAccounts() {
         val sessionToken = usersSteps.userSession?.token
 
         if (sessionToken != null) {

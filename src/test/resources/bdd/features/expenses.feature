@@ -15,8 +15,6 @@ Feature: Expense management
       | 2022-01-02T00:00:00Z  | Another expense      | 2.00    |
       | 2022-01-03T00:00:00Z  | Yet another expense  | 3.00    |
 
-  #Scenario: Accounts can only be viewed by a user with a valid user session
-
   Scenario: An expense can be added to an account
     Given a user with email "test@example.com" has logged in
     And an account with the name "Account 1"
@@ -30,9 +28,12 @@ Feature: Expense management
       | date                  | description          | amount  |
       | 2022-01-01T00:00:00Z  | A new expense        | 1.00    |
 
-  #Scenario: An expense can only be added by a user with a valid user session
+  Scenario: An expense can only be added by a user with a valid user session cookie
+    Given an account with the name "Account 1"
+    When an expense is added to account "Account 1" by a user without a valid user session cookie
+    Then an InvalidSessionToken error is returned
 
-  #Scenario: An expense can only be added to an account belonging to the logged-in user
+  #TODO: Scenario: An expense can only be added to an account belonging to the logged-in user
 
   Scenario: An expense can be deleted
     Given a user with email "test@example.com" has logged in
@@ -51,9 +52,15 @@ Feature: Expense management
       | date                  | description          | amount  |
       | 2022-01-01T00:00:00Z  | An expense           | 1.00    |
 
-  #Scenario: An expense can only be deleted by a user with a valid user session
+  Scenario: An expense can only be deleted by a user with a valid user session cookie
+    Given an account with the name "Account 1"
+    And the account with the name "Account 1" has the following expenses
+      | date                  | description          | amount  |
+      | 2022-01-01T00:00:00Z  | An expense           | 1.00    |
+    When the expense on account "Account 1" is deleted by a user without a valid user session cookie
+    Then an InvalidSessionToken error is returned
 
-  #Scenario: An expense can only be deleted if it belongs to an account belonging to the logged-in user
+  #TODO: Scenario: An expense can only be deleted if it belongs to an account belonging to the logged-in user
 
   Scenario: Multiple expenses can be deleted at the same time
     Given a user with email "test@example.com" has logged in
