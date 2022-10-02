@@ -69,7 +69,12 @@ Feature: Account management
     When an account is deleted without a valid user session cookie
     Then an InvalidSessionToken error is returned
 
-  #TODO: Scenario: Only an account belonging to the logged-in user can be deleted
+  Scenario: An account can only be deleted by the user who it belongs to
+    Given a registered user "user-1@example.com"
+    And a registered user "user-2@example.com"
+    And user "user-1@example.com" has an account with the name "User 1s account"
+    When user "user-2@example.com" tries to delete the account "User 1s account"
+    Then an UnauthorizedOperation error is returned
 
   Scenario: Multiple accounts can be deleted at he same time
     Given the user with email "test@example.com" has logged in

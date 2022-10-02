@@ -177,6 +177,22 @@ class AccountsSteps {
         }
     }
 
+    @When("user {string} tries to delete the account {string}")
+    fun userTriesToDeleteAccount(userEmail: String, accountName: String) {
+        usersSteps.givenUserHasLoggedIn(userEmail)
+
+        val accountId = accountProjectionRepository.findByNameOrNull(accountName)!!.id
+
+        try {
+            accountResource.delete(
+                id = accountId,
+                sessionToken = usersSteps.userSession!!.token!!,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
     @When("user {string} tries to retrieve the account {string}")
     fun userTriesToRetrieveAccount(userEmail: String, accountName: String) {
         usersSteps.givenUserHasLoggedIn(userEmail)
