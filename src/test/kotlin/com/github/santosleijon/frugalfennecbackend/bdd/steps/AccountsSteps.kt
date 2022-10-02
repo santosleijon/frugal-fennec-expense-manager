@@ -25,6 +25,7 @@ import java.util.*
 
 class AccountsSteps {
 
+    // TODO: Move WebDriver stuff to CommonSteps class
     companion object {
         private val dbContainer = TestDbContainer()
 
@@ -152,6 +153,23 @@ class AccountsSteps {
             accountResource.delete(
                 id = UUID.randomUUID(),
                 sessionToken = commonSteps.invalidUserSessionToken,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
+    @When("user {string} tries to rename the account {string} to {string}")
+    fun userTriesToRenameAccount(userEmail: String, originalAccountName: String, newAccountName: String) {
+        usersSteps.givenUserHasLoggedIn(userEmail)
+
+        val accountId = accountProjectionRepository.findByNameOrNull(originalAccountName)!!.id
+
+        try {
+            accountResource.updateName(
+                id = accountId,
+                updateAccountNameInputsDTO = AccountResource.UpdateAccountNameInputsDTO(newAccountName),
+                sessionToken = usersSteps.userSession!!.token!!,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e

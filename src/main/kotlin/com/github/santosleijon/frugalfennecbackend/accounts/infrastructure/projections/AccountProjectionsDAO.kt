@@ -68,7 +68,24 @@ class AccountProjectionsDAO @Autowired constructor(
         ).firstOrNull()
     }
 
-    fun findByName(name: String, userId: UUID): AccountProjection? {
+    fun findByName(name: String): AccountProjection? {
+        val paramMap: Map<String, String> = mapOf(
+            "account_name" to name,
+        )
+
+        return template.query("""
+            SELECT
+                 data
+            FROM
+                account_projections
+            WHERE
+                account_name = :account_name
+            LIMIT 1
+        """.trimIndent(), paramMap, ProjectionMapping(objectMapper)
+        ).firstOrNull()
+    }
+
+    fun findByNameAndUserId(name: String, userId: UUID): AccountProjection? {
         val paramMap: Map<String, Any> = mapOf(
             "account_name" to name,
             "user_id" to userId,

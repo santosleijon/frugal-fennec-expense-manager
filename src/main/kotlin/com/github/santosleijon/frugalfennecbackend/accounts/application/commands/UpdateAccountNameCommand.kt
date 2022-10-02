@@ -3,6 +3,7 @@ package com.github.santosleijon.frugalfennecbackend.accounts.application.command
 import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.AccountNotFoundError
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
+import com.github.santosleijon.frugalfennecbackend.common.errors.UnauthorizedOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
@@ -16,10 +17,12 @@ class UpdateAccountNameCommand @Autowired constructor(
         newName: String,
         userId: UUID,
     ): Account {
-        // TODO: Authorization
-
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
+
+        if (account.userId != userId) {
+            throw UnauthorizedOperation("update account name")
+        }
 
         account.setName(newName, userId)
 
