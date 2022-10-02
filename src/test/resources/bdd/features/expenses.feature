@@ -34,7 +34,12 @@ Feature: Expense management
     When an expense is added to account "Account 1" by a user without a valid user session cookie
     Then an InvalidSessionToken error is returned
 
-  #TODO: Scenario: An expense can only be added to an account belonging to the logged-in user
+  Scenario: An expense can only be added to an account belonging to the logged-in user
+    Given a registered user "user-1@example.com"
+    And a registered user "user-2@example.com"
+    And user "user-1@example.com" has an account with the name "User 1s account"
+    When user "user-2@example.com" tries to add an expense the account "User 1s account"
+    Then an UnauthorizedOperation error is returned
 
   Scenario: An expense can be deleted
     Given the user with email "test@example.com" has logged in

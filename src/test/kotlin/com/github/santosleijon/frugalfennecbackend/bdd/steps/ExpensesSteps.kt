@@ -154,6 +154,27 @@ class ExpensesSteps {
         }
     }
 
+    @When("user {string} tries to add an expense the account {string}")
+    fun userTriesToAddExpenseToAccount(userEmail: String, accountName: String) {
+        usersSteps.givenUserHasLoggedIn(userEmail)
+
+        val accountId = accountProjectionRepository.findByNameOrNull(accountName)!!.id
+
+        try {
+            accountResource.addExpense(
+                id = accountId,
+                expenseInputsDTO = AccountResource.ExpenseInputsDTO(
+                    date = Instant.now().toDateString(),
+                    description = "Expense description",
+                    amount = BigDecimal.ONE,
+                ),
+                sessionToken = usersSteps.userSession!!.token!!,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
     @Then("the following expenses are displayed in the expenses list")
     fun assertExpensesAreDisplayedInExpensesList(expenses: List<Expense>) {
         val expensesDataGrid = AccountsSteps.webDriver.findElement(By.id("expensesDataGrid"))
