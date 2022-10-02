@@ -21,6 +21,13 @@ Feature: Account management
     When the user opens the accounts page
     Then the account "User 2s account" is not displayed in the accounts list
 
+  Scenario: An account can only be retrieved by the user who it belongs to
+    Given a registered user "user-1@example.com"
+    And a registered user "user-2@example.com"
+    And user "user-1@example.com" has an account with the name "User 1s account"
+    When user "user-2@example.com" tries to retrieve the account "User 1s account"
+    Then an AccountNotFound error is returned
+
   Scenario: An account can be created
     Given the user with email "test@example.com" has logged in
     When the user opens the accounts page

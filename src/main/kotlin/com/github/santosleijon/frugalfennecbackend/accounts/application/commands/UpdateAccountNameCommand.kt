@@ -21,7 +21,7 @@ class UpdateAccountNameCommand @Autowired constructor(
             ?: throw AccountNotFoundError(id)
 
         if (account.userId != userId) {
-            throw UnauthorizedOperation("update account name")
+            throw UnauthorizedOperation(this::class, userId)
         }
 
         account.setName(newName, userId)

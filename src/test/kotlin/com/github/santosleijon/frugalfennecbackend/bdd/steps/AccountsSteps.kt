@@ -1,6 +1,7 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.AccountResource
+import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.AccountNotFoundError
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.bdd.TestDbContainer
@@ -116,7 +117,7 @@ class AccountsSteps {
     @When("accounts are retrieved without a valid user session cookie")
     fun retrieveAccountsWithoutAValidUserSessionCookie() {
         try {
-            accountResource.getAll(commonSteps.invalidUserSessionToken)
+            accountResource.getAllForUser(commonSteps.invalidUserSessionToken)
         } catch (e: Exception) {
             commonSteps.requestException = e
         }
@@ -176,6 +177,22 @@ class AccountsSteps {
         }
     }
 
+    @When("user {string} tries to retrieve the account {string}")
+    fun userTriesToRetrieveAccount(userEmail: String, accountName: String) {
+        usersSteps.givenUserHasLoggedIn(userEmail)
+
+        val accountId = accountProjectionRepository.findByNameOrNull(accountName)!!.id
+
+        try {
+            accountResource.get(
+                id = accountId,
+                sessionToken = usersSteps.userSession!!.token!!,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
     @Then("the account {string} is displayed in the accounts list")
     fun assertAccountIsDisplayedInList(accountName: String) {
         val accountsDataGrid = webDriver.findElement(By.id("accountsDataGrid"))
@@ -202,11 +219,17 @@ class AccountsSteps {
         Assertions.assertThat(actualExpenses).containsAll(expectedExpenses)
     }
 
+    @Then("an AccountNotFound error is returned")
+    fun assertAccountNotFoundErrorIsReturned() {
+        Assertions.assertThat(commonSteps.requestException).isNotNull
+        Assertions.assertThat(commonSteps.requestException).isInstanceOf(AccountNotFoundError::class.java)
+    }
+
     fun deleteAllAccounts() {
         val sessionToken = usersSteps.userSession?.token
 
         if (sessionToken != null) {
-            accountResource.getAll(sessionToken).forEach { accountProjection ->
+            accountResource.getAllForUser(sessionToken).forEach { accountProjection ->
                 accountResource.delete(accountProjection.id, sessionToken)
             }
         }

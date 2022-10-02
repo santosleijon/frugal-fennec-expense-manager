@@ -2,8 +2,8 @@ package com.github.santosleijon.frugalfennecbackend.accounts.application.api
 
 import com.github.santosleijon.frugalfennecbackend.accounts.application.api.utils.toUTCInstant
 import com.github.santosleijon.frugalfennecbackend.accounts.application.commands.*
-import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAccountQuery
-import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAllAccountsQuery
+import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAccountForUserQuery
+import com.github.santosleijon.frugalfennecbackend.accounts.application.queries.GetAllAccountsForUserQuery
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjection
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserAuthorizer
@@ -19,8 +19,8 @@ import java.util.*
 class AccountResource @Autowired constructor(
     private val userAuthorizer: UserAuthorizer,
     private val createAccountCommand: CreateAccountCommand,
-    private val getAllAccounts: GetAllAccountsQuery,
-    private val getAccountQuery: GetAccountQuery,
+    private val getAllAccountsForUser: GetAllAccountsForUserQuery,
+    private val getAccountForUserQuery: GetAccountForUserQuery,
     private val updateAccountNameCommand: UpdateAccountNameCommand,
     private val deleteAccountCommand: DeleteAccountCommand,
     private val addExpenseCommand: AddExpenseCommand,
@@ -45,12 +45,12 @@ class AccountResource @Autowired constructor(
     )
 
     @GetMapping
-    fun getAll(
+    fun getAllForUser(
         @CookieValue(value = "sessionToken") sessionToken: String,
     ): List<AccountProjection> {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return getAllAccounts.handle(userId)
+        return getAllAccountsForUser.handle(userId)
     }
 
     @RequestMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -60,7 +60,7 @@ class AccountResource @Autowired constructor(
     ): AccountProjection {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return getAccountQuery.handle(id, userId)
+        return getAccountForUserQuery.handle(id, userId)
     }
 
     @PatchMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
