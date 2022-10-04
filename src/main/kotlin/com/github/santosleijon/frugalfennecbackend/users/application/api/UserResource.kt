@@ -69,7 +69,8 @@ class UserResource @Autowired constructor(
 
     @GetMapping("current-session")
     fun getCurrentUserSession(@CookieValue(value = "sessionToken") sessionToken: String?): GetCurrentUserSessionDTO {
-        return getCurrentUserSessionQuery.handle(sessionToken)
+        val queryInput = GetCurrentUserSessionQuery.Input(sessionToken)
+        return getCurrentUserSessionQuery.execute(queryInput)
     }
 
     data class StartLoginInputsDTO(

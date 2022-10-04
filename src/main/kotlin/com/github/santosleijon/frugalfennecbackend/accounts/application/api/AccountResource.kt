@@ -52,7 +52,9 @@ class AccountResource @Autowired constructor(
     ): List<AccountProjection> {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return getAllAccountsForUser.handle(userId)
+        val queryInput = GetAllAccountsForUserQuery.Input(userId)
+
+        return getAllAccountsForUser.execute(queryInput)
     }
 
     @RequestMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -62,7 +64,9 @@ class AccountResource @Autowired constructor(
     ): AccountProjection {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return getAccountForUserQuery.handle(id, userId)
+        val queryInput = GetAccountForUserQuery.Input(id, userId)
+
+        return getAccountForUserQuery.execute(queryInput)
     }
 
     @PatchMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
