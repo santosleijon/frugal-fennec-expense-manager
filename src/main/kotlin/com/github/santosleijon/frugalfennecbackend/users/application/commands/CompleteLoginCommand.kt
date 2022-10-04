@@ -1,8 +1,8 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
+import com.github.santosleijon.frugalfennecbackend.common.cqrs.Command
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailAddressError
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailVerificationCodeError
-import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
 import com.github.santosleijon.frugalfennecbackend.users.domain.*
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.isValidEmail
@@ -21,12 +21,25 @@ class CompleteLoginCommand @Autowired constructor(
     private val userSessions: UserSessions,
     private val userProjectionRepository: UserProjectionRepository,
     private val userRepository: UserRepository,
-) {
+) : Command<CompleteLoginCommand.Input, CompleteLoginCommand.Result> {
 
     private var logger = LoggerFactory.getLogger(this::class.java)
 
-    // TODO: All of these "handle" command should be called "execute" since these classes are not command handlers
-    fun handle(email: String, verificationCode: String): CompleteLoginResult {
+    data class Input(
+        val email: String,
+        val verificationCode: String,
+    )
+
+    data class Result(
+        val userId: UUID,
+        val userEmail: String,
+        val userSession: UserSession,
+    )
+
+    override fun execute(input: Input): Result {
+        val email = input.email
+        val verificationCode = input.verificationCode
+
         if (!isValidEmail(email)) {
             throw InvalidEmailAddressError(email)
         }
@@ -60,12 +73,6 @@ class CompleteLoginCommand @Autowired constructor(
 
         logger.info("Completed login for user $email. Given session token: ${userSession.token}")
 
-        return CompleteLoginResult(userId, email, userSession)
+        return Result(userId, email, userSession)
     }
-
-    data class CompleteLoginResult(
-        val userId: UUID,
-        val userEmail: String,
-        val userSession: UserSession,
-    )
 }

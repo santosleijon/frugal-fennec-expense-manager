@@ -33,11 +33,13 @@ class AccountResource @Autowired constructor(
     ): Account {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return createAccountCommand.handle(
+        val commandInput = CreateAccountCommand.Input(
             id = UUID.randomUUID(),
             name = createAccountInputsDTO.name,
             userId = userId,
         )
+
+        return createAccountCommand.execute(commandInput)
     }
 
     data class CreateAccountInputsDTO(
@@ -72,7 +74,13 @@ class AccountResource @Autowired constructor(
     ): Account? {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return updateAccountNameCommand.handle(id, updateAccountNameInputsDTO.newName, userId)
+        val commandInput = UpdateAccountNameCommand.Input(
+            id,
+            updateAccountNameInputsDTO.newName,
+            userId,
+        )
+
+        return updateAccountNameCommand.execute(commandInput)
     }
 
     data class UpdateAccountNameInputsDTO(
@@ -87,7 +95,9 @@ class AccountResource @Autowired constructor(
     ) {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return deleteAccountCommand.handle(id, userId)
+        val commandInput = DeleteAccountCommand.Input(id, userId)
+
+        return deleteAccountCommand.execute(commandInput)
     }
 
     @PostMapping("{id}/expense", produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -99,13 +109,15 @@ class AccountResource @Autowired constructor(
     ): Account? {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return addExpenseCommand.handle(
+        val commandInput = AddExpenseCommand.Input(
             id,
             expenseInputsDTO.date.toUTCInstant(),
             expenseInputsDTO.description,
             expenseInputsDTO.amount,
             userId,
         )
+
+        return addExpenseCommand.execute(commandInput)
     }
 
     data class ExpenseInputsDTO(
@@ -123,12 +135,14 @@ class AccountResource @Autowired constructor(
     ): Account? {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
 
-        return deleteExpenseCommand.handle(
+        val commandInput = DeleteExpenseCommand.Input(
             id,
             expenseInputsDTO.date.toUTCInstant(),
             expenseInputsDTO.description,
             expenseInputsDTO.amount,
             userId,
         )
+
+        return deleteExpenseCommand.execute(commandInput)
     }
 }

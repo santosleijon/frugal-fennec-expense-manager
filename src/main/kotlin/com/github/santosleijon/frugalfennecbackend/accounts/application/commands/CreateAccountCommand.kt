@@ -4,6 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.A
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
+import com.github.santosleijon.frugalfennecbackend.common.cqrs.Command
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
@@ -12,12 +13,19 @@ import java.util.*
 class CreateAccountCommand @Autowired constructor(
     private val accountRepository: AccountRepository,
     private val accountProjectionRepository: AccountProjectionRepository,
-) {
-    fun handle(
-        id: UUID,
-        name: String,
-        userId: UUID,
-    ): Account {
+) : Command<CreateAccountCommand.Input, Account> {
+
+    data class Input(
+        val id: UUID,
+        val name: String,
+        val userId: UUID,
+    )
+
+    override fun execute(input: Input): Account {
+        val id = input.id
+        val name = input.name
+        val userId = input.userId
+
         val accountProjection = accountProjectionRepository.findByNameAndUserIdOrNull(name, userId)
 
         if (accountProjection != null) {

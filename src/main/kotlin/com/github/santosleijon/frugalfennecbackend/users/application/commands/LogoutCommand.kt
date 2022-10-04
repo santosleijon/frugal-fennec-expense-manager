@@ -1,30 +1,26 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.commands
 
-import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidEmailAddressError
-import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.*
+import com.github.santosleijon.frugalfennecbackend.common.cqrs.Command
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessionRepository
-import com.github.santosleijon.frugalfennecbackend.users.domain.UserRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
-import com.sendgrid.helpers.mail.Mail
-import com.sendgrid.helpers.mail.objects.Email
-import com.sendgrid.helpers.mail.objects.Personalization
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import java.time.Duration
-import java.time.Instant
-import java.util.UUID
 
 @Component
 class LogoutCommand @Autowired constructor(
     private val userSessions: UserSessions,
     private val userSessionRepository: UserSessionRepository,
-) {
+) : Command<LogoutCommand.Input, Unit> {
 
     private var logger = LoggerFactory.getLogger(this::class.java)
 
-    fun handle(userSessionToken: String) {
-        val userSessionId = userSessions.getSessionIdFromSessionToken(userSessionToken)
+    data class Input(
+        val userSessionToken: String,
+    )
+
+    override fun execute(input: Input) {
+        val userSessionId = userSessions.getSessionIdFromSessionToken(input.userSessionToken)
 
         val userSession = userSessionRepository.findById(userSessionId)
             ?: return

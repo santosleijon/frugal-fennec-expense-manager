@@ -2,6 +2,7 @@ package com.github.santosleijon.frugalfennecbackend.accounts.application.command
 
 import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.AccountNotFoundError
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
+import com.github.santosleijon.frugalfennecbackend.common.cqrs.Command
 import com.github.santosleijon.frugalfennecbackend.common.errors.UnauthorizedOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -10,8 +11,17 @@ import java.util.*
 @Component
 class DeleteAccountCommand @Autowired constructor(
     private val accountRepository: AccountRepository
-) {
-    fun handle(id: UUID, userId: UUID) {
+) : Command<DeleteAccountCommand.Input, Unit> {
+
+    data class Input(
+        val id: UUID,
+        val userId: UUID,
+    )
+
+    override fun execute(input: Input) {
+        val id = input.id
+        val userId = input.userId
+
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 

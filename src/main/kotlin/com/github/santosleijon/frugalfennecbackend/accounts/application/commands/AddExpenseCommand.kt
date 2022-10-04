@@ -4,6 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.application.errors.A
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
+import com.github.santosleijon.frugalfennecbackend.common.cqrs.Command
 import com.github.santosleijon.frugalfennecbackend.common.errors.UnauthorizedOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -14,14 +15,20 @@ import java.util.*
 @Component
 class AddExpenseCommand @Autowired constructor(
     private val accountRepository: AccountRepository,
-) {
-    fun handle(
-        id: UUID,
-        date: Instant,
-        description: String,
-        amount: BigDecimal,
-        userId: UUID,
-    ): Account {
+): Command<AddExpenseCommand.Input, Account> {
+
+    data class Input(
+        val id: UUID,
+        val date: Instant,
+        val description: String,
+        val amount: BigDecimal,
+        val userId: UUID,
+    )
+
+    override fun execute(input: Input): Account {
+        val id = input.id
+        val userId = input.userId
+
         val account = accountRepository.findByIdOrNull(id)
             ?: throw AccountNotFoundError(id)
 
@@ -29,7 +36,7 @@ class AddExpenseCommand @Autowired constructor(
             throw UnauthorizedOperation(this::class, userId)
         }
 
-        val expense = Expense(date, description, amount)
+        val expense = Expense(input.date, input.description, input.amount)
 
         account.addExpense(expense, userId)
 

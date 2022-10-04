@@ -5,7 +5,6 @@ import com.github.santosleijon.frugalfennecbackend.users.application.commands.Co
 import com.github.santosleijon.frugalfennecbackend.users.application.commands.LogoutCommand
 import com.github.santosleijon.frugalfennecbackend.users.application.commands.StartLoginCommand
 import com.github.santosleijon.frugalfennecbackend.users.application.queries.GetCurrentUserSessionQuery
-import com.github.santosleijon.frugalfennecbackend.users.domain.UserAuthorizer
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjection
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +23,6 @@ class UserResource @Autowired constructor(
     private val abortLoginCommand: AbortLoginCommand,
     private val logoutCommand: LogoutCommand,
     private val getCurrentUserSessionQuery: GetCurrentUserSessionQuery,
-    private val userAuthorizer: UserAuthorizer,
 ) {
 
     companion object {
@@ -33,7 +31,8 @@ class UserResource @Autowired constructor(
 
     @PostMapping("start-login")
     fun startLogin(@RequestBody(required = true) startLoginInputsDTO: StartLoginInputsDTO) {
-        startLoginCommand.handle(startLoginInputsDTO.email)
+        val commandInput = StartLoginCommand.Input(startLoginInputsDTO.email)
+        startLoginCommand.execute(commandInput)
     }
 
     @PostMapping("complete-login")
@@ -41,16 +40,22 @@ class UserResource @Autowired constructor(
         @RequestBody(required = true) completeLoginInputsDTO: CompleteLoginInputsDTO,
         response: HttpServletResponse?,
     ): CompleteLoginResultDTO {
-        val result = completeLoginCommand.handle(completeLoginInputsDTO.email, completeLoginInputsDTO.verificationCode)
+        val commandInput = CompleteLoginCommand.Input(
+            completeLoginInputsDTO.email,
+            completeLoginInputsDTO.verificationCode,
+        )
 
-        response?.addCookie(createSessionTokenCookie(result.userSession))
+        val commandResult = completeLoginCommand.execute(commandInput)
 
-        return CompleteLoginResultDTO(result.userId, result.userEmail, result.userSession)
+        response?.addCookie(createSessionTokenCookie(commandResult.userSession))
+
+        return CompleteLoginResultDTO(commandResult.userId, commandResult.userEmail, commandResult.userSession)
     }
 
     @PostMapping("abort-login")
     fun abortLogin(@RequestBody(required = true) abortLoginInputsDTO: AbortLoginInputsDTO) {
-        abortLoginCommand.handle(abortLoginInputsDTO.email)
+        val commandInput = AbortLoginCommand.Input(abortLoginInputsDTO.email)
+        abortLoginCommand.execute(commandInput)
     }
 
     @PostMapping("logout")
@@ -58,8 +63,7 @@ class UserResource @Autowired constructor(
         @CookieValue(value = "sessionToken") sessionToken: String,
         response: HttpServletResponse?,
     ) {
-        logoutCommand.handle(sessionToken)
-        
+        logoutCommand.execute(LogoutCommand.Input(sessionToken))
         response?.addCookie(createDeletedSessionTokenCookie())
     }
 

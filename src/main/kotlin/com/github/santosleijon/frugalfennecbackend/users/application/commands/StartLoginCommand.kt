@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component
 import java.time.Duration
 import java.time.Instant
 import MaxNumberOfStartedLoginsReached
+import com.github.santosleijon.frugalfennecbackend.common.cqrs.Command
 
 @Component
 class StartLoginCommand @Autowired constructor(
     private val randomEmailVerificationCodeGenerator: RandomEmailVerificationCodeGenerator,
     private val emailVerificationCodeRepository: EmailVerificationCodeRepository,
     private val mailSender: MailSender
-) {
+) : Command<StartLoginCommand.Input, Unit> {
 
     companion object {
         const val MAX_NUMBER_OF_STARTED_LOGINS_ALLOWED = 10
@@ -25,7 +26,13 @@ class StartLoginCommand @Autowired constructor(
 
     private var logger = LoggerFactory.getLogger(this::class.java)
 
-    fun handle(email: String) {
+    data class Input(
+        val email: String,
+    )
+
+    override fun execute(input: Input) {
+        val email = input.email
+
         if (!isValidEmail(email)) {
             throw InvalidEmailAddressError(email)
         }
