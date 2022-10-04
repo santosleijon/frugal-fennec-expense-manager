@@ -118,24 +118,24 @@ class UsersSteps {
             .path("/")
             .build()
 
-        AccountsSteps.webDriver.get(loginPageUrl)
-        AccountsSteps.webDriver.manage().addCookie(cookie)
-        AccountsSteps.webDriver.navigate().refresh()
+        CommonSteps.webDriver.get(loginPageUrl)
+        CommonSteps.webDriver.manage().addCookie(cookie)
+        CommonSteps.webDriver.navigate().refresh()
     }
 
     @When("the user opens the login page")
     fun theUserOpensTheLoginPage() {
-        AccountsSteps.webDriver.get(loginPageUrl)
+        CommonSteps.webDriver.get(loginPageUrl)
     }
 
     @When("the user enters email {string}")
     fun enterEmail(email: String) = runBlocking {
-        AccountsSteps.webDriver.enterTextIntoElementWithId(email, "email-field")
+        CommonSteps.webDriver.enterTextIntoElementWithId(email, "email-field")
     }
 
     @When("the user enters email verification code {string}")
     fun enterEmailVerificationCode(verificationCode: String) = runBlocking {
-        AccountsSteps.webDriver.enterTextIntoElementWithId(verificationCode, "verification-code-field")
+        CommonSteps.webDriver.enterTextIntoElementWithId(verificationCode, "verification-code-field")
     }
 
     @When("a user with email {string} completes a login with verification code {string}")
@@ -152,7 +152,7 @@ class UsersSteps {
 
     @When("the user refreshes the page")
     fun theUserRefreshesThePage() {
-        AccountsSteps.webDriver.navigate().refresh()
+        CommonSteps.webDriver.navigate().refresh()
     }
 
     @Then("an email with verification code {string} is sent to {string}")
@@ -193,7 +193,7 @@ class UsersSteps {
 
     @Then("the user sees the complete login form")
     fun assertUserSeesTheCompleteLoginForm() {
-        val pageContent = AccountsSteps.webDriver.getPageContent()
+        val pageContent = CommonSteps.webDriver.getPageContent()
 
         Assertions.assertThat(pageContent).contains("Complete login by entering verification code")
     }
@@ -202,21 +202,21 @@ class UsersSteps {
     fun assertTheUserIsRedirectedToTheStartPage(): Any = runBlocking {
         waitFor(1000)
 
-        val currentUrl = AccountsSteps.webDriver.currentUrl
+        val currentUrl = CommonSteps.webDriver.currentUrl
 
         Assertions.assertThat(currentUrl).isEqualTo("http://localhost:8080/")
     }
 
     @Then("the user sees the error message {string}")
     fun assertTheUserSeesError(message: String): Any = runBlocking {
-        val pageContent = AccountsSteps.webDriver.getPageContent()
+        val pageContent = CommonSteps.webDriver.getPageContent()
 
         Assertions.assertThat(pageContent).contains(message)
     }
 
     @Then("the user is redirected back the start login form")
     fun assertTheUserIsRedirectedBackToStartLoginForm() {
-        val pageContent = AccountsSteps.webDriver.getPageContent()
+        val pageContent = CommonSteps.webDriver.getPageContent()
 
         Assertions.assertThat(pageContent).contains("Enter email to start login")
     }
@@ -240,6 +240,6 @@ class UsersSteps {
 
     @Then("the user is still logged in")
     fun assertUserIsStillLoggedIn() {
-        Assertions.assertThat(AccountsSteps.webDriver.getPageContent().lowercase()).contains("logout")
+        Assertions.assertThat(CommonSteps.webDriver.getPageContent().lowercase()).contains("logout")
     }
 }

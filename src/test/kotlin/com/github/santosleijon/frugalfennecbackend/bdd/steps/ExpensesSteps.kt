@@ -60,13 +60,13 @@ class ExpensesSteps {
 
     @When("the user opens the expenses page")
     fun openTheAccountsPage() = runBlocking {
-        AccountsSteps.webDriver.get(pageUrl)
-        AccountsSteps.webDriver.clickOnButton("Expenses")
+        CommonSteps.webDriver.get(pageUrl)
+        CommonSteps.webDriver.clickOnButton("Expenses")
     }
 
     @When("the user selects account {string} in the add expense form")
     fun selectAccountInAddExpenseForm(accountName: String) {
-        AccountsSteps.webDriver.selectOptionFromDropdownElement("account-field", accountName)
+        CommonSteps.webDriver.selectOptionFromDropdownElement("account-field", accountName)
     }
 
     @When("the user enters expense date {string} in the add expense form")
@@ -77,7 +77,7 @@ class ExpensesSteps {
             error("Date must be specified in format YYYY-MM-DD")
         }
 
-        val dateField = AccountsSteps.webDriver.findElement(
+        val dateField = CommonSteps.webDriver.findElement(
             By.xpath("//*[contains(@class, 'addExpenseForm')]//input[@type='date']")
         )
 
@@ -90,12 +90,12 @@ class ExpensesSteps {
 
     @When("the user enters expense description {string} in the add expense form")
     fun enterExpenseDescriptionInAddExpenseForm(description: String) = runBlocking {
-        AccountsSteps.webDriver.enterTextIntoElementWithId(description, "description-field")
+        CommonSteps.webDriver.enterTextIntoElementWithId(description, "description-field")
     }
 
     @When("the user enters amount {bigdecimal} in the add expense form")
     fun enterAmountInAddExpenseForm(amount: BigDecimal) = runBlocking {
-        AccountsSteps.webDriver.enterTextIntoElementWithId(amount.toString(), "amount-field")
+        CommonSteps.webDriver.enterTextIntoElementWithId(amount.toString(), "amount-field")
     }
 
     @When("the user selects the following expenses from the expenses list")
@@ -108,7 +108,7 @@ class ExpensesSteps {
                 //input[@aria-label='Select Row checkbox']
             """.trimIndent()
 
-            val element = AccountsSteps.webDriver.findElement(By.xpath(xpath))
+            val element = CommonSteps.webDriver.findElement(By.xpath(xpath))
 
             element.click()
         }
@@ -200,7 +200,7 @@ class ExpensesSteps {
 
     @Then("the following expenses are displayed in the expenses list")
     fun assertExpensesAreDisplayedInExpensesList(expenses: List<Expense>) {
-        val expensesDataGrid = AccountsSteps.webDriver.findElement(By.id("expensesDataGrid"))
+        val expensesDataGrid = CommonSteps.webDriver.findElement(By.id("expensesDataGrid"))
 
         expenses.forEach {
             Assertions.assertThat(expensesDataGrid.text).contains(it.date.toDateString())
@@ -211,7 +211,7 @@ class ExpensesSteps {
 
     @Then("the following expenses are not displayed in the expenses list")
     fun assertExpensesAreNotDisplayedInExpensesList(expenses: List<Expense>) {
-        val expensesDataGrid = AccountsSteps.webDriver.findElement(By.id("expensesDataGrid"))
+        val expensesDataGrid = CommonSteps.webDriver.findElement(By.id("expensesDataGrid"))
 
         expenses.forEach {
             Assertions.assertThat(expensesDataGrid.text).doesNotContain(it.date.toDateString())

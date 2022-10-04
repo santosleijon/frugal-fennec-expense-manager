@@ -12,13 +12,13 @@ class ReportsSteps {
 
     @When("the user opens the reports page")
     fun openTheReportsPage() = runBlocking {
-        AccountsSteps.webDriver.get(pageUrl)
-        AccountsSteps.webDriver.clickOnButton("Reports")
+        CommonSteps.webDriver.get(pageUrl)
+        CommonSteps.webDriver.clickOnButton("Reports")
     }
 
     @Then("the expense report shown contains the following values")
     fun assertExpenseReportContainsValues(values: DataTable) {
-        val actualContent = AccountsSteps.webDriver.getPageContent()
+        val actualContent = CommonSteps.webDriver.getPageContent()
 
         val expectedValues = values.asMap().toMutableMap()
 
