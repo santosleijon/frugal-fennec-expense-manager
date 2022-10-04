@@ -38,7 +38,7 @@ Feature: Expense management
     Given a registered user "user-1@example.com"
     And a registered user "user-2@example.com"
     And user "user-1@example.com" has an account with the name "User 1s account"
-    When user "user-2@example.com" tries to add an expense the account "User 1s account"
+    When user "user-2@example.com" tries to add an expense to the account "User 1s account"
     Then an UnauthorizedOperation error is returned
 
   Scenario: An expense can be deleted
@@ -67,7 +67,15 @@ Feature: Expense management
     When the expense on account "Account 1" is deleted by a user without a valid user session cookie
     Then an InvalidSessionToken error is returned
 
-  #TODO: Scenario: An expense can only be deleted if it belongs to an account belonging to the logged-in user
+  Scenario: An expense can only be deleted if it belongs to an account belonging to the logged-in user
+    Given a registered user "user-1@example.com"
+    And a registered user "user-2@example.com"
+    And user "user-1@example.com" has an account with the name "User 1s account"
+    And the account with the name "User 1s account" has the following expenses
+      | date                  | description          | amount  |
+      | 2022-01-01T00:00:00Z  | An expense           | 1.00    |
+    When user "user-2@example.com" tries to delete the expense on account "User 1s account"
+    Then an UnauthorizedOperation error is returned
 
   Scenario: Multiple expenses can be deleted at the same time
     Given the user with email "test@example.com" has logged in

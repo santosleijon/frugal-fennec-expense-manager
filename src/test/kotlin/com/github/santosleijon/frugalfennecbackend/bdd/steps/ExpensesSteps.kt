@@ -48,8 +48,8 @@ class ExpensesSteps {
 
     @Given("the account with the name {string} has the following expenses")
     fun givenExpenses(accountName: String, expenses: List<Expense>) {
-        val accountProjection = accountProjectionRepository.findByNameAndUserIdOrNull(accountName, usersSteps.sessionUserId!!)
-        val account = accountRepository.findByIdOrNull(accountProjection!!.id)!!
+        val accountProjection = accountProjectionRepository.findByNameOrNull(accountName)!!
+        val account = accountRepository.findByIdOrNull(accountProjection.id)!!
 
         expenses.forEach { expense ->
             account.addExpense(expense, usersSteps.sessionUserId!!)
@@ -154,7 +154,7 @@ class ExpensesSteps {
         }
     }
 
-    @When("user {string} tries to add an expense the account {string}")
+    @When("user {string} tries to add an expense to the account {string}")
     fun userTriesToAddExpenseToAccount(userEmail: String, accountName: String) {
         usersSteps.givenUserHasLoggedIn(userEmail)
 
@@ -167,6 +167,29 @@ class ExpensesSteps {
                     date = Instant.now().toDateString(),
                     description = "Expense description",
                     amount = BigDecimal.ONE,
+                ),
+                sessionToken = usersSteps.userSession!!.token!!,
+            )
+        } catch (e: Exception) {
+            commonSteps.requestException = e
+        }
+    }
+
+    @When("user {string} tries to delete the expense on account {string}")
+    fun userTriesToDeleteExpenseOnAccount(userEmail: String, accountName: String) {
+        usersSteps.givenUserHasLoggedIn(userEmail)
+
+        val account = accountProjectionRepository.findByNameOrNull(accountName)!!
+
+        val expense = account.expenses.first()
+
+        try {
+            accountResource.deleteExpense(
+                id = account.id,
+                expenseInputsDTO = AccountResource.ExpenseInputsDTO(
+                    date = expense.date.toDateString(),
+                    description = expense.description,
+                    amount = expense.amount,
                 ),
                 sessionToken = usersSteps.userSession!!.token!!,
             )
