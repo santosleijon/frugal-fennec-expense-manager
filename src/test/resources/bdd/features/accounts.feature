@@ -10,7 +10,7 @@ Feature: Account management
 
   Scenario: Accounts can only be retrieved by a user with a valid user session cookie
     When accounts are retrieved without a valid user session cookie
-    Then an InvalidSessionToken error is returned
+    Then an InvalidSessionId error is returned
 
   Scenario: Only accounts belonging to the logged-in users can be viewed
     Given a registered user "user-1@example.com"
@@ -37,7 +37,7 @@ Feature: Account management
 
   Scenario: An account can only be created by a user with a valid user session cookie
     When an account is created without a valid user session cookie
-    Then an InvalidSessionToken error is returned
+    Then an InvalidSessionId error is returned
 
   Scenario: An account can be renamed
     Given the user with email "test@example.com" has logged in
@@ -48,7 +48,7 @@ Feature: Account management
 
   Scenario: An account can only be renamed by a user with a valid user session cookie
     When an account is renamed without a valid user session cookie
-    Then an InvalidSessionToken error is returned
+    Then an InvalidSessionId error is returned
 
   Scenario: An account can only be renamed by the user who it belongs to
     Given a registered user "user-1@example.com"
@@ -67,7 +67,7 @@ Feature: Account management
 
   Scenario: An account can be only be deleted by a user with a valid user session cookie
     When an account is deleted without a valid user session cookie
-    Then an InvalidSessionToken error is returned
+    Then an InvalidSessionId error is returned
 
   Scenario: An account can only be deleted by the user who it belongs to
     Given a registered user "user-1@example.com"

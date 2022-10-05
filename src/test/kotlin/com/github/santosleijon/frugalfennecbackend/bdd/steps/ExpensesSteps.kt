@@ -126,7 +126,7 @@ class ExpensesSteps {
                     "Expense description",
                     BigDecimal.ONE,
                 ),
-                sessionToken = commonSteps.invalidUserSessionToken,
+                sessionId = commonSteps.invalidUserSessionId,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -147,7 +147,7 @@ class ExpensesSteps {
                     expenseToDelete.description,
                     expenseToDelete.amount,
                 ),
-                sessionToken = commonSteps.invalidUserSessionToken,
+                sessionId = commonSteps.invalidUserSessionId,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -168,7 +168,7 @@ class ExpensesSteps {
                     description = "Expense description",
                     amount = BigDecimal.ONE,
                 ),
-                sessionToken = usersSteps.userSession!!.token!!,
+                sessionId = usersSteps.userSession!!.id,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -191,7 +191,7 @@ class ExpensesSteps {
                     description = expense.description,
                     amount = expense.amount,
                 ),
-                sessionToken = usersSteps.userSession!!.token!!,
+                sessionId = usersSteps.userSession!!.id,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e

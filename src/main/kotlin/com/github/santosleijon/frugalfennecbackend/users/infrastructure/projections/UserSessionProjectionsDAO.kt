@@ -20,7 +20,6 @@ class UserSessionProjectionsDAO @Autowired constructor(
         val paramMap: Map<String, Any> = mapOf(
             "id" to userSessionProjection.id,
             "user_id" to userSessionProjection.userId,
-            "token" to userSessionProjection.token,
             "valid_to" to userSessionProjection.validTo.toZuluLocalDateTime(),
             "data" to objectMapper.writeValueAsString(userSessionProjection),
             "version" to userSessionProjection.version,
@@ -30,7 +29,6 @@ class UserSessionProjectionsDAO @Autowired constructor(
             INSERT INTO user_session_projections (
                 id,
                 user_id,
-                token,
                 valid_to,
                 data,
                 version
@@ -38,7 +36,6 @@ class UserSessionProjectionsDAO @Autowired constructor(
             VALUES (
                 :id,
                 :user_id,
-                :token,
                 :valid_to,
                 :data::jsonb,
                 :version
@@ -47,16 +44,15 @@ class UserSessionProjectionsDAO @Autowired constructor(
             DO
                 UPDATE SET
                     user_id = :user_id,
-                    token = :token,
                     valid_to = :valid_to,
                     data = :data::jsonb,
                     version = :version
         """.trimIndent(), paramMap)
     }
 
-    fun findValidSessionByToken(token: String): UserSessionProjection? {
+    fun findValidSessionById(sessionId: UUID): UserSessionProjection? {
         val paramMap: Map<String, Any> = mapOf(
-            "token" to token,
+            "id" to sessionId,
             "current_time" to Instant.now().toZuluLocalDateTime(),
         )
 
@@ -66,7 +62,7 @@ class UserSessionProjectionsDAO @Autowired constructor(
             FROM
                 user_session_projections
             WHERE
-                token = :token AND
+                id = :id AND
                 valid_to >= :current_time
             LIMIT 1
         """.trimIndent(), paramMap, RowMapping(objectMapper)

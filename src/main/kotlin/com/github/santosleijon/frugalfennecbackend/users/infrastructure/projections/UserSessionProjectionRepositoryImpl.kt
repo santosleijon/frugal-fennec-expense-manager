@@ -18,8 +18,8 @@ class UserSessionProjectionRepositoryImpl @Autowired constructor(
         return userSessionProjection
     }
 
-    override fun findValidSessionByToken(token: String): UserSessionProjection? {
-        return userSessionProjectionsDAO.findValidSessionByToken(token)
+    override fun findValidSessionById(sessionId: UUID): UserSessionProjection? {
+        return userSessionProjectionsDAO.findValidSessionById(sessionId)
     }
 
     override fun findByUserId(userId: UUID): List<UserSessionProjection> {

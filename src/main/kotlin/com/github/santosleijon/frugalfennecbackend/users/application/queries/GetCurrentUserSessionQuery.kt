@@ -6,6 +6,7 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.projections.User
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class GetCurrentUserSessionQuery @Autowired constructor(
@@ -14,7 +15,7 @@ class GetCurrentUserSessionQuery @Autowired constructor(
 ) : Command<GetCurrentUserSessionQuery.Input, UserResource.GetCurrentUserSessionDTO> {
 
     data class Input(
-        val userSessionToken: String?,
+        val sessionId: UUID?,
     )
 
     override fun execute(input: Input): UserResource.GetCurrentUserSessionDTO {
@@ -22,11 +23,11 @@ class GetCurrentUserSessionQuery @Autowired constructor(
             hasValidUserSession = false
         )
 
-        if (input.userSessionToken == null) {
+        if (input.sessionId == null) {
             return noValidUserSessionResponse
         }
 
-        val userSessionProjection = userSessionProjectionRepository.findValidSessionByToken(input.userSessionToken)
+        val userSessionProjection = userSessionProjectionRepository.findValidSessionById(input.sessionId)
             ?: return noValidUserSessionResponse
 
         val userProjection = userProjectionRepository.findById(userSessionProjection.userId)

@@ -114,7 +114,7 @@ class UsersSteps {
 
         userSession = newUserSession
 
-        val cookie = Cookie.Builder("sessionToken", newUserSession.token)
+        val cookie = Cookie.Builder("sessionId", newUserSession.id.toString())
             .path("/")
             .build()
 

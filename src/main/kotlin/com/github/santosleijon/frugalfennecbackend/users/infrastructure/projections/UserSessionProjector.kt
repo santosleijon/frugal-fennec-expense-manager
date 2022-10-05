@@ -23,7 +23,6 @@ class UserSessionProjector @Autowired constructor(
                 val projection = UserSessionProjection(
                     id = event.aggregateId,
                     userId = event.userId,
-                    token = event.token,
                     issued = event.issued,
                     validTo = event.validTo,
                     version = event.version,

@@ -1,6 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.users.domain
 
-import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidSessionToken
+import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidSessionId
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjectionRepository
 import org.springframework.stereotype.Component
 import java.util.*
@@ -9,9 +9,9 @@ import java.util.*
 class UserAuthorizer constructor(
     private val userSessionProjectionRepository: UserSessionProjectionRepository,
 ) {
-    fun validateUserSessionAndGetUserId(sessionToken: String): UUID {
-        val validUserSession = userSessionProjectionRepository.findValidSessionByToken(sessionToken)
-            ?: throw InvalidSessionToken(sessionToken)
+    fun validateUserSessionAndGetUserId(sessionId: UUID): UUID {
+        val validUserSession = userSessionProjectionRepository.findValidSessionById(sessionId)
+            ?: throw InvalidSessionId(sessionId)
 
         return validUserSession.userId
     }

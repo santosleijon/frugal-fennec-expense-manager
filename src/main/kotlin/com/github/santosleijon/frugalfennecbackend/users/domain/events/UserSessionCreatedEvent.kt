@@ -11,7 +11,6 @@ class UserSessionCreatedEvent(
     val id: UUID,
     override val version: Int,
     override val userId: UUID,
-    val token: String,
     val issued: Instant,
     val validTo: Instant,
 ) : DomainEvent {

@@ -25,10 +25,6 @@ class UserResource @Autowired constructor(
     private val getCurrentUserSessionQuery: GetCurrentUserSessionQuery,
 ) {
 
-    companion object {
-        private const val SESSION_TOKEN_COOKIE_NAME = "sessionToken"
-    }
-
     @PostMapping("start-login")
     fun startLogin(@RequestBody(required = true) startLoginInputsDTO: StartLoginInputsDTO) {
         val commandInput = StartLoginCommand.Input(startLoginInputsDTO.email)
@@ -47,7 +43,7 @@ class UserResource @Autowired constructor(
 
         val commandResult = completeLoginCommand.execute(commandInput)
 
-        response?.addCookie(createSessionTokenCookie(commandResult.userSession))
+        response?.addCookie(createSessionCookie(commandResult.userSession))
 
         return CompleteLoginResultDTO(commandResult.userId, commandResult.userEmail, commandResult.userSession)
     }
@@ -60,16 +56,16 @@ class UserResource @Autowired constructor(
 
     @PostMapping("logout")
     fun logout(
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
         response: HttpServletResponse?,
     ) {
-        logoutCommand.execute(LogoutCommand.Input(sessionToken))
-        response?.addCookie(createDeletedSessionTokenCookie())
+        logoutCommand.execute(LogoutCommand.Input(sessionId))
+        response?.addCookie(createDeletedSessionCookie())
     }
 
     @GetMapping("current-session")
-    fun getCurrentUserSession(@CookieValue(value = "sessionToken") sessionToken: String?): GetCurrentUserSessionDTO {
-        val queryInput = GetCurrentUserSessionQuery.Input(sessionToken)
+    fun getCurrentUserSession(@CookieValue(value = "sessionId") sessionId: UUID?): GetCurrentUserSessionDTO {
+        val queryInput = GetCurrentUserSessionQuery.Input(sessionId)
         return getCurrentUserSessionQuery.execute(queryInput)
     }
 
@@ -99,8 +95,8 @@ class UserResource @Autowired constructor(
         val userSession: UserSessionProjection? = null,
     )
 
-    private fun createSessionTokenCookie(userSession: UserSession): Cookie {
-        val cookie = Cookie("sessionToken", userSession.token)
+    private fun createSessionCookie(userSession: UserSession): Cookie {
+        val cookie = Cookie("sessionId", userSession.id.toString())
         
         val secondsUntilSessionExpiration = Duration.between(Instant.now(), userSession.validTo).seconds.toInt()
         
@@ -113,8 +109,8 @@ class UserResource @Autowired constructor(
         return cookie
     }
 
-    private fun createDeletedSessionTokenCookie(): Cookie {
-        val cookie = Cookie(SESSION_TOKEN_COOKIE_NAME, "")
+    private fun createDeletedSessionCookie(): Cookie {
+        val cookie = Cookie("sessionId", "")
 
         cookie.maxAge = 0
         cookie.path = "/"

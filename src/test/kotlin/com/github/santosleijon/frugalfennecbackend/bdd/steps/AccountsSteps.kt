@@ -89,7 +89,7 @@ class AccountsSteps {
     @When("accounts are retrieved without a valid user session cookie")
     fun retrieveAccountsWithoutAValidUserSessionCookie() {
         try {
-            accountResource.getAllForUser(commonSteps.invalidUserSessionToken)
+            accountResource.getAllForUser(commonSteps.invalidUserSessionId)
         } catch (e: Exception) {
             commonSteps.requestException = e
         }
@@ -100,7 +100,7 @@ class AccountsSteps {
         try {
             accountResource.create(
                 createAccountInputsDTO = AccountResource.CreateAccountInputsDTO("test-account"),
-                sessionToken = commonSteps.invalidUserSessionToken,
+                sessionId = commonSteps.invalidUserSessionId,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -113,7 +113,7 @@ class AccountsSteps {
             accountResource.updateName(
                 id = UUID.randomUUID(),
                 updateAccountNameInputsDTO = AccountResource.UpdateAccountNameInputsDTO("new-test-account-name"),
-                sessionToken = commonSteps.invalidUserSessionToken,
+                sessionId = commonSteps.invalidUserSessionId,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -125,7 +125,7 @@ class AccountsSteps {
         try {
             accountResource.delete(
                 id = UUID.randomUUID(),
-                sessionToken = commonSteps.invalidUserSessionToken,
+                sessionId = commonSteps.invalidUserSessionId,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -142,7 +142,7 @@ class AccountsSteps {
             accountResource.updateName(
                 id = accountId,
                 updateAccountNameInputsDTO = AccountResource.UpdateAccountNameInputsDTO(newAccountName),
-                sessionToken = usersSteps.userSession!!.token!!,
+                sessionId = usersSteps.userSession!!.id,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -158,7 +158,7 @@ class AccountsSteps {
         try {
             accountResource.delete(
                 id = accountId,
-                sessionToken = usersSteps.userSession!!.token!!,
+                sessionId = usersSteps.userSession!!.id,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -174,7 +174,7 @@ class AccountsSteps {
         try {
             accountResource.get(
                 id = accountId,
-                sessionToken = usersSteps.userSession!!.token!!,
+                sessionId = usersSteps.userSession!!.id,
             )
         } catch (e: Exception) {
             commonSteps.requestException = e
@@ -214,11 +214,11 @@ class AccountsSteps {
     }
 
     fun deleteAllAccounts() {
-        val sessionToken = usersSteps.userSession?.token
+        val sessionId = usersSteps.userSession?.id
 
-        if (sessionToken != null) {
-            accountResource.getAllForUser(sessionToken).forEach { accountProjection ->
-                accountResource.delete(accountProjection.id, sessionToken)
+        if (sessionId != null) {
+            accountResource.getAllForUser(sessionId).forEach { accountProjection ->
+                accountResource.delete(accountProjection.id, sessionId)
             }
         }
     }

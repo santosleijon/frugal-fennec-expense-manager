@@ -29,9 +29,9 @@ class AccountResource @Autowired constructor(
     @PostMapping("", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun create(
         @RequestBody(required = true) createAccountInputsDTO: CreateAccountInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account {
-        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
 
         val commandInput = CreateAccountCommand.Input(
             id = UUID.randomUUID(),
@@ -48,9 +48,9 @@ class AccountResource @Autowired constructor(
 
     @GetMapping
     fun getAllForUser(
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
     ): List<AccountProjection> {
-        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
 
         val queryInput = GetAllAccountsForUserQuery.Input(userId)
 
@@ -60,9 +60,9 @@ class AccountResource @Autowired constructor(
     @RequestMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun get(
         @PathVariable(value = "id") id: UUID,
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
     ): AccountProjection {
-        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
 
         val queryInput = GetAccountForUserQuery.Input(id, userId)
 
@@ -74,9 +74,9 @@ class AccountResource @Autowired constructor(
     fun updateName(
         @PathVariable(value = "id") id: UUID,
         @RequestBody(required = true) updateAccountNameInputsDTO: UpdateAccountNameInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account? {
-        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
 
         val commandInput = UpdateAccountNameCommand.Input(
             id,
@@ -95,9 +95,9 @@ class AccountResource @Autowired constructor(
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun delete(
         @PathVariable(value = "id") id: UUID,
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
     ) {
-        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
 
         val commandInput = DeleteAccountCommand.Input(id, userId)
 
@@ -109,9 +109,9 @@ class AccountResource @Autowired constructor(
     fun addExpense(
         @PathVariable("id") id: UUID,
         @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account? {
-        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
 
         val commandInput = AddExpenseCommand.Input(
             id,
@@ -135,9 +135,9 @@ class AccountResource @Autowired constructor(
     fun deleteExpense(
         @PathVariable("id") id: UUID,
         @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
-        @CookieValue(value = "sessionToken") sessionToken: String,
+        @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account? {
-        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionToken)
+        val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
 
         val commandInput = DeleteExpenseCommand.Input(
             id,

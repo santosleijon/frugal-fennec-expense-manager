@@ -15,9 +15,6 @@ class UserSession(
     var userId: UUID? = null
         private set
 
-    var token: String? = null
-        private set
-
     var issued: Instant? = null
         private set
 
@@ -41,7 +38,6 @@ class UserSession(
     constructor(
         id: UUID,
         userId: UUID,
-        token: String,
         issued: Instant,
         validTo: Instant,
     ) : this(id = id, version = 0) {
@@ -50,7 +46,6 @@ class UserSession(
                 id,
                 version,
                 userId,
-                token,
                 issued,
                 validTo,
             )
@@ -61,7 +56,6 @@ class UserSession(
         when (event) {
             is UserSessionCreatedEvent -> {
                 userId = event.userId
-                token = event.token
                 issued = event.issued
                 validTo = event.validTo
             }

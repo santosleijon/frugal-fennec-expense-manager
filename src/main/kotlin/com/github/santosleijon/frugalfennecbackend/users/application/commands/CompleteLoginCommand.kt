@@ -71,7 +71,7 @@ class CompleteLoginCommand @Autowired constructor(
 
         emailVerificationCodeRepository.markAsConsumed(email, verificationCode)
 
-        logger.info("Completed login for user $email. Given session token: ${userSession.token}")
+        logger.info("Completed login for user $email. Created session ${userSession.id}")
 
         return Result(userId, email, userSession)
     }

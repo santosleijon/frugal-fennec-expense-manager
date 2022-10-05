@@ -9,7 +9,6 @@ data class UserSessionProjection (
     val id: UUID,
     val version: Int,
     val userId: UUID,
-    val token: String,
     val issued: Instant,
     val validTo: Instant,
 )

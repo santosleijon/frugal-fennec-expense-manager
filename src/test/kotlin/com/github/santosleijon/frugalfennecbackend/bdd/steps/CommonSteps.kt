@@ -3,13 +3,14 @@ package com.github.santosleijon.frugalfennecbackend.bdd.steps
 import com.github.santosleijon.frugalfennecbackend.bdd.TestDbContainer
 import com.github.santosleijon.frugalfennecbackend.bdd.webdriver.ExtendedWebDriver
 import com.github.santosleijon.frugalfennecbackend.common.errors.UnauthorizedOperation
-import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidSessionToken
+import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidSessionId
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.en.Then
 import org.assertj.core.api.Assertions
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import java.util.*
 
 class CommonSteps {
     companion object {
@@ -28,7 +29,7 @@ class CommonSteps {
         lateinit var webDriver: ExtendedWebDriver
     }
 
-    val invalidUserSessionToken = "invalid-user-session-token"
+    val invalidUserSessionId: UUID = UUID.randomUUID()
 
     var requestException: Exception? = null
 
@@ -44,10 +45,10 @@ class CommonSteps {
 
     }
 
-    @Then("an InvalidSessionToken error is returned")
-    fun assertInvalidSessionTokenErrorIsReturned() {
+    @Then("an InvalidSessionId error is returned")
+    fun assertInvalidSessionIdErrorIsReturned() {
         Assertions.assertThat(requestException).isNotNull
-        Assertions.assertThat(requestException).isInstanceOf(InvalidSessionToken::class.java)
+        Assertions.assertThat(requestException).isInstanceOf(InvalidSessionId::class.java)
     }
 
     @Then("an UnauthorizedOperation error is returned")

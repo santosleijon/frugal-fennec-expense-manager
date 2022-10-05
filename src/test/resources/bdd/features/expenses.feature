@@ -32,7 +32,7 @@ Feature: Expense management
     Given a registered user "test@example.com"
     And user "test@example.com" has an account with the name "Account 1"
     When an expense is added to account "Account 1" by a user without a valid user session cookie
-    Then an InvalidSessionToken error is returned
+    Then an InvalidSessionId error is returned
 
   Scenario: An expense can only be added to an account belonging to the logged-in user
     Given a registered user "user-1@example.com"
@@ -65,7 +65,7 @@ Feature: Expense management
       | date                  | description          | amount  |
       | 2022-01-01T00:00:00Z  | An expense           | 1.00    |
     When the expense on account "Account 1" is deleted by a user without a valid user session cookie
-    Then an InvalidSessionToken error is returned
+    Then an InvalidSessionId error is returned
 
   Scenario: An expense can only be deleted if it belongs to an account belonging to the logged-in user
     Given a registered user "user-1@example.com"
