@@ -1,7 +1,8 @@
 # Frugal Fennec Expense Manager
 
 *Frugal Fennec Expense Manager* a single page web application that can be used to track expenses over time. It allows a user to:
-* Manage an accounts structure
+* Log in using email verification without needing a password
+* Manage an expense accounts structure
 * Post expenses to accounts
 * View expense reports as line charts
 
@@ -13,6 +14,7 @@
   * [Kotlin](https://kotlinlang.org/) - Strongly statically typed programming language that runs on the JVM, but with a [number of improvements over Java](https://kotlinlang.org/docs/comparison-to-java.html#some-java-issues-addressed-in-kotlin).
   * [Spring Boot](https://spring.io/projects/spring-boot) - Framework that makes it easy to write production-ready web applications with Spring.
   * [PostgreSQL](https://www.postgresql.org/) - The world's most advanced open source relational database.
+  * [SendGrid](https://sendgrid.com/) - Email delivery service.
 * Frontend
   * [React](https://github.com/facebook/react/) - Used to build web UI with functional components.
   * [Redux](https://github.com/reduxjs/redux) - Used to handle UI state.
