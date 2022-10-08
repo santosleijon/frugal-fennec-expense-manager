@@ -8,19 +8,19 @@ import com.github.santosleijon.frugalfennecbackend.users.domain.emailverificatio
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.isValidEmail
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
-import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.Duration
 import java.time.Instant
 import java.util.*
 
 @Component
 class CompleteLoginCommand @Autowired constructor(
     private val emailVerificationCodeRepository: EmailVerificationCodeRepository,
-    private val userSessions: UserSessions,
     private val userProjectionRepository: UserProjectionRepository,
     private val userRepository: UserRepository,
+    private val userSessionRepository: UserSessionRepository,
 ) : Command<CompleteLoginCommand.Input, CompleteLoginCommand.Result> {
 
     private var logger = LoggerFactory.getLogger(this::class.java)
@@ -50,29 +50,43 @@ class CompleteLoginCommand @Autowired constructor(
 
         val existingUser = userProjectionRepository.findByEmail(email)
 
-        val userId: UUID?
-
-        if (existingUser == null) {
-            userId = UUID.randomUUID()
-
+        val userId = if (existingUser == null) {
             val newUser = User(
-                userId,
+                UUID.randomUUID(),
                 email,
             )
 
             userRepository.save(newUser)
 
-            logger.info("New user for email $email created. User ID: $userId")
+            logger.info("New user for email $email created. User ID: ${newUser.id}")
+
+            newUser.id
         } else {
-            userId = existingUser.id
+            existingUser.id
         }
 
-        val userSession = userSessions.create(userId!!)
+        val userSession = createUserSession(userId)
 
         emailVerificationCodeRepository.markAsConsumed(email, verificationCode)
 
         logger.info("Completed login for user $email. Created session ${userSession.id}")
 
         return Result(userId, email, userSession)
+    }
+
+    fun createUserSession(userId: UUID): UserSession {
+        val sessionId = UUID.randomUUID() // Cryptographically strong pseudo random number
+        val issuedDate = Instant.now()
+        val expirationDate = Instant.now().plus(Duration.ofDays(7))
+
+        val userSession = UserSession(
+            id = sessionId,
+            userId = userId,
+            issued = issuedDate,
+            validTo = expirationDate,
+        )
+
+        return userSessionRepository.save(userSession)
+            ?: error("Failed to save new user session")
     }
 }

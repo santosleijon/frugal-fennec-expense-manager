@@ -4,11 +4,11 @@ import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
 import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
+import com.github.santosleijon.frugalfennecbackend.users.application.commands.CompleteLoginCommand
 import com.github.santosleijon.frugalfennecbackend.users.domain.User
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.RandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
-import com.github.santosleijon.frugalfennecbackend.users.domain.UserSessions
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.MailSender
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCodeRepository
 import com.github.santosleijon.frugalfennecbackend.users.domain.emailverification.EmailVerificationCode
@@ -39,7 +39,7 @@ class UsersSteps {
     private lateinit var randomEmailVerificationCodeGenerator: RandomEmailVerificationCodeGenerator
 
     @Autowired
-    private lateinit var userSessions: UserSessions
+    private lateinit var completeLoginCommand: CompleteLoginCommand
 
     @Autowired
     private lateinit var userRepository: UserRepository
@@ -110,7 +110,7 @@ class UsersSteps {
 
         val userId = userProjectionRepository.findByEmail(email)!!.id
 
-        val newUserSession = userSessions.create(userId)
+        val newUserSession = completeLoginCommand.createUserSession(userId)
 
         userSession = newUserSession
 
