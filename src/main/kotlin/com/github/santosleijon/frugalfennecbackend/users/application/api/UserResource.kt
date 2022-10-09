@@ -14,6 +14,8 @@ import java.time.Instant
 import java.util.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
+import javax.validation.Valid
+import javax.validation.constraints.*
 
 @RestController
 @RequestMapping("user")
@@ -26,14 +28,19 @@ class UserResource @Autowired constructor(
 ) {
 
     @PostMapping("start-login")
-    fun startLogin(@RequestBody(required = true) startLoginInputsDTO: StartLoginInputsDTO) {
+    fun startLogin(@Valid @RequestBody(required = true) startLoginInputsDTO: StartLoginInputsDTO) {
         val commandInput = StartLoginCommand.Input(startLoginInputsDTO.email)
         startLoginCommand.execute(commandInput)
     }
 
+    data class StartLoginInputsDTO(
+        @field:NotEmpty
+        val email: String,
+    )
+
     @PostMapping("complete-login")
     fun completeLogin(
-        @RequestBody(required = true) completeLoginInputsDTO: CompleteLoginInputsDTO,
+        @Valid @RequestBody(required = true) completeLoginInputsDTO: CompleteLoginInputsDTO,
         response: HttpServletResponse?,
     ): CompleteLoginResultDTO {
         val commandInput = CompleteLoginCommand.Input(
@@ -48,11 +55,30 @@ class UserResource @Autowired constructor(
         return CompleteLoginResultDTO(commandResult.userId, commandResult.userEmail, commandResult.userSession)
     }
 
+    data class CompleteLoginInputsDTO(
+        @field:NotEmpty
+        val email: String,
+
+        @field:NotEmpty
+        val verificationCode: String,
+    )
+
+    data class CompleteLoginResultDTO(
+        val id: UUID,
+        val email: String,
+        val userSession: UserSession,
+    )
+
     @PostMapping("abort-login")
-    fun abortLogin(@RequestBody(required = true) abortLoginInputsDTO: AbortLoginInputsDTO) {
+    fun abortLogin(@Valid @RequestBody(required = true) abortLoginInputsDTO: AbortLoginInputsDTO) {
         val commandInput = AbortLoginCommand.Input(abortLoginInputsDTO.email)
         abortLoginCommand.execute(commandInput)
     }
+
+    data class AbortLoginInputsDTO(
+        @field:NotEmpty
+        val email: String,
+    )
 
     @PostMapping("logout")
     fun logout(
@@ -64,31 +90,12 @@ class UserResource @Autowired constructor(
     }
 
     @GetMapping("current-session")
-    fun getCurrentUserSession(@CookieValue(value = "sessionId") sessionId: UUID?): GetCurrentUserSessionDTO {
+    fun getCurrentUserSession(@CookieValue(value = "sessionId") sessionId: UUID?): GetCurrentUserSessionResultDTO {
         val queryInput = GetCurrentUserSessionQuery.Input(sessionId)
         return getCurrentUserSessionQuery.execute(queryInput)
     }
 
-    data class StartLoginInputsDTO(
-        val email: String,
-    )
-
-    data class CompleteLoginInputsDTO(
-        val email: String,
-        val verificationCode: String,
-    )
-
-    data class CompleteLoginResultDTO(
-        val id: UUID,
-        val email: String,
-        val userSession: UserSession,
-    )
-
-    data class AbortLoginInputsDTO(
-        val email: String,
-    )
-
-    data class GetCurrentUserSessionDTO(
+    data class GetCurrentUserSessionResultDTO(
         val hasValidUserSession: Boolean,
         val userId: UUID? = null,
         val email: String? = null,

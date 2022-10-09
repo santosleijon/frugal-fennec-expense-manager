@@ -12,14 +12,14 @@ import java.util.*
 class GetCurrentUserSessionQuery @Autowired constructor(
     private val userSessionProjectionRepository: UserSessionProjectionRepository,
     private val userProjectionRepository: UserProjectionRepository,
-) : Command<GetCurrentUserSessionQuery.Input, UserResource.GetCurrentUserSessionDTO> {
+) : Command<GetCurrentUserSessionQuery.Input, UserResource.GetCurrentUserSessionResultDTO> {
 
     data class Input(
         val sessionId: UUID?,
     )
 
-    override fun execute(input: Input): UserResource.GetCurrentUserSessionDTO {
-        val noValidUserSessionResponse = UserResource.GetCurrentUserSessionDTO(
+    override fun execute(input: Input): UserResource.GetCurrentUserSessionResultDTO {
+        val noValidUserSessionResponse = UserResource.GetCurrentUserSessionResultDTO(
             hasValidUserSession = false
         )
 
@@ -33,7 +33,7 @@ class GetCurrentUserSessionQuery @Autowired constructor(
         val userProjection = userProjectionRepository.findById(userSessionProjection.userId)
             ?: return noValidUserSessionResponse
 
-        return UserResource.GetCurrentUserSessionDTO(
+        return UserResource.GetCurrentUserSessionResultDTO(
             hasValidUserSession = true,
             userId = userSessionProjection.id,
             email = userProjection.email,

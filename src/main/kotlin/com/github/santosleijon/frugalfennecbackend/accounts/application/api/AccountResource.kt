@@ -13,6 +13,8 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 import java.util.*
+import javax.validation.Valid
+import javax.validation.constraints.*
 
 @RestController
 @RequestMapping("account")
@@ -28,7 +30,7 @@ class AccountResource @Autowired constructor(
 ) {
     @PostMapping("", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun create(
-        @RequestBody(required = true) createAccountInputsDTO: CreateAccountInputsDTO,
+        @Valid @RequestBody(required = true) createAccountInputsDTO: CreateAccountInputsDTO,
         @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
@@ -43,7 +45,7 @@ class AccountResource @Autowired constructor(
     }
 
     data class CreateAccountInputsDTO(
-        val name: String,
+        @field:NotBlank val name: String,
     )
 
     @GetMapping
@@ -73,7 +75,7 @@ class AccountResource @Autowired constructor(
     @Suppress("unused")
     fun updateName(
         @PathVariable(value = "id") id: UUID,
-        @RequestBody(required = true) updateAccountNameInputsDTO: UpdateAccountNameInputsDTO,
+        @Valid @RequestBody(required = true) updateAccountNameInputsDTO: UpdateAccountNameInputsDTO,
         @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account? {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
@@ -88,7 +90,7 @@ class AccountResource @Autowired constructor(
     }
 
     data class UpdateAccountNameInputsDTO(
-        val newName: String,
+        @field:NotBlank val newName: String,
     )
 
     @DeleteMapping("{id}")
@@ -108,7 +110,7 @@ class AccountResource @Autowired constructor(
     @Suppress("unused")
     fun addExpense(
         @PathVariable("id") id: UUID,
-        @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
+        @Valid @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
         @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account? {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
@@ -125,8 +127,16 @@ class AccountResource @Autowired constructor(
     }
 
     data class ExpenseInputsDTO(
+        @field:NotNull
+        @field:Pattern(regexp="^([0-9]{4})-([0-9]{2})-([0-9]{2})$")
         val date: String,
+
+        @field:NotNull
         val description: String,
+
+        @field:NotNull
+        @field:DecimalMin(value = "0.00")
+        @field:Digits(integer=9, fraction=2)
         val amount: BigDecimal,
     )
 
@@ -134,7 +144,7 @@ class AccountResource @Autowired constructor(
     @Suppress("unused")
     fun deleteExpense(
         @PathVariable("id") id: UUID,
-        @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
+        @Valid @RequestBody(required = true) expenseInputsDTO: ExpenseInputsDTO,
         @CookieValue(value = "sessionId") sessionId: UUID,
     ): Account? {
         val userId = userAuthorizer.validateUserSessionAndGetUserId(sessionId)
