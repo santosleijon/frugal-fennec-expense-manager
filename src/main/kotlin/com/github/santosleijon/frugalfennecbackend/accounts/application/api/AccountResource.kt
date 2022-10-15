@@ -128,7 +128,7 @@ class AccountResource @Autowired constructor(
 
     data class ExpenseInputsDTO(
         @field:NotNull
-        @field:Pattern(regexp="^([0-9]{4})-([0-9]{2})-([0-9]{2})$")
+        @field:Pattern(regexp="^([0-9]{4})-([0-9]{2})-([0-9]{2})(?:T([0-9]{2}):([0-9]{2}):([0-9]{2})Z)?$")
         val date: String,
 
         @field:NotNull
