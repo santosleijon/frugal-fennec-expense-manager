@@ -8,7 +8,7 @@ import Login from "modules/users/components/Login";
 import { User } from "modules/users/types/User";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 export default function Main() {
   const dispatch = useDispatch()
@@ -30,9 +30,10 @@ export default function Main() {
             <Route path="expenses" element={<Expenses />} />
             <Route path="accounts" element={<Accounts />} />
           </>
-        ) : (
-          <Route path="/" element={<Login />} />
+        ) : (   
+            <Route path="/" element={<Login />} />
         ) }
+          <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   )

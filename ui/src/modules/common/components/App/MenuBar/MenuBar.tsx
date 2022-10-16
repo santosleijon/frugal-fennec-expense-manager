@@ -23,13 +23,7 @@ export default function MenuBar() {
   const toolbarIcon = isLoadingCommand ? <CircularProgress color="inherit" size="32px" /> : <img src={process.env.PUBLIC_URL + '/frugal-fennec-icon-32x32.png'} alt="Frugal Fennec icon" />;
 
   const onLogout = () => {
-    const logoutCommand = async () => {
-      const result = await logout()
-      navigate('./', { replace: true })
-      return result
-    }
-
-    dispatchCommand(logoutCommand, dispatch)
+    dispatchCommand(logout, dispatch)
   }
 
   return (
