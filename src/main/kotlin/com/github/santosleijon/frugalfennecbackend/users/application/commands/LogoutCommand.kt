@@ -26,6 +26,6 @@ class LogoutCommand @Autowired constructor(
 
         userSessionRepository.save(userSession)
 
-        logger.info("Logged out user ${userSession.userId} from session ${input.sessionId}")
+        logger.info("Logged out user {} from session {}", userSession.userId, input.sessionId)
     }
 }

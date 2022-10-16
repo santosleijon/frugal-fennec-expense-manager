@@ -47,7 +47,7 @@ class StartLoginCommand @Autowired constructor(
 
         mailSender.send(verificationMail)
 
-        logger.info("Started login for $email. Sent email verification code: ${emailVerificationCode.verificationCode}")
+        logger.info("Started login for {}. Sent email verification code: {}", email, emailVerificationCode.verificationCode)
     }
 
     private fun createEmailVerificationCode(email: String): EmailVerificationCode {

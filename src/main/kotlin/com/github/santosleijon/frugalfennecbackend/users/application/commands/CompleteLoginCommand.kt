@@ -58,7 +58,7 @@ class CompleteLoginCommand @Autowired constructor(
 
             userRepository.save(newUser)
 
-            logger.info("New user for email $email created. User ID: ${newUser.id}")
+            logger.info("New user for email $email created. User ID: {}", newUser.id)
 
             newUser.id
         } else {
@@ -69,7 +69,7 @@ class CompleteLoginCommand @Autowired constructor(
 
         emailVerificationCodeRepository.markAsConsumed(email, verificationCode)
 
-        logger.info("Completed login for user $email. Created session ${userSession.id}")
+        logger.info("Completed login for user {}. Created session {}", email, userSession.id)
 
         return Result(userId, email, userSession)
     }

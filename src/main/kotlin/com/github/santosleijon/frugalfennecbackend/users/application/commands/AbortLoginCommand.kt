@@ -28,7 +28,7 @@ class AbortLoginCommand @Autowired constructor(
 
         emailVerificationCodeRepository.deleteUnconsumed(email)
 
-        logger.info("Aborted login for user $email")
+        logger.info("Aborted login for user {}", email)
 
         return
     }

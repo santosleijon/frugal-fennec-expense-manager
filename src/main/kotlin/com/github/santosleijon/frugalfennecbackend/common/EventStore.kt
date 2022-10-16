@@ -17,7 +17,7 @@ class EventStore @Autowired constructor(
         eventStoreDAO.insert(event)
         eventServer.publishEvent(event)
 
-        logger.info("${event.javaClass.simpleName} recorded on ${event.aggregateName} with ID ${event.aggregateId}")
+        logger.info("{} recorded on {} with ID {}", event.javaClass.simpleName, event.aggregateName, event.aggregateId)
     }
 
     fun loadStream(aggregateId: UUID): EventStream {
