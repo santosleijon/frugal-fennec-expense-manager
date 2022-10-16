@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions
 
 class ReportsSteps {
 
-    private val pageUrl = "http://localhost:8080"
+    private val pageUrl = "https://localhost:8080"
 
     @When("the user opens the reports page")
     fun openTheReportsPage() = runBlocking {

@@ -39,7 +39,7 @@ class ExpensesSteps {
     @Autowired
     private lateinit var accountSteps: AccountsSteps
 
-    private val pageUrl = "http://localhost:8080"
+    private val pageUrl = "https://localhost:8080"
 
     @After
     fun afterScenario() {

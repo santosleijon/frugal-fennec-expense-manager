@@ -256,6 +256,11 @@
 				<configuration>
 					<executable>http-server</executable>
 					<arguments>
+						<argument>-S</argument>
+						<argument>-K</argument>
+						<argument>ui/certs/private-key.pem</argument>
+						<argument>-C</argument>
+						<argument>ui/certs/public-cert.pem</argument>
 						<argument>ui/build</argument>
 					</arguments>
 					<async>true</async>

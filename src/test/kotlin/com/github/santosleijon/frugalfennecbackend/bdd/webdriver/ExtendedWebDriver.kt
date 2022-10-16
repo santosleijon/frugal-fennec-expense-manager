@@ -6,13 +6,17 @@ import org.openqa.selenium.By
 import org.openqa.selenium.Keys
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.interactions.Actions
 
-class ExtendedWebDriver : ChromeDriver() {
+class ExtendedWebDriver(options: ChromeOptions) : ChromeDriver(options) {
     companion object {
         fun createWithWebDriverManager(): ExtendedWebDriver {
             WebDriverManager.chromedriver().setup()
-            return ExtendedWebDriver()
+
+            val options = ChromeOptions().addArguments("ignore-certificate-errors")
+
+            return ExtendedWebDriver(options)
         }
     }
 
@@ -34,7 +38,7 @@ class ExtendedWebDriver : ChromeDriver() {
     suspend fun clickOnButton(buttonText: String) {
         val button = findElement(By.xpath("//button/*[text()='$buttonText']/.."))
         button.click()
-        waitFor(1750L)
+        waitFor(2000L) // TODO: Remove fixed waiting time by replacing it with a conditional waiting loop
     }
 
     fun doubleClickOnElementWithText(text: String) {

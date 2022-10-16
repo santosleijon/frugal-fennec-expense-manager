@@ -56,7 +56,7 @@ class UsersSteps {
     var userSession: UserSession? = null
     var sessionUserId: UUID? = userSession?.userId
 
-    private val loginPageUrl = "http://localhost:8080"
+    private val loginPageUrl = "https://localhost:8080"
 
     @Before
     fun before() {
@@ -204,7 +204,7 @@ class UsersSteps {
 
         val currentUrl = CommonSteps.webDriver.currentUrl
 
-        Assertions.assertThat(currentUrl).isEqualTo("http://localhost:8080/")
+        Assertions.assertThat(currentUrl).isEqualTo("https://localhost:8080/")
     }
 
     @Then("the user sees the error message {string}")
