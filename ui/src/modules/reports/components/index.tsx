@@ -7,19 +7,26 @@ import { SelectAccountFormField } from "../../common/components/App/SelectAccoun
 import { dispatchCommand } from "modules/common/commands/dispatchCommand";
 import { getAccounts } from "modules/accounts/commands/getAccounts";
 import { ExpenseReport } from "./ExpenseReport";
+import { User } from "modules/users/types/User";
 
 export default function Reports() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-      dispatchCommand(getAccounts, dispatch)
-  }, [dispatch]);
+  const userIsLoggedIn = useSelector<AppState, User | null>(
+    (state) => state.loggedInUser
+  ) != null;
 
   const accounts = useSelector<AppState, Account[]>(
     (state) => state.accounts
   );
-
+ 
   const [selectedAccount, setSelectedAccount] = useState<Account | undefined>(undefined)
+
+  useEffect(() => {
+    if (userIsLoggedIn) {
+      dispatchCommand(getAccounts, dispatch)
+    }
+  }, [dispatch, userIsLoggedIn]);
 
   useEffect(() => {
     setSelectedAccount(accounts[0])
