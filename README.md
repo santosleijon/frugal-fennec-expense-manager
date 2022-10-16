@@ -35,14 +35,20 @@
 git clone https://github.com/santosleijon/frugal-fennec-expense-manager.git
 ```
 
-2. Build and start the Kotlin backend server:
+2. Generate self-signed TLS certificates for both frontend and backend
+```
+cd scripts
+./generate-localhost-cert.sh
+```
+
+3. Build and start the Kotlin backend server:
 
 ```
 mvn clean install
 java -jar ./target/frugal-fennec-expense-manager-0.0.1.jar
 ```
 
-3. Build and start the React frontend:
+4. Build and start the React frontend:
 
 ```
 npm install

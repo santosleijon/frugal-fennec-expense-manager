@@ -34,3 +34,6 @@ build/
 
 ### Environment variables sometimes containing secret keys ###
 *.env
+
+### TLS key pair and certificate ###
+/src/main/resources/certs/
