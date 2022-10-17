@@ -109,9 +109,7 @@ class UserResource @Autowired constructor(
         
         cookie.maxAge = secondsUntilSessionExpiration
         cookie.path = "/"
-
-        // TODO: Use secure http-only cookie
-        cookie.secure = false
+        cookie.secure = true
 
         return cookie
     }
@@ -121,9 +119,7 @@ class UserResource @Autowired constructor(
 
         cookie.maxAge = 0
         cookie.path = "/"
-
-        // TODO: Use secure http-only cookie
-        cookie.secure = false
+        cookie.secure = true
 
         return cookie
     }
