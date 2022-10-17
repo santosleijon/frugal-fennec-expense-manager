@@ -1,0 +1,21 @@
+.toolbar {
+  flex-wrap: 'wrap';
+}
+.toolbar-title {
+  flex-grow: 1;
+}
+.toolbar-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 0.8em;
+}
+.toolbar-icon img {
+  width: 32px;
+  height: 32px;
+}
+.toolbar .MuiTypography-root.toolbar-link {
+  margin-left: 1em;
+}
+.toolbar Button.logout {
+  margin-left: 20px;
+}

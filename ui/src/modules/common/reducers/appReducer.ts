@@ -10,16 +10,23 @@ import { DELETE_ACCOUNT_RESULT_ACTION_TYPE } from 'modules/accounts/commands/del
 import { ADD_EXPENSE_RESULT_ACTION_TYPE } from 'modules/expenses/commands/addExpense';
 import { Account } from 'modules/accounts/types/Account';
 import { UPDATE_ACCOUNT_NAME_ACTION_TYPE } from 'modules/accounts/commands/updateAccountName';
+import { RESET_COMMAND_ACTION_TYPE } from '../commands/resetCommandAction';
+import { COMPLETE_LOGIN_RESULT_ACTION_TYPE } from 'modules/users/commands/completeLogin';
+import { User } from 'modules/users/types/User';
+import { LOGOUT_RESULT_ACTION_TYPE } from 'modules/users/commands/logout';
+import { GET_CURRENT_USER_SESSION_RESULT_ACTION_TYPE } from 'modules/users/commands/getCurrentUserSession';
 
 export interface AppState {
   isLoadingCommand: boolean,
   commandErrorMessage: string | null,
+  loggedInUser: User | null
   accounts: Account[]
 }
 
 const initialState: AppState = {
   isLoadingCommand: false,
   commandErrorMessage: null,
+  loggedInUser: null,
   accounts: []
 }
 
@@ -31,6 +38,8 @@ export function appReducer(state: AppState = initialState, action: Action) {
       return { ...state, ...{ isLoadingCommand: false, commandErrorMessage: action.payload } }
     case COMPLETE_COMMAND_ACTION_TYPE:
       return { ...state, isLoadingCommand: false }
+    case RESET_COMMAND_ACTION_TYPE:
+      return { ...state, ...{ isLoadingCommand: false, commandErrorMessage: "" } }
     case GET_ACCOUNTS_RESULT_ACTION_TYPE:
       return { ...state, accounts: action.payload }
     case ADD_ACCOUNT_RESULT_ACTION_TYPE:
@@ -45,6 +54,12 @@ export function appReducer(state: AppState = initialState, action: Action) {
       return { ...state, accounts: replaceAccount(action.payload, state.accounts) }
     case DELETE_EXPENSE_RESULT_ACTION_TYPE:
       return { ...state, accounts: replaceAccount(action.payload, state.accounts) }
+    case COMPLETE_LOGIN_RESULT_ACTION_TYPE: 
+      return { ...state, loggedInUser: action.payload }
+    case LOGOUT_RESULT_ACTION_TYPE:
+      return { ...state, loggedInUser: null }
+    case GET_CURRENT_USER_SESSION_RESULT_ACTION_TYPE:
+      return { ...state, loggedInUser: action.payload }
     default:
       return state
   }

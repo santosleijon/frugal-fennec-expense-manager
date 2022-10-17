@@ -11,6 +11,7 @@ export const accountsApi = {
       headers: {
         'Accept': 'application/json'
       },
+      credentials: "include",
     })
     
     if (!response.ok) {
@@ -27,6 +28,7 @@ export const accountsApi = {
         'Accept': '*/*',
         'Content-Type': 'application/json'
       },
+      credentials: "include",
       body: JSON.stringify(account),
     })
   
@@ -44,6 +46,7 @@ export const accountsApi = {
         'Accept': '*/*',
         'Content-Type': 'application/json'
       },
+      credentials: "include",
       body: JSON.stringify({ "newName": newName }),
     })
 
@@ -55,6 +58,7 @@ export const accountsApi = {
   async delete(accountId: string): Promise<void> {
     const response = await fetch(`${baseUrl}/${accountId}`, {
       method: 'DELETE',
+      credentials: "include",
     })
 
     if (!response.ok) {
@@ -69,6 +73,7 @@ export const accountsApi = {
         'Accept': '*/*',
         'Content-Type': 'application/json'
       },
+      credentials: "include",
       body: JSON.stringify(expense),
     })
   
@@ -86,6 +91,7 @@ export const accountsApi = {
         'Accept': '*/*',
         'Content-Type': 'application/json'
       },
+      credentials: "include",
       body: JSON.stringify(expense),
     })
   

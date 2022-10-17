@@ -36,9 +36,11 @@ function AddAccountForm() {
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault()
 
-    dispatchCommand(() => addAccount(account), dispatch)
-
-    setAccount({ ...account, name: "" })
+    dispatchCommand(async () => {
+      const result = await addAccount(account)
+      setAccount({ ...account, name: "" })
+      return result
+    }, dispatch)
   }
 
   const onChangeAccountName = (event: React.ChangeEvent<HTMLInputElement>) => {

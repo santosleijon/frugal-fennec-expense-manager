@@ -11,15 +11,15 @@ import { ExpenseReport } from "./ExpenseReport";
 export default function Reports() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-      dispatchCommand(getAccounts, dispatch)
-  }, [dispatch]);
-
   const accounts = useSelector<AppState, Account[]>(
     (state) => state.accounts
   );
-
+ 
   const [selectedAccount, setSelectedAccount] = useState<Account | undefined>(undefined)
+
+  useEffect(() => {
+      dispatchCommand(getAccounts, dispatch)
+  }, [dispatch]);
 
   useEffect(() => {
     setSelectedAccount(accounts[0])

@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS event_store (
   event_id UUID PRIMARY KEY,
   aggregate_name VARCHAR(255) NOT NULL,
   aggregate_id UUID NOT NULL,
+  user_id UUID NOT NULL,
   event_date TIMESTAMP WITH TIME ZONE NOT NULL,
   version INT NOT NULL,
   data JSONB NOT NULL
