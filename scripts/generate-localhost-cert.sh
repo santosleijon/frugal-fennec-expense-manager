@@ -1,8 +1,8 @@
-KEYSTORE_OUTPUT_FILE="../src/main/resources/certs/localhost-tls.p12"
+KEYSTORE_OUTPUT_FILE="../src/main/resources/localhost/localhost.p12"
 KEYSTORE_PASSWORD="password"
-PRIVATE_KEY_FILE="../ui/certs/private-key.pem"
+PRIVATE_KEY_FILE="../ui/certs/localhost/localhost-privkey.pem"
 CSR_FILE="csr.pem"
-CERT_FILE="../ui/certs/public-cert.pem"
+CERT_FILE="../ui/certs/localhost/localhost-cert.pem"
 
 # Cleanup previous files
 rm -f "$KEYSTORE_OUTPUT_FILE"

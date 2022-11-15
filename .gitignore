@@ -35,5 +35,14 @@ build/
 ### Environment variables sometimes containing secret keys ###
 *.env
 
-### TLS key pair and certificate ###
-/src/main/resources/certs/
+### Localhost TLS certs ###
+/src/main/resources/localhost/
+
+### Production config and TLS certs ###
+/src/main/resources/production/
+
+### Deployment scripts ###
+/scripts/certbot/
+/scripts/deploy*
+/scripts/push*
+
