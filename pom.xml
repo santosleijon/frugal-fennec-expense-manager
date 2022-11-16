@@ -254,13 +254,11 @@
 					</execution>
 				</executions>
 				<configuration>
-					<executable>http-server</executable>
+					<executable>npx</executable>
 					<arguments>
-						<argument>-S</argument>
-						<argument>-K</argument>
-						<argument>ui/certs/private-key.pem</argument>
-						<argument>-C</argument>
-						<argument>ui/certs/public-cert.pem</argument>
+						<argument>http-server</argument>
+						<argument>--port</argument>
+						<argument>8080</argument>
 						<argument>ui/build</argument>
 					</arguments>
 					<async>true</async>

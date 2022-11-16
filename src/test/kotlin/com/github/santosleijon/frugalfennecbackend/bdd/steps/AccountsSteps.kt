@@ -21,7 +21,7 @@ import java.util.*
 
 class AccountsSteps {
 
-    private val pageUrl = "https://localhost:8080"
+    private val pageUrl = "http://localhost:8080"
 
     @Autowired
     private lateinit var accountResource: AccountResource

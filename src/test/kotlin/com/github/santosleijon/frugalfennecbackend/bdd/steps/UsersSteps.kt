@@ -56,10 +56,10 @@ class UsersSteps {
     var userSession: UserSession? = null
     var sessionUserId: UUID? = userSession?.userId
 
-    private val loginPageUrl = "https://localhost:8080"
+    private val loginPageUrl = "http://localhost:8080"
 
     @Before
-    fun before() {
+    fun beforeScenario() {
         MockMailSender.init(mailSender)
         MockRandomEmailVerificationCodeGenerator.init(randomEmailVerificationCodeGenerator)
 
@@ -116,6 +116,7 @@ class UsersSteps {
 
         val cookie = Cookie.Builder("sessionId", newUserSession.id.toString())
             .path("/")
+            .isSecure(false)
             .build()
 
         CommonSteps.webDriver.get(loginPageUrl)
@@ -204,7 +205,7 @@ class UsersSteps {
 
         val currentUrl = CommonSteps.webDriver.currentUrl
 
-        Assertions.assertThat(currentUrl).isEqualTo("https://localhost:8080/")
+        Assertions.assertThat(currentUrl).isEqualTo("http://localhost:8080/")
     }
 
     @Then("the user sees the error message {string}")

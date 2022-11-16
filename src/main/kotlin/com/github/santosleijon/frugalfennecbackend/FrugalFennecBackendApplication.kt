@@ -14,7 +14,7 @@ class FrugalFennecBackendApplication {
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
-					.allowedOrigins("https://localhost:8080")
+					.allowedOrigins("http://localhost:8080")
 					.allowCredentials(true)
 					.allowedMethods(
 						HttpMethod.GET.name,

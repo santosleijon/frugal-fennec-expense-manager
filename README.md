@@ -27,7 +27,7 @@
   * [Testcontainers](https://www.testcontainers.org/) - Used to set up a complete PostgreSQL database instance in a Docker container during the execution of test scenarios.
 
 
-## Launching the application
+## Running the application locally
 
 1. Download the Git repo:
 
@@ -35,30 +35,28 @@
 git clone https://github.com/santosleijon/frugal-fennec-expense-manager.git
 ```
 
-2. Generate self-signed TLS certificates for both frontend and backend
-```
-cd scripts
-./generate-localhost-cert.sh
-```
-
-3. Build and start the Kotlin backend server:
+2. Build and start the Kotlin backend server:
 
 ```
-mvn clean install
+mvn clean package -DskipTests
 java -jar ./target/frugal-fennec-expense-manager-0.0.1.jar
 ```
 
-4. Build and start the React frontend:
+3. Start the React frontend:
 
 ```
-npm install
+cd ui
 npm start
 ```
+
 ## Executing automated end-to-end tests
 
 The automated end-to-end tests are executed as part of the *verify* Maven lifecycle phase.
 
 ```
+cd ui
+npm run build:test
+cd ..
 mvn clean verify
 ```
 

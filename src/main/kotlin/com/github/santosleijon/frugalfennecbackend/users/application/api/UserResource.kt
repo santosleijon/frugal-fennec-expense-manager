@@ -109,7 +109,7 @@ class UserResource @Autowired constructor(
         
         cookie.maxAge = secondsUntilSessionExpiration
         cookie.path = "/"
-        cookie.secure = true
+        cookie.secure = false // Disabled to allow cookies when running locally without HTTPS
 
         return cookie
     }
@@ -119,7 +119,7 @@ class UserResource @Autowired constructor(
 
         cookie.maxAge = 0
         cookie.path = "/"
-        cookie.secure = true
+        cookie.secure = false // Disabled to allow cookies when running locally without HTTPS
 
         return cookie
     }

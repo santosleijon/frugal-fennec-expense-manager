@@ -39,7 +39,7 @@ class ExpensesSteps {
     @Autowired
     private lateinit var accountSteps: AccountsSteps
 
-    private val pageUrl = "https://localhost:8080"
+    private val pageUrl = "http://localhost:8080"
 
     @After
     fun afterScenario() {
@@ -82,8 +82,8 @@ class ExpensesSteps {
         )
 
         dateField.sendKeys(
-            date.substring(0, 4), Keys.ARROW_LEFT,
-            date.substring(5, 7), Keys.ARROW_LEFT,
+            date.substring(0, 4), Keys.ARROW_RIGHT,
+            date.substring(5, 7), Keys.ARROW_RIGHT,
             date.substring(8, 10)
         )
     }
