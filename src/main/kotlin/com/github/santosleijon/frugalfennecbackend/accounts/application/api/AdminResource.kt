@@ -12,7 +12,7 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 @RestController
-@RequestMapping("admin")
+@RequestMapping("api/admin")
 @Suppress("unused")
 class AdminResource @Autowired constructor(
     private val accountRepository: AccountRepository,

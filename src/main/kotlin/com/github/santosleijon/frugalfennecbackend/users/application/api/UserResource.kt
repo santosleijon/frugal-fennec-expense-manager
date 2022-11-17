@@ -18,7 +18,7 @@ import javax.validation.Valid
 import javax.validation.constraints.*
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("api/user")
 class UserResource @Autowired constructor(
     private val startLoginCommand: StartLoginCommand,
     private val completeLoginCommand: CompleteLoginCommand,

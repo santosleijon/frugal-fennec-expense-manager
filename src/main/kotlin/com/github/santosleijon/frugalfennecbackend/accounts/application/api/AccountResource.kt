@@ -17,7 +17,7 @@ import javax.validation.Valid
 import javax.validation.constraints.*
 
 @RestController
-@RequestMapping("account")
+@RequestMapping("api/account")
 class AccountResource @Autowired constructor(
     private val userAuthorizer: UserAuthorizer,
     private val createAccountCommand: CreateAccountCommand,
