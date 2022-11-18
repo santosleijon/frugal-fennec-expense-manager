@@ -9,12 +9,16 @@ import org.springframework.http.HttpMethod
 
 @SpringBootApplication
 class FrugalFennecBackendApplication {
+
+	private val allowedCorsOrigin: String = System.getenv("ALLOWED_CORS_ORIGIN")
+		?: "http://localhost:8080"
+
 	@Bean
 	fun webMvcConfigurer(): WebMvcConfigurer {
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
-					.allowedOrigins("http://localhost:8080")
+					.allowedOrigins(allowedCorsOrigin)
 					.allowCredentials(true)
 					.allowedMethods(
 						HttpMethod.GET.name,

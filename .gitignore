@@ -39,10 +39,8 @@ build/
 /src/main/resources/localhost/
 
 ### Production config and TLS certs ###
-/src/main/resources/production/
+/src/main/resources/application-prod.properties
 
 ### Deployment scripts ###
 /scripts/certbot/
 /scripts/deploy*
-/scripts/push*
-

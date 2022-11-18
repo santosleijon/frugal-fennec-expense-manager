@@ -1,8 +1,7 @@
 FROM node:16-slim
 
-# Build stage
+# Copy build from dev machine
 COPY ./build ./
-COPY ./certs/production ./certs/production
 RUN npm install -g http-server
 
 # Run stage

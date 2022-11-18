@@ -74,7 +74,7 @@ class StartLoginCommand @Autowired constructor(
         }
 
         return Mail().also {
-            it.from = Email("santos.leijon@gmail.com")
+            it.from = Email("noreply@santosleijon.com")
             it.templateId = "d-bcf8c873247f4bb68f4551d54df9ec6b"
             it.addPersonalization(personalization)
         }
