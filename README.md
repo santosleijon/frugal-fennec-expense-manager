@@ -25,6 +25,20 @@
   * [Cucumber](https://cucumber.io/) - Makes it possible to write human readably Behavior-Driven Development (BDD) test scenarios using the [Gherkin](https://cucumber.io/docs/gherkin/reference/) *Given-When-Then* syntax.
   * [Selenium](https://www.selenium.dev/) - Used to execute automated test steps in a real web browser.
   * [Testcontainers](https://www.testcontainers.org/) - Used to set up a complete PostgreSQL database instance in a Docker container during the execution of test scenarios.
+* Deployment
+  * [Docker](https://www.docker.com/) - Used to build and run this application as containerized services, one container for the backend and one for the frontend.
+  * [AWS ECS](https://aws.amazon.com/ecs/) - Managed container orchestration service that makes it easy to deploy, manage and scale containerized applications.
+  * [AWS Fargate](https://aws.amazon.com/fargate/) - Serverless compute for containers. Used to deploy and manage containerized applications without having to manage servers or provision EC2 instances. 
+  * [AWS RDS](https://aws.amazon.com/rds/) - Managed relational database service. Used to manage a PostgreSQL database instance.
+
+
+## Amazon Web Services deployment
+
+This application is public available at **[frugal-fennec.santosleijon.com](https://frugal-fennec.santosleijon.com)**.
+
+The diagram below describes how it is deployed using selected AWS services and features.
+
+![AWS deployment](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/docs/aws_deployment.png?raw=true)
 
 
 ## Running the application locally

@@ -1,0 +1,42 @@
+@startuml
+
+actor User
+
+cloud vpc as "Virtual Private Cloud" {
+    node alb as "Application Load Balancer" {
+        node listener as "Listener" {
+            agent backend_listener_rule as "Requests to path /api/*"
+            agent frontend_listener_rule as "Requests to any other path"
+        }
+        node tgs as "Target Groups" {
+            agent backend_tg as "Backend target group"
+            agent frontend_tg as "Frontend target group"
+        }
+    }
+
+    node cluster as "ECS Cluster" {
+        node backend_service as "Backend FARGATE service" {
+            node backend_task as "Backend task" {
+                agent backend_container as "Backend Docker container"
+            }
+        }
+        node frontend_service as "Frontend FARGATE service" {
+            node frontend_task as "Frontend task" {
+                agent frontend_container as "Frontend Docker container"
+            }
+        }
+    }
+
+    node RDS {
+        database db as "PostgreSQL\n"
+    }
+}
+
+User->alb: HTTPS :443
+backend_listener_rule-->backend_tg
+frontend_listener_rule-->frontend_tg
+backend_tg-->backend_task: HTTP :8081
+frontend_tg-->frontend_task: HTTP :8080
+backend_container-d->db: TCP :5432
+
+@enduml
