@@ -37,7 +37,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:test": "cross-env REACT_APP_API_URL=http://localhost:8081 react-scripts build",
+    "build:test": "cross-env REACT_APP_API_URL=http://localhost:8081/api react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

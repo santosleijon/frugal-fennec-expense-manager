@@ -246,23 +246,41 @@
 				<version>${exec-maven-plugin.version}</version>
 				<executions>
 					<execution>
+						<id>build-ui</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<workingDirectory>${basedir}/ui</workingDirectory>
+							<executable>npm</executable>
+							<arguments>
+								<argument>run</argument>
+								<argument>build:test</argument>
+							</arguments>
+							<async>false</async>
+						</configuration>
+					</execution>
+					<execution>
 						<id>serve-ui-build</id>
 						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>exec</goal>
 						</goals>
+						<configuration>
+							<workingDirectory>${basedir}/ui</workingDirectory>
+							<executable>npx</executable>
+							<arguments>
+								<argument>http-server</argument>
+								<argument>--port</argument>
+								<argument>8080</argument>
+								<argument>build</argument>
+							</arguments>
+							<async>true</async>
+							<asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<executable>npx</executable>
-					<arguments>
-						<argument>http-server</argument>
-						<argument>--port</argument>
-						<argument>8080</argument>
-						<argument>ui/build</argument>
-					</arguments>
-					<async>true</async>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
