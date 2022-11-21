@@ -10,7 +10,7 @@ export function StartLoginForm(props: StartLoginFormProps) {
   return (
     <>
       <form noValidate onSubmit={props.onSubmit}>
-        <h3>Enter email to start login</h3>
+        <h3>Enter your email to login or register a new user</h3>
         <FormControl variant="outlined" style={{ display: "flex", alignItems: "flex-start", flexDirection: "row" }}>
           <TextField
             id="email-field"
@@ -31,7 +31,7 @@ export function StartLoginForm(props: StartLoginFormProps) {
             className="submitButton"
             type="submit"
           >
-            Start login
+            Verify email
           </Button>
         </FormControl>
       </form>

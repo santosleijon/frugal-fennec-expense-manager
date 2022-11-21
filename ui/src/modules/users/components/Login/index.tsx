@@ -1,4 +1,4 @@
-import { Card, CardContent} from "@material-ui/core"
+import { Avatar, Card, CardContent, List, ListItem, ListItemAvatar, ListItemText } from "@material-ui/core"
 import { useState } from "react"
 import { startLogin } from "modules/users/commands/startLogin"
 import { dispatchCommand } from "modules/common/commands/dispatchCommand"
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { CompleteLoginForm } from "./CompleteLoginForm"
 import { StartLoginForm } from "./StartLoginForm"
 import { abortLogin } from "modules/users/commands/abortLogin"
+import { AttachMoney, Lock, Timeline } from "@material-ui/icons";
 
 export default function Login() {
   const dispatch = useDispatch()
@@ -74,26 +75,59 @@ export default function Login() {
 
   return (
     <>
-      <h1>Login</h1>
+      <h1>Take control of your expenses with Frugal Fennec</h1>
       <Card>
-          <CardContent>
-            {loginStarted ?
-              <CompleteLoginForm
-                email={formValues.email}
-                verificationCode={formValues.verificationCode}
-                onVerificationCodeChanged={onVerificationCodeChanged}
-                onSubmit={onSubmitCompleteLogin}
-                onAbort={onAbortLogin}
+        <List>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <AttachMoney />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="Record your expenses in a customizable accounts structure"
               />
-              :
-              <StartLoginForm
-                email={formValues.email}
-                onEmailChanged={onEmailChanged}
-                onSubmit={onSubmitStartLogin}
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <Timeline />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="View expense reports to track your expenses over time"
               />
-            }
-          </CardContent>
-        </Card>
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <Lock />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="Login securely without a password using email verification"
+              />
+            </ListItem>
+        </List>
+
+        <CardContent>
+          {loginStarted ?
+            <CompleteLoginForm
+              email={formValues.email}
+              verificationCode={formValues.verificationCode}
+              onVerificationCodeChanged={onVerificationCodeChanged}
+              onSubmit={onSubmitCompleteLogin}
+              onAbort={onAbortLogin}
+            />
+            :
+            <StartLoginForm
+              email={formValues.email}
+              onEmailChanged={onEmailChanged}
+              onSubmit={onSubmitStartLogin}
+            />
+          }
+        </CardContent>
+      </Card>
     </>
   )
 }

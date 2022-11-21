@@ -122,6 +122,8 @@ class UsersSteps {
         CommonSteps.webDriver.get(loginPageUrl)
         CommonSteps.webDriver.manage().addCookie(cookie)
         CommonSteps.webDriver.navigate().refresh()
+
+        waitFor(250L)
     }
 
     @When("the user opens the login page")
@@ -219,7 +221,7 @@ class UsersSteps {
     fun assertTheUserIsRedirectedBackToStartLoginForm() {
         val pageContent = CommonSteps.webDriver.getPageContent()
 
-        Assertions.assertThat(pageContent).contains("Enter email to start login")
+        Assertions.assertThat(pageContent).contains("Enter your email to login or register")
     }
 
     @Then("no unconsumed email verification codes exist for user with email {string}")

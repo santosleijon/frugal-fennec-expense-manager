@@ -4,7 +4,7 @@ Feature: Password-less user registration and login using email verification
     Given that the randomly generated email verification code will be "1234"
     When the user opens the login page
     And the user enters email "test@example.com"
-    And the user clicks on "Start login"
+    And the user clicks on "Verify email"
     Then an email with verification code "1234" is sent to "test@example.com"
     And the user sees the complete login form
     When the user enters email verification code "1234"
@@ -18,7 +18,7 @@ Feature: Password-less user registration and login using email verification
     And that the randomly generated email verification code will be "1234"
     When the user opens the login page
     And the user enters email "test@example.com"
-    And the user clicks on "Start login"
+    And the user clicks on "Verify email"
     And the user enters email verification code "1234"
     And the user clicks on "Complete login"
     Then a user session is created for user with email "test@example.com"
@@ -38,14 +38,14 @@ Feature: Password-less user registration and login using email verification
   Scenario: An error is displayed when trying to start a login with an invalid email address
     When the user opens the login page
     And the user enters email "@invalid-email-address"
-    And the user clicks on "Start login"
+    And the user clicks on "Verify email"
     Then the user sees the error message "Invalid email address"
 
   Scenario: An error is displayed when trying to complete the login with an invalid email verification code
     Given that the randomly generated email verification code will be "1234"
     When the user opens the login page
     And the user enters email "test@example.com"
-    And the user clicks on "Start login"
+    And the user clicks on "Verify email"
     And the user enters email verification code "5678"
     And the user clicks on "Complete login"
     Then the user sees the error message "Invalid verification code"
@@ -54,7 +54,7 @@ Feature: Password-less user registration and login using email verification
     Given that the randomly generated email verification code will be "1234"
     When the user opens the login page
     And the user enters email "test@example.com"
-    And the user clicks on "Start login"
+    And the user clicks on "Verify email"
     And a user with email "test@example.com" completes a login with verification code "1234"
     And the user enters email verification code "5678"
     And the user clicks on "Complete login"
@@ -63,7 +63,7 @@ Feature: Password-less user registration and login using email verification
   Scenario: A started login can be aborted
     When the user opens the login page
     And the user enters email "test@example.com"
-    And the user clicks on "Start login"
+    And the user clicks on "Verify email"
     And the user clicks on "Abort"
     Then the user is redirected back the start login form
     And no unconsumed email verification codes exist for user with email "test@example.com"
@@ -72,6 +72,5 @@ Feature: Password-less user registration and login using email verification
     Given 10 logins have been started
     When the user opens the login page
     And the user enters email "test@example.com"
-    And the user clicks on "Start login"
+    And the user clicks on "Verify email"
     Then the user sees the error message "Max number of started logins reached"
-
