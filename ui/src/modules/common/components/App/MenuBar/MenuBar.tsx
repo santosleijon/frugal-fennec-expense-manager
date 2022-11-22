@@ -55,15 +55,15 @@ export default function MenuBar() {
             <>
               Logged in as&nbsp;<strong>{loggedInUser.email}</strong>&nbsp;
               &middot;
-              <Button color="inherit" onClick={onLogout}>Logout</Button>
-              &middot;
-              <Button color="inherit" onClick={() => onDeleteUser()}>Delete user</Button>
-              &middot;
               <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Reports</Button>
               &middot;
               <Button color="inherit" onClick={() => navigate('./expenses', { replace: true })}>Expenses</Button>
               &middot;
               <Button color="inherit" onClick={() => navigate('./accounts', { replace: true })}>Accounts</Button>
+              &middot;
+              <Button color="inherit" onClick={() => onDeleteUser()}>Delete user</Button>
+              &middot;
+              <Button color="inherit" onClick={onLogout}>Logout</Button>
 
               <DeleteUserConfirmDialog
                 isOpen={isDeleteUserConfirmDialogOpen}
