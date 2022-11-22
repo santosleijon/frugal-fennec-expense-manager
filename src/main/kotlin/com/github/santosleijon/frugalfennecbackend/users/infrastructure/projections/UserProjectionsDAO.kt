@@ -78,6 +78,17 @@ class UserProjectionsDAO @Autowired constructor(
         ).firstOrNull()
     }
 
+    fun delete(id: UUID) {
+        val paramMap: Map<String, UUID> = mapOf(
+            "id" to id,
+        )
+
+        template.update("""
+            DELETE FROM user_projections
+            WHERE id = :id
+        """.trimIndent(), paramMap)
+    }
+
     class RowMapping constructor(
         private val objectMapper: ObjectMapper,
     ) : RowMapper<UserProjection> {

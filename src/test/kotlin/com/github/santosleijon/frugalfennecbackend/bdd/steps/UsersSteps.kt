@@ -1,5 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
+import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
@@ -52,6 +53,9 @@ class UsersSteps {
 
     @Autowired
     private lateinit var emailVerificationCodeRepository: EmailVerificationCodeRepository
+
+    @Autowired
+    private lateinit var accountProjectionRepository: AccountProjectionRepository
 
     var userSession: UserSession? = null
     var sessionUserId: UUID? = userSession?.userId
@@ -244,5 +248,18 @@ class UsersSteps {
     @Then("the user is still logged in")
     fun assertUserIsStillLoggedIn() {
         Assertions.assertThat(CommonSteps.webDriver.getPageContent().lowercase()).contains("logout")
+    }
+
+    @Then("the user sees the confirm delete user dialog")
+    fun assertUserSeesConfirmDeleteUserDialog() {
+        Assertions.assertThat(CommonSteps.webDriver.getPageContent()).contains("Are you sure you want to permanently delete your user account")
+    }
+
+    @Then("the user data is deleted")
+    fun assertUserDataIsDeleted() {
+        Assertions.assertThat(userRepository.findById(sessionUserId!!)).isNull()
+        Assertions.assertThat(userProjectionRepository.findById(sessionUserId!!)).isNull()
+        Assertions.assertThat(accountProjectionRepository.findByUserId(sessionUserId!!)).isEmpty()
+        Assertions.assertThat(userSessionProjectionRepsitory.findByUserId(sessionUserId!!)).isEmpty()
     }
 }

@@ -1,9 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.users.application.api
 
-import com.github.santosleijon.frugalfennecbackend.users.application.commands.AbortLoginCommand
-import com.github.santosleijon.frugalfennecbackend.users.application.commands.CompleteLoginCommand
-import com.github.santosleijon.frugalfennecbackend.users.application.commands.LogoutCommand
-import com.github.santosleijon.frugalfennecbackend.users.application.commands.StartLoginCommand
+import com.github.santosleijon.frugalfennecbackend.users.application.commands.*
 import com.github.santosleijon.frugalfennecbackend.users.application.queries.GetCurrentUserSessionQuery
 import com.github.santosleijon.frugalfennecbackend.users.domain.UserSession
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserSessionProjection
@@ -25,6 +22,7 @@ class UserResource @Autowired constructor(
     private val abortLoginCommand: AbortLoginCommand,
     private val logoutCommand: LogoutCommand,
     private val getCurrentUserSessionQuery: GetCurrentUserSessionQuery,
+    private val deleteUserCommand: DeleteUserCommand,
 ) {
 
     @PostMapping("start-login")
@@ -101,6 +99,16 @@ class UserResource @Autowired constructor(
         val email: String? = null,
         val userSession: UserSessionProjection? = null,
     )
+
+    @DeleteMapping
+    fun deleteUser(
+        @CookieValue(value = "sessionId") sessionId: UUID,
+        response: HttpServletResponse?,
+    ) {
+        val commandInput = DeleteUserCommand.Input(sessionId)
+        deleteUserCommand.execute(commandInput)
+        response?.addCookie(createDeletedSessionCookie())
+    }
 
     private fun createSessionCookie(userSession: UserSession): Cookie {
         val cookie = Cookie("sessionId", userSession.id.toString())

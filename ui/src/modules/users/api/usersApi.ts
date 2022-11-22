@@ -111,4 +111,18 @@ export const usersApi = {
 
     return validUserSessionData
   },
+
+  async deleteUser() {
+    const response = await fetch(`${baseUrl}/`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': '*/*',
+      },
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete user (HTTP status = ${response.status})`)
+    }
+  },
 }

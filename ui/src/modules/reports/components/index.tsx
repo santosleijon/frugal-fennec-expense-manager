@@ -36,7 +36,7 @@ export default function Reports() {
       <h1>Reports</h1>
       <Card>
         <CardContent>
-          <h2>Expenses by account</h2>
+          <h3>Expenses by account</h3>
 
           <SelectAccountFormField
             accounts={accounts}

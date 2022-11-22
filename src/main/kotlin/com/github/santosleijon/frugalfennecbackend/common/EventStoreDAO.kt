@@ -63,6 +63,17 @@ class EventStoreDAO @Autowired constructor(
         """.trimIndent(), paramMap)
     }
 
+    fun deleteByUserId(userId: UUID) {
+        val paramMap: Map<String, UUID> = mapOf(
+            "user_id" to userId,
+        )
+
+        template.update("""
+            DELETE FROM event_store
+            WHERE user_id = :user_id
+        """.trimIndent(), paramMap)
+    }
+
     class EventMapping constructor(
         private val objectMapper: ObjectMapper,
     ) : RowMapper<DomainEvent> {

@@ -7,6 +7,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountReposi
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
+import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidSessionId
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import io.cucumber.java.After
 import io.cucumber.java.en.Given
@@ -217,8 +218,12 @@ class AccountsSteps {
         val sessionId = usersSteps.userSession?.id
 
         if (sessionId != null) {
-            accountResource.getAllForUser(sessionId).forEach { accountProjection ->
-                accountResource.delete(accountProjection.id, sessionId)
+            try {
+                accountResource.getAllForUser(sessionId).forEach { accountProjection ->
+                    accountResource.delete(accountProjection.id, sessionId)
+                }
+            } catch (e: InvalidSessionId) {
+                // The user and their accounts have been deleted
             }
         }
     }

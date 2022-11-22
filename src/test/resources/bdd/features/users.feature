@@ -74,3 +74,11 @@ Feature: Password-less user registration and login using email verification
     And the user enters email "test@example.com"
     And the user clicks on "Verify email"
     Then the user sees the error message "Max number of started logins reached"
+
+  Scenario: A user and all their associated data can be deleted
+    Given the user with email "test@example.com" has logged in
+    When the user clicks on "Delete user"
+    Then the user sees the confirm delete user dialog
+    When the user clicks on "Permanently delete user"
+    Then the user data is deleted
+    And the user is redirected to the start page
