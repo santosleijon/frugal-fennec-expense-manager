@@ -1,4 +1,4 @@
-import { AppBar, Typography, Toolbar, Link, Box, Button, CircularProgress } from "@material-ui/core";
+import { AppBar, Toolbar, Link, Box, CircularProgress, Divider } from "@material-ui/core";
 import { useNavigate } from 'react-router-dom';
 import React from "react";
 import './MenuBar.css'
@@ -9,6 +9,8 @@ import { dispatchCommand } from "modules/common/commands/dispatchCommand";
 import { logout } from "modules/users/commands/logout"
 import { deleteUser } from "modules/users/commands/deleteUser"
 import DeleteUserConfirmDialog from "./DeleteUserConfirmDialog";
+import { Drawer, Button, IconButton, List, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
+import { Menu } from "@material-ui/icons";
 
 export default function MenuBar() {
   const navigate = useNavigate()
@@ -21,6 +23,8 @@ export default function MenuBar() {
   const loggedInUser = useSelector<AppState, User | null>(
     (state) => state.loggedInUser
   )
+
+  const [mobileOpen, setMobileOpen] = React.useState(false)
 
   const [isDeleteUserConfirmDialogOpen, setIsDeleteUserConfirmDialogOpen] = React.useState(false)
 
@@ -39,10 +43,55 @@ export default function MenuBar() {
     setIsDeleteUserConfirmDialogOpen(false)
   }
 
+  const drawerWidth = 240
+
+  const navItems = loggedInUser ? [
+    { key: 'reports', text: 'Reports', onClick: () => navigate('./', { replace: true }) },
+    { key: 'expenses', text: 'Expenses', onClick: () => navigate('./expenses', { replace: true }) },
+    { key: 'accounts', text: 'Accounts', onClick: () => navigate('./accounts', { replace: true }) },
+    { key: 'delete-user', text: 'Delete user', onClick: onDeleteUser },
+    { key: 'logout', text: 'Logout', onClick: onLogout },
+  ] : [
+    { key: 'login', text: 'Login', onClick: () => navigate('./', { replace: true }) },
+  ]
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  }
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Typography variant="h6" className="toolbar-title" color="inherit">
+        <Link href="./" title="Frugal Fennec Expense Manager" color="inherit">
+          Frugal Fennec Expense Manager
+        </Link>
+      </Typography>
+      <Divider />
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item.key} disablePadding>
+            <ListItemButton onClick={item.onClick} sx={{ textAlign: 'center' }}>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  )
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar className="toolbar">
+    <Box sx={{ display: 'flex' }}>
+      <AppBar component="nav" position="static">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <Menu />
+          </IconButton>
           <Box className="toolbar-icon">
             {toolbarIcon}
           </Box>
@@ -51,31 +100,38 @@ export default function MenuBar() {
               Frugal Fennec Expense Manager
             </Link>
           </Typography>
-          { loggedInUser ? (
-            <>
-              Logged in as&nbsp;<strong>{loggedInUser.email}</strong>&nbsp;
-              &middot;
-              <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Reports</Button>
-              &middot;
-              <Button color="inherit" onClick={() => navigate('./expenses', { replace: true })}>Expenses</Button>
-              &middot;
-              <Button color="inherit" onClick={() => navigate('./accounts', { replace: true })}>Accounts</Button>
-              &middot;
-              <Button color="inherit" onClick={() => onDeleteUser()}>Delete user</Button>
-              &middot;
-              <Button color="inherit" onClick={onLogout}>Logout</Button>
-
-              <DeleteUserConfirmDialog
-                isOpen={isDeleteUserConfirmDialogOpen}
-                onConfirmDeleteUser={onConfirmDeleteUser}
-                onClose={() => setIsDeleteUserConfirmDialogOpen(false)}
-                userEmail={loggedInUser.email} />
-            </>
-          ) :
-            <Button color="inherit" onClick={() => navigate('./', { replace: true })}>Login</Button>
-          }
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            {navItems.map((item) => (
+              <Button key={item.key} onClick={item.onClick} sx={{ color: '#fff' }}>
+                {item.text}
+              </Button>
+            ))}
+          </Box>
         </Toolbar>
       </AppBar>
+      <Box component="nav">
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+      {loggedInUser &&
+        <DeleteUserConfirmDialog
+          isOpen={isDeleteUserConfirmDialogOpen}
+          onConfirmDeleteUser={onConfirmDeleteUser}
+          onClose={() => setIsDeleteUserConfirmDialogOpen(false)}
+          userEmail={loggedInUser.email} />
+      }
     </Box>
   )
 }

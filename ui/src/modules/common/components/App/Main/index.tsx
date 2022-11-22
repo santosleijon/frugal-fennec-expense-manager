@@ -1,3 +1,4 @@
+import { Container } from "@material-ui/core";
 import Accounts from "modules/accounts/components/Accounts";
 import { dispatchCommand } from "modules/common/commands/dispatchCommand";
 import { AppState } from "modules/common/reducers/appReducer";
@@ -22,7 +23,7 @@ export default function Main() {
   ) != null;
 
   return (
-    <div className="MainContainer">
+    <Container fixed>
       <Routes>
         { userIsLoggedIn ? (
           <>
@@ -35,6 +36,6 @@ export default function Main() {
         ) }
           <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </div>
+    </Container>
   )
 }

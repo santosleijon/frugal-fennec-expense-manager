@@ -1,5 +1,4 @@
 import ExpensesDataGrid from "./ExpensesDataGrid"
-import './index.css'
 import { useEffect } from "react"
 import AddExpenseForm from "./AddExpenseForm"
 import { useDispatch, useSelector } from "react-redux"
