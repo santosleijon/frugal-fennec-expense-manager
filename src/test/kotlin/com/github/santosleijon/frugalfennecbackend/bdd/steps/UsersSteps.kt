@@ -4,6 +4,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.A
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
+import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntil
 import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
 import com.github.santosleijon.frugalfennecbackend.users.application.commands.CompleteLoginCommand
 import com.github.santosleijon.frugalfennecbackend.users.domain.User
@@ -190,12 +191,12 @@ class UsersSteps {
     }
 
     @Then("a user session is created for user with email {string}")
-    fun assertUserSessionIsCreatedForUserWith(email: String) {
+    fun assertUserSessionIsCreatedForUserWith(email: String): Unit = runBlocking {
         val user = userProjectionRepository.findByEmail(email)
 
-        val userSession = userSessionProjectionRepsitory.findByUserId(user!!.id)
-
-        Assertions.assertThat(userSession).isNotEmpty
+        waitUntil {
+            userSessionProjectionRepsitory.findByUserId(user!!.id).isNotEmpty()
+        }
     }
 
     @Then("the user sees the complete login form")

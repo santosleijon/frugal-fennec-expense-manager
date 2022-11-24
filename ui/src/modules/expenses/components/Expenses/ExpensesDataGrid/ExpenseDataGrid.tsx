@@ -1,4 +1,5 @@
-import { Button, Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { DataGrid, GridColDef, GridRowId, GridRowsProp } from '@mui/x-data-grid';
 import { Account } from "modules/accounts/types/Account";
 import DataGridContainer from "modules/common/components/App/DataGridContainer";

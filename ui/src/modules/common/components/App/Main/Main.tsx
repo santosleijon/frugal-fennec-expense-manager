@@ -1,11 +1,11 @@
 import { Container } from "@material-ui/core";
-import Accounts from "modules/accounts/components/Accounts";
+import Accounts from "modules/accounts/components/Accounts/Accounts";
 import { dispatchCommand } from "modules/common/commands/dispatchCommand";
 import { AppState } from "modules/common/reducers/appReducer";
-import Expenses from "modules/expenses/components/Expenses";
-import Reports from "modules/reports/components";
+import Expenses from "modules/expenses/components/Expenses/Expenses";
+import Reports from "modules/reports/components/Reports";
 import { getCurrentUserSession } from "modules/users/commands/getCurrentUserSession";
-import Login from "modules/users/components/Login";
+import Login from "modules/users/components/Login/Login";
 import { User } from "modules/users/types/User";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,4 +1,4 @@
-import { Button, Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import { DataGrid, GridColDef, GridRowId, MuiEvent, GridCellEditCommitParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -6,6 +6,7 @@ import { dispatchCommand } from "modules/common/commands/dispatchCommand";
 import { Account } from "modules/accounts/types/Account";
 import { deleteAccount } from "modules/accounts/commands/deleteAccount";
 import { updateAccountName } from "modules/accounts/commands/updateAccountName";
+import { Button } from "@mui/material";
 
 interface AccountsDataGridProps {
   accounts: Account[]

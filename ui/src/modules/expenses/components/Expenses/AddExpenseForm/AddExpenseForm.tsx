@@ -1,10 +1,11 @@
-import { Button, Card, CardContent, FormControl, TextField } from "@material-ui/core"
+import { Card, CardContent, FormControl, TextField } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import './index.css'
+import './AddExpenseForm.css'
 import { getCurrentDate } from "utils/getCurrentDate"
 import { Account } from "modules/accounts/types/Account"
 import { Expense } from "modules/expenses/types/Expense"
 import { SelectAccountFormField } from "modules/common/components/App/SelectAccountFormField"
+import { Button, Grid } from "@mui/material"
 
 interface AddExpenseFormProps {
   accounts: Account[],
@@ -109,61 +110,67 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
         <form noValidate autoComplete="off" onSubmit={onSubmit}>
           <h3>Add expense</h3>
           
-          <FormControl variant="outlined">
-            <div className="addExpenseForm">
-              <TextField
-                  id="date-field"
-                  label="Date"
-                  type="date"
-                  value={values.date}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  onChange={onDateChange}
-                  className="inputField"
-              />
-
-              {/* TODO: Use common AccountFormField component? */}
-              <SelectAccountFormField 
-                accounts={props.accounts}
-                selectedAccountId={values.accountId ?? props.accounts[0]?.id}
-                onSelectAccount={onAccountChange}
-              />
-
-              <TextField
-                  id="description-field"
-                  label="Description"
-                  value={values.description}
-                  className="inputField"
-                  onChange={onDescriptionChange}
-                  error={errors.description !== ""}
-                  variant="outlined"
-                  helperText={errors.description}
-              />
-              
-              <TextField
-                  id="amount-field"
-                  label="Amount"
-                  value={values.amount}
-                  onBlur={onAmountBlur}
-                  onChange={onAmountChanged}
-                  variant="outlined"
-                  className="inputField"
-                  error={errors.amount !== ""}
-                  helperText={errors.amount}
-              /> 
-
-              <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  className="submitButton"
-                  type="submit"
-              >
-                  Add
-              </Button>
-            </div>
+          <FormControl variant="outlined" fullWidth>
+            <Grid container spacing={3}>
+              <Grid item xs="auto">
+                <TextField
+                    id="date-field"
+                    label="Date"
+                    type="date"
+                    value={values.date}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    variant="outlined"
+                    onChange={onDateChange}
+                    className="inputField"
+                />
+              </Grid>
+              <Grid item xs="auto">
+                {/* TODO: Use common AccountFormField component? */}
+                <SelectAccountFormField 
+                  accounts={props.accounts}
+                  selectedAccountId={values.accountId ?? props.accounts[0]?.id}
+                  onSelectAccount={onAccountChange}
+                />
+              </Grid>
+              <Grid item xs="auto">
+                <TextField
+                    id="description-field"
+                    label="Description"
+                    value={values.description}
+                    className="inputField"
+                    onChange={onDescriptionChange}
+                    error={errors.description !== ""}
+                    variant="outlined"
+                    helperText={errors.description}
+                />
+              </Grid>
+              <Grid item xs="auto">
+                <TextField
+                    id="amount-field"
+                    label="Amount"
+                    value={values.amount}
+                    onBlur={onAmountBlur}
+                    onChange={onAmountChanged}
+                    variant="outlined"
+                    className="inputField"
+                    error={errors.amount !== ""}
+                    helperText={errors.amount}
+                /> 
+              </Grid>
+              <Grid item xs="auto">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    className="submitButton"
+                    type="submit"
+                  >
+                    Add
+                </Button>
+              </Grid>
+            </Grid>
           </FormControl>
         </form>
       </CardContent>

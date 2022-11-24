@@ -1,0 +1,8 @@
+div.inputField {
+  width: 200px;
+  margin-right: 12px;
+}
+
+button.submitButton {
+  align-self: center;
+}

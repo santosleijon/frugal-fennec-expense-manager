@@ -1,4 +1,5 @@
-import { Button, FormControl, TextField } from "@material-ui/core"
+import { FormControl, TextField } from "@material-ui/core"
+import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
 
 interface CompleteLoginFormProps {

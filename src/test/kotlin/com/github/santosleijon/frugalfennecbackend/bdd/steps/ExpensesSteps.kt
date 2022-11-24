@@ -78,7 +78,7 @@ class ExpensesSteps {
         }
 
         val dateField = CommonSteps.webDriver.findElement(
-            By.xpath("//*[contains(@class, 'addExpenseForm')]//input[@type='date']")
+            By.xpath("//input[@id='date-field']")
         )
 
         dateField.sendKeys(

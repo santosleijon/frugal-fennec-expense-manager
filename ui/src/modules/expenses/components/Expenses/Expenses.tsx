@@ -1,6 +1,6 @@
-import ExpensesDataGrid from "./ExpensesDataGrid"
+import ExpensesDataGrid from "./ExpensesDataGrid/ExpenseDataGrid"
 import { useEffect } from "react"
-import AddExpenseForm from "./AddExpenseForm"
+import AddExpenseForm from "./AddExpenseForm/AddExpenseForm"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteExpense } from "modules/expenses/commands/deleteExpense"
 import { dispatchCommand } from "modules/common/commands/dispatchCommand"

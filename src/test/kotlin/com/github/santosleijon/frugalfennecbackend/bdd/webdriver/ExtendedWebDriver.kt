@@ -37,9 +37,9 @@ class ExtendedWebDriver(options: ChromeOptions) : ChromeDriver(options) {
 
     suspend fun clickOnButton(buttonText: String) {
         waitFor(250L)
-        val button = findElement(By.xpath("//button/*[text()='$buttonText']/.."))
+        val button = findElement(By.xpath("//button[text()='$buttonText']"))
         button.click()
-        waitFor(2000L) // TODO: Remove fixed waiting time by replacing it with a conditional waiting loop
+        waitFor(2000L) // TODO: Remove fixed waiting times by replacing it with a conditional waiting loop
     }
 
     fun doubleClickOnElementWithText(text: String) {
