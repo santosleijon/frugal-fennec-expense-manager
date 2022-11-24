@@ -46,9 +46,9 @@ export default function MenuBar() {
   const drawerWidth = 240
 
   const navItems = loggedInUser ? [
-    { key: 'reports', text: 'Reports', onClick: () => navigate('./', { replace: true }) },
-    { key: 'expenses', text: 'Expenses', onClick: () => navigate('./expenses', { replace: true }) },
+    { key: 'expenses', text: 'Expenses', onClick: () => navigate('./', { replace: true }) },
     { key: 'accounts', text: 'Accounts', onClick: () => navigate('./accounts', { replace: true }) },
+    { key: 'reports', text: 'Reports', onClick: () => navigate('./reports', { replace: true }) },
     { key: 'delete-user', text: 'Delete user', onClick: onDeleteUser },
     { key: 'logout', text: 'Logout', onClick: onLogout },
   ] : [

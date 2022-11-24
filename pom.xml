@@ -274,6 +274,8 @@
 								<argument>http-server</argument>
 								<argument>--port</argument>
 								<argument>8080</argument>
+								<argument>--proxy</argument>
+								<argument>http://localhost:8080?</argument>
 								<argument>build</argument>
 							</arguments>
 							<async>true</async>

@@ -9,4 +9,4 @@ FROM openjdk:11-jre-slim
 COPY --from=build /app/target/*.jar /app/app.jar
 COPY src/main/resources/application-prod.properties /app/application.properties
 EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "/app/app.jar", "--spring.config.location=/app/application.properties"]
+ENTRYPOINT java -jar /app/app.jar --spring.config.location=/app/application.properties

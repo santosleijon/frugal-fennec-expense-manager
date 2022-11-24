@@ -74,6 +74,12 @@ class EventStoreDAO @Autowired constructor(
         """.trimIndent(), paramMap)
     }
 
+    fun deleteAll() {
+        template.update("""
+            DELETE FROM event_store
+        """.trimIndent(), emptyMap<String, Any>())
+    }
+
     class EventMapping constructor(
         private val objectMapper: ObjectMapper,
     ) : RowMapper<DomainEvent> {

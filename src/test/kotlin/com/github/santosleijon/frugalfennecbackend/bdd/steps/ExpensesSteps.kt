@@ -13,7 +13,6 @@ import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,14 +36,11 @@ class ExpensesSteps {
     @Autowired
     private lateinit var commonSteps: CommonSteps
 
-    @Autowired
-    private lateinit var accountSteps: AccountsSteps
-
-    private val pageUrl = "http://localhost:8080"
+    private val expensesPageUrl = "http://localhost:8080/"
 
     @After
     fun afterScenario() {
-        accountSteps.deleteAllAccounts()
+        commonSteps.deleteAllTestData()
     }
 
     @Given("the account with the name {string} has the following expenses")
@@ -61,8 +57,11 @@ class ExpensesSteps {
 
     @When("the user opens the expenses page")
     fun openTheAccountsPage() = runBlocking {
-        CommonSteps.webDriver.get(pageUrl)
-        CommonSteps.webDriver.clickOnButton("Expenses")
+        CommonSteps.webDriver.get(expensesPageUrl)
+
+        waitUntilOrThrow {
+            !CommonSteps.webDriver.findElements(By.id("expensesDataGrid")).isEmpty()
+        }
     }
 
     @When("the user selects account {string} in the add expense form")
@@ -213,15 +212,18 @@ class ExpensesSteps {
     }
 
     @Then("the following expenses are not displayed in the expenses list")
-    fun assertExpensesAreNotDisplayedInExpensesList(expenses: List<Expense>) {
-        val expensesDataGrid = CommonSteps.webDriver.findElement(By.id("expensesDataGrid"))
+    fun assertExpensesAreNotDisplayedInExpensesList(expenses: List<Expense>) = runBlocking {
+        waitUntilOrThrow {
+            val expensesDataGrid = CommonSteps.webDriver.findElement(By.id("expensesDataGrid"))
 
-        expenses.forEach {
-            Assertions.assertThat(expensesDataGrid.text).doesNotContain(it.date.toDateString())
-            Assertions.assertThat(expensesDataGrid.text).doesNotContain(it.description)
-            Assertions.assertThat(expensesDataGrid.text).doesNotContain(it.amount.toString())
+            expenses.all {
+                !expensesDataGrid.text.contains(it.date.toDateString()) &&
+                        !expensesDataGrid.text.contains(it.description) &&
+                        !expensesDataGrid.text.contains(it.amount.toString())
+            }
         }
     }
+
     @Suppress("unused")
     @DataTableType
     fun expenseTransformer(entry: Map<String, String>): Expense {

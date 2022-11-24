@@ -7,9 +7,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountReposi
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntilOrThrow
-import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidSessionId
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
-import io.cucumber.java.After
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
@@ -28,13 +26,13 @@ class AccountsSteps {
     private lateinit var accountResource: AccountResource
 
     @Autowired
-    private lateinit var accountProjectionRepository: AccountProjectionRepository
-
-    @Autowired
     private lateinit var accountRepository: AccountRepository
 
     @Autowired
     private lateinit var userProjectionRepository: UserProjectionRepository
+
+    @Autowired
+    private lateinit var accountProjectionRepository: AccountProjectionRepository
 
     @Autowired
     private lateinit var usersSteps: UsersSteps
@@ -42,18 +40,15 @@ class AccountsSteps {
     @Autowired
     private lateinit var commonSteps: CommonSteps
 
-    @After
-    fun afterScenario() {
-        deleteAllAccounts()
-    }
-
     @Given("user {string} has an account with the name {string}")
     fun givenAnAccount(userEmail: String, accountName: String) {
         val userId = userProjectionRepository.findByEmail(userEmail)!!.id
 
-        val account = Account(UUID.randomUUID(), accountName, userId)
+        if (accountProjectionRepository.findByNameAndUserIdOrNull(accountName, userId) == null) {
+            val account = Account(UUID.randomUUID(), accountName, userId)
 
-        accountRepository.save(account)
+            accountRepository.save(account)
+        }
     }
 
     @When("the user clicks on {string}")
@@ -216,19 +211,5 @@ class AccountsSteps {
     fun assertAccountNotFoundErrorIsReturned() {
         Assertions.assertThat(commonSteps.requestException).isNotNull
         Assertions.assertThat(commonSteps.requestException).isInstanceOf(AccountNotFoundError::class.java)
-    }
-
-    fun deleteAllAccounts() {
-        val sessionId = usersSteps.userSession?.id
-
-        if (sessionId != null) {
-            try {
-                accountResource.getAllForUser(sessionId).forEach { accountProjection ->
-                    accountResource.delete(accountProjection.id, sessionId)
-                }
-            } catch (e: InvalidSessionId) {
-                // The user and their accounts have been deleted
-            }
-        }
     }
 }

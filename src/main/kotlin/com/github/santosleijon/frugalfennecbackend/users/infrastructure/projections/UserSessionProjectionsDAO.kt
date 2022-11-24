@@ -96,6 +96,12 @@ class UserSessionProjectionsDAO @Autowired constructor(
         """.trimIndent(), paramMap)
     }
 
+    fun deleteAll() {
+        template.update("""
+            DELETE FROM user_session_projections
+        """.trimIndent(), emptyMap<String, Any>())
+    }
+
     class RowMapping constructor(
         private val objectMapper: ObjectMapper,
     ): RowMapper<UserSessionProjection> {

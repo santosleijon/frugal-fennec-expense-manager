@@ -1,32 +1,33 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.steps
 
+import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntilOrThrow
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
 
 class ReportsSteps {
 
-    private val pageUrl = "http://localhost:8080"
+    private val reportsPageUrl = "http://localhost:8080/reports"
 
     @When("the user opens the reports page")
     fun openTheReportsPage() = runBlocking {
-        CommonSteps.webDriver.get(pageUrl)
-        CommonSteps.webDriver.clickOnButton("Reports")
+        CommonSteps.webDriver.get(reportsPageUrl)
     }
 
     @Then("the expense report shown contains the following values")
-    fun assertExpenseReportContainsValues(values: DataTable) {
-        val actualContent = CommonSteps.webDriver.getPageContent()
+    fun assertExpenseReportContainsValues(values: DataTable): Unit = runBlocking {
+        waitUntilOrThrow {
+            val actualContent = CommonSteps.webDriver.getPageContent()
 
-        val expectedValues = values.asMap().toMutableMap()
+            val expectedValues = values.asMap().toMutableMap()
 
-        expectedValues.remove("date")
+            expectedValues.remove("date")
 
-        expectedValues.forEach { (date, amount) ->
-            Assertions.assertThat(actualContent).contains(date)
-            Assertions.assertThat(actualContent).contains(amount)
+            expectedValues.all { (date, amount) ->
+                actualContent.contains(date)
+                actualContent.contains(amount)
+            }
         }
     }
 }

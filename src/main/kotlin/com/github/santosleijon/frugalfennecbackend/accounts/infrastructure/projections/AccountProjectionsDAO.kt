@@ -160,6 +160,12 @@ class AccountProjectionsDAO @Autowired constructor(
         """.trimIndent(), paramMap)
     }
 
+    fun deleteAll() {
+        template.update("""
+            DELETE FROM account_projections
+        """.trimIndent(), emptyMap<String, Any>())
+    }
+
     class ProjectionMapping constructor(
         private val objectMapper: ObjectMapper,
     ) : RowMapper<AccountProjection> {

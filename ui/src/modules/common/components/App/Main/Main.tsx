@@ -9,7 +9,7 @@ import Login from "modules/users/components/Login/Login";
 import { User } from "modules/users/types/User";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 export default function Main() {
   const dispatch = useDispatch()
@@ -27,14 +27,13 @@ export default function Main() {
       <Routes>
         { userIsLoggedIn ? (
           <>
-            <Route path="/" element={<Reports />} />
-            <Route path="expenses" element={<Expenses />} />
+            <Route path="/" element={<Expenses />} />
             <Route path="accounts" element={<Accounts />} />
+            <Route path="reports" element={<Reports />} />
           </>
         ) : (   
             <Route path="/" element={<Login />} />
         ) }
-          <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Container>
   )
