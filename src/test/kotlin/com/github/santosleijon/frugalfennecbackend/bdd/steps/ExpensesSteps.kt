@@ -6,6 +6,7 @@ import com.github.santosleijon.frugalfennecbackend.bdd.utils.toDateString
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
+import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntilOrThrow
 import io.cucumber.java.After
 import io.cucumber.java.DataTableType
 import io.cucumber.java.en.Given
@@ -199,13 +200,15 @@ class ExpensesSteps {
     }
 
     @Then("the following expenses are displayed in the expenses list")
-    fun assertExpensesAreDisplayedInExpensesList(expenses: List<Expense>) {
-        val expensesDataGrid = CommonSteps.webDriver.findElement(By.id("expensesDataGrid"))
+    fun assertExpensesAreDisplayedInExpensesList(expenses: List<Expense>) = runBlocking {
+        waitUntilOrThrow {
+            val expensesDataGrid = CommonSteps.webDriver.findElement(By.id("expensesDataGrid"))
 
-        expenses.forEach {
-            Assertions.assertThat(expensesDataGrid.text).contains(it.date.toDateString())
-            Assertions.assertThat(expensesDataGrid.text).contains(it.description)
-            Assertions.assertThat(expensesDataGrid.text).contains(it.amount.toString())
+            expenses.all {
+                expensesDataGrid.text.contains(it.date.toDateString()) &&
+                expensesDataGrid.text.contains(it.description) &&
+                expensesDataGrid.text.contains(it.amount.toString())
+            }
         }
     }
 

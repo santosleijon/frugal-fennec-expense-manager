@@ -1,9 +1,10 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.webdriver
 
-import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
+import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntilOrThrow
 import io.github.bonigarcia.wdm.WebDriverManager
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
+import org.openqa.selenium.NoSuchElementException
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -29,17 +30,30 @@ class ExtendedWebDriver(options: ChromeOptions) : ChromeDriver(options) {
     }
 
     suspend fun enterTextIntoElementWithId(text: String, id: String) {
+        waitUntilOrThrow {
+            try {
+                findElement(By.id(id)) != null
+            } catch (e: NoSuchElementException) {
+                false
+            }
+        }
+
         val element = findElement(By.id(id))
         clearInputElement(element)
         element.sendKeys(text)
-        waitFor(500L)
     }
 
     suspend fun clickOnButton(buttonText: String) {
-        waitFor(250L)
+        waitUntilOrThrow {
+            try {
+                findElement(By.xpath("//button[text()='$buttonText']")) != null
+            } catch (e: NoSuchElementException) {
+                false
+            }
+        }
+
         val button = findElement(By.xpath("//button[text()='$buttonText']"))
         button.click()
-        waitFor(2000L) // TODO: Remove fixed waiting times by replacing it with a conditional waiting loop
     }
 
     fun doubleClickOnElementWithText(text: String) {

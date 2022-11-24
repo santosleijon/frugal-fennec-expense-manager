@@ -6,7 +6,7 @@ import com.github.santosleijon.frugalfennecbackend.accounts.domain.Account
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.AccountRepository
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.Expense
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
-import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
+import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntilOrThrow
 import com.github.santosleijon.frugalfennecbackend.users.application.errors.InvalidSessionId
 import com.github.santosleijon.frugalfennecbackend.users.domain.projections.UserProjectionRepository
 import io.cucumber.java.After
@@ -67,7 +67,6 @@ class AccountsSteps {
         val accountNameInputElement = CommonSteps.webDriver.findInputElementByValue(oldAccountName)
         CommonSteps.webDriver.enterValueIntoInputElement(accountNameInputElement, newAccountName)
         accountNameInputElement.sendKeys(Keys.ENTER)
-        waitFor(500L)
     }
 
     @When("the user opens the accounts page")
@@ -183,15 +182,20 @@ class AccountsSteps {
     }
 
     @Then("the account {string} is displayed in the accounts list")
-    fun assertAccountIsDisplayedInList(accountName: String) {
+    fun assertAccountIsDisplayedInList(accountName: String) = runBlocking {
         val accountsDataGrid = CommonSteps.webDriver.findElement(By.id("accountsDataGrid"))
-        Assertions.assertThat(accountsDataGrid.text).contains(accountName)
+
+        waitUntilOrThrow {
+            accountsDataGrid.text.contains(accountName)
+        }
     }
 
     @Then("the account {string} is not displayed in the accounts list")
-    fun assertAccountIsNotDisplayedInList(accountName: String) {
-        val accountsDataGrid = CommonSteps.webDriver.findElement(By.id("accountsDataGrid"))
-        Assertions.assertThat(accountsDataGrid.text).doesNotContain(accountName)
+    fun assertAccountIsNotDisplayedInList(accountName: String) = runBlocking {
+        waitUntilOrThrow {
+            val accountsDataGrid = CommonSteps.webDriver.findElement(By.id("accountsDataGrid"))
+            !accountsDataGrid.text.contains(accountName)
+        }
     }
 
     @Then("an account with the name {string} exists")

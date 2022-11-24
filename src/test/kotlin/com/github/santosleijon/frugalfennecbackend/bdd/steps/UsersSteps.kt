@@ -3,8 +3,7 @@ package com.github.santosleijon.frugalfennecbackend.bdd.steps
 import com.github.santosleijon.frugalfennecbackend.accounts.domain.projections.AccountProjectionRepository
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockMailSender
 import com.github.santosleijon.frugalfennecbackend.bdd.mocks.MockRandomEmailVerificationCodeGenerator
-import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitFor
-import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntil
+import com.github.santosleijon.frugalfennecbackend.bdd.utils.waitUntilOrThrow
 import com.github.santosleijon.frugalfennecbackend.users.application.api.UserResource
 import com.github.santosleijon.frugalfennecbackend.users.application.commands.CompleteLoginCommand
 import com.github.santosleijon.frugalfennecbackend.users.domain.User
@@ -127,8 +126,6 @@ class UsersSteps {
         CommonSteps.webDriver.get(loginPageUrl)
         CommonSteps.webDriver.manage().addCookie(cookie)
         CommonSteps.webDriver.navigate().refresh()
-
-        waitFor(250L)
     }
 
     @When("the user opens the login page")
@@ -164,37 +161,42 @@ class UsersSteps {
     }
 
     @Then("an email with verification code {string} is sent to {string}")
-    fun assertAnEmailWithVerificationCodeHasBeenSentTo(verificationCode: String, email: String) {
-        val sentEmail = MockMailSender.sentEmails.first()
+    fun assertAnEmailWithVerificationCodeHasBeenSentTo(verificationCode: String, email: String) = runBlocking {
+        waitUntilOrThrow {
+            if (MockMailSender.sentEmails.size < 1) {
+                false
+            } else {
+                val sentEmail = MockMailSender.sentEmails.first()
 
-        val actualRecipientEmail = sentEmail.personalization.first {
-            it.tos.isNotEmpty()
+                val actualRecipientEmail = sentEmail.personalization.first {
+                    it.tos.isNotEmpty()
+                }
+                    .tos
+                    .first()
+                    .email
+
+                val actualVerificationCode = sentEmail.personalization.first {
+                    it.dynamicTemplateData.isNotEmpty()
+                }
+                    .dynamicTemplateData["verificationCode"]
+
+                actualRecipientEmail == email && actualVerificationCode == verificationCode
+            }
         }
-            .tos
-            .first()
-            .email
-
-        val actualVerificationCode = sentEmail.personalization.first {
-            it.dynamicTemplateData.isNotEmpty()
-        }
-            .dynamicTemplateData["verificationCode"]
-
-        Assertions.assertThat(actualRecipientEmail).isEqualTo(email)
-        Assertions.assertThat(actualVerificationCode).isEqualTo(verificationCode)
     }
 
     @Then("a user is created for email {string}")
-    fun assertUserIsCreatedFor(email: String) {
-        val user = userProjectionRepository.findByEmail(email)
-
-        Assertions.assertThat(user).isNotNull
+    fun assertUserIsCreatedFor(email: String): Unit = runBlocking {
+        waitUntilOrThrow {
+            userProjectionRepository.findByEmail(email) != null
+        }
     }
 
     @Then("a user session is created for user with email {string}")
     fun assertUserSessionIsCreatedForUserWith(email: String): Unit = runBlocking {
         val user = userProjectionRepository.findByEmail(email)
 
-        waitUntil {
+        waitUntilOrThrow {
             userSessionProjectionRepsitory.findByUserId(user!!.id).isNotEmpty()
         }
     }
@@ -208,25 +210,23 @@ class UsersSteps {
 
     @Then("the user is redirected to the start page")
     fun assertTheUserIsRedirectedToTheStartPage(): Any = runBlocking {
-        waitFor(1000)
-
-        val currentUrl = CommonSteps.webDriver.currentUrl
-
-        Assertions.assertThat(currentUrl).isEqualTo("http://localhost:8080/")
+        waitUntilOrThrow {
+            CommonSteps.webDriver.currentUrl == "http://localhost:8080/"
+        }
     }
 
     @Then("the user sees the error message {string}")
-    fun assertTheUserSeesError(message: String): Any = runBlocking {
-        val pageContent = CommonSteps.webDriver.getPageContent()
-
-        Assertions.assertThat(pageContent).contains(message)
+    fun assertTheUserSeesError(message: String): Unit = runBlocking {
+        waitUntilOrThrow {
+            CommonSteps.webDriver.getPageContent().contains(message)
+        }
     }
 
     @Then("the user is redirected back the start login form")
-    fun assertTheUserIsRedirectedBackToStartLoginForm() {
-        val pageContent = CommonSteps.webDriver.getPageContent()
-
-        Assertions.assertThat(pageContent).contains("Enter your email to login or register")
+    fun assertTheUserIsRedirectedBackToStartLoginForm(): Unit = runBlocking {
+        waitUntilOrThrow {
+            CommonSteps.webDriver.getPageContent().contains("Enter your email to login or register")
+        }
     }
 
     @Then("no unconsumed email verification codes exist for user with email {string}")
@@ -257,10 +257,12 @@ class UsersSteps {
     }
 
     @Then("the user data is deleted")
-    fun assertUserDataIsDeleted() {
-        Assertions.assertThat(userRepository.findById(sessionUserId!!)).isNull()
-        Assertions.assertThat(userProjectionRepository.findById(sessionUserId!!)).isNull()
-        Assertions.assertThat(accountProjectionRepository.findByUserId(sessionUserId!!)).isEmpty()
-        Assertions.assertThat(userSessionProjectionRepsitory.findByUserId(sessionUserId!!)).isEmpty()
+    fun assertUserDataIsDeleted(): Unit = runBlocking {
+        waitUntilOrThrow {
+            userRepository.findById(sessionUserId!!) == null &&
+            userProjectionRepository.findById(sessionUserId!!) == null &&
+            accountProjectionRepository.findByUserId(sessionUserId!!).isEmpty() &&
+            userSessionProjectionRepsitory.findByUserId(sessionUserId!!).isEmpty()
+        }
     }
 }

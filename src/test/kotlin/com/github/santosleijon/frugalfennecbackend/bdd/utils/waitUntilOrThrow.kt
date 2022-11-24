@@ -1,6 +1,6 @@
 package com.github.santosleijon.frugalfennecbackend.bdd.utils
 
-suspend fun waitUntil(conditionalBlock: () -> Boolean) {
+suspend fun waitUntilOrThrow(conditionalBlock: () -> Boolean) {
     var timeLeftMillis = 5000L
     val iterationDelayMillis = 200L
 
