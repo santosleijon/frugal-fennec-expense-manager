@@ -49,6 +49,7 @@ export function CompleteLoginForm(props: CompleteLoginFormProps) {
             }}
             variant="outlined"
             autoFocus={true}
+            autoComplete="off"
             onChange={props.onVerificationCodeChanged}
             disabled={verificationCodeHasExpired}
             style={{ flexGrow: 1, marginRight: "12px" }}
