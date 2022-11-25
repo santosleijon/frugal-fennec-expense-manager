@@ -37,7 +37,7 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
   const onDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const date = event.target.value
 
-    if (date) {
+    if (date != null) {
       setValues({ ...values, date: date })
     }
   }

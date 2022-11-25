@@ -1,5 +1,5 @@
 import { Avatar, Card, CardContent, List, ListItem, ListItemAvatar, ListItemText } from "@material-ui/core"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { startLogin } from "modules/users/commands/startLogin"
 import { dispatchCommand } from "modules/common/commands/dispatchCommand"
 import { useDispatch } from "react-redux"
@@ -25,7 +25,7 @@ export default function Login() {
   const onEmailChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value
 
-    if (email) {
+    if (email != null) {
       setFormValues({ ...formValues, email: email })
     }
   }
@@ -45,7 +45,7 @@ export default function Login() {
   const onVerificationCodeChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const verificationCode = event.target.value
     
-    if (verificationCode) {
+    if (verificationCode != null) {
       setFormValues({ ...formValues, verificationCode: verificationCode })
     }
   }
