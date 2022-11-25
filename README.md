@@ -1,10 +1,9 @@
 # Frugal Fennec Expense Manager
 
-*Frugal Fennec Expense Manager* a single page web application that can be used to track expenses over time. It allows a user to:
-* Log in using email verification without needing a password
-* Manage an expense accounts structure
-* Post expenses to accounts
-* View expense reports as line charts
+*Frugal Fennec Expense Manager* a single page web application that can be used to track expenses. It allows users to:
+* Record expenses in a customizable accounts structure
+* View expense reports to track expenses over time
+* Login without a password using email verification
 
 ![screen capture of demo](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/docs/demo.gif?raw=true)
 
@@ -34,7 +33,7 @@
 
 ## Amazon Web Services deployment
 
-This application is public available at **[frugal-fennec.santosleijon.com](https://frugal-fennec.santosleijon.com)**.
+*Frugal Fennec Expense Manager* is publicly available at **[frugal-fennec.santosleijon.com](https://frugal-fennec.santosleijon.com)**.
 
 The diagram below describes how it is deployed using selected AWS services and features.
 
