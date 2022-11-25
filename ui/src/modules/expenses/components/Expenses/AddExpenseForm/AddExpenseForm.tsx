@@ -127,7 +127,6 @@ export default function AddExpenseForm(props: AddExpenseFormProps) {
                 />
               </Grid>
               <Grid item xs="auto">
-                {/* TODO: Use common AccountFormField component? */}
                 <SelectAccountFormField 
                   accounts={props.accounts}
                   selectedAccountId={values.accountId ?? props.accounts[0]?.id}
