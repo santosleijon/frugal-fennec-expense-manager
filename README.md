@@ -33,9 +33,9 @@
 
 ## Amazon Web Services deployment
 
-*Frugal Fennec Expense Manager* is publicly available at **[frugal-fennec.santosleijon.com](https://frugal-fennec.santosleijon.com)**.
+*Frugal Fennec Expense Manager* was previously publicly available at ~~[frugal-fennec.santosleijon.com](https://frugal-fennec.santosleijon.com)~~.
 
-The diagram below describes how it is deployed using selected AWS services and features.
+The diagram below describes how it was deployed using selected AWS services and features.
 
 ![AWS deployment](https://github.com/santosleijon/frugal-fennec-expense-manager/blob/main/docs/aws_deployment.png?raw=true)
 
